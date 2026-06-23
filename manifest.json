@@ -7,8 +7,8 @@
   },
   "reproduction": {
     "milestone": "none",
-    "status": "error",
-    "error": "rc=-1: You've hit your usage limit. Visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 7:41 AM.",
+    "status": "done",
+    "error": null,
     "scaffold": "codex",
     "model": "gpt-5.5",
     "profile": "gpt-5.5-medium",
@@ -20,7 +20,7 @@
     "current_iteration_cpu_hours_used": 0.0,
     "total_cpu_hours_used": 0,
     "gpu_budget": 30,
-    "duration_sec": 9994.2,
+    "duration_sec": 12716.8,
     "cost_usd": null,
     "input_tokens": 0,
     "output_tokens": 0,
@@ -30,13 +30,13 @@
     "total_input_tokens": 0,
     "num_turns": 0,
     "duration_api_ms": null,
-    "num_runs": 6,
-    "iteration_count": 5,
+    "num_runs": 7,
+    "iteration_count": 6,
     "workflow": "standard",
     "workflow_step": 0,
     "total_gpu_jobs": 0,
     "time_breakdown": {
-      "working": 1822.8543436527252
+      "working": 1810.1069464683533
     }
   },
   "agents": [
@@ -261,6 +261,43 @@
       "tool_uses": {},
       "gpu_jobs": [],
       "progress_log": ""
+    },
+    {
+      "scaffold": "codex",
+      "model": "gpt-5.5",
+      "profile": "gpt-5.5-medium",
+      "effort": "medium",
+      "role": "reproducer",
+      "is_iteration": true,
+      "iteration": 1,
+      "workflow": "standard",
+      "workflow_step": 0,
+      "started_at": 1782180394.4423022,
+      "finished_at": 1782183875.3298726,
+      "duration_sec": 2722.6,
+      "blocked_sec": 758.3,
+      "status": "done",
+      "error": null,
+      "milestone": "none",
+      "gpu_budget": 30,
+      "gpu_hours_used": 0.0,
+      "total_gpu_hours_used": 0.0,
+      "cpu_hours_used": 0.0,
+      "time_breakdown": {
+        "working": 1810.1069464683533
+      },
+      "cost_usd": null,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cached_input_tokens": 0,
+      "cache_creation_tokens": null,
+      "reasoning_tokens": 0,
+      "total_input_tokens": 0,
+      "num_turns": 0,
+      "duration_api_ms": null,
+      "tool_uses": {},
+      "gpu_jobs": [],
+      "progress_log": ""
     }
   ],
   "components": {
@@ -271,7 +308,7 @@
     "has_reproduce_script": true,
     "has_method_script": true,
     "has_baseline": true,
-    "has_reference": false,
+    "has_reference": true,
     "has_data": true
   }
 }

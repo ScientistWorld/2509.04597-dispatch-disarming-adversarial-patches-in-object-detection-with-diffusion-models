@@ -51,6 +51,10 @@ Do NOT describe the paper's method or solution here — only the problem itself.
 - **Milestone**: `none` | **Status**: error
 - **Working time**: 30m | **GPU**: 0.0h
 
+### Iteration 1: gpt-5.5
+- **Milestone**: `none` | **Status**: done
+- **Working time**: 30m | **GPU**: 0.0h
+
 
 ---
 
