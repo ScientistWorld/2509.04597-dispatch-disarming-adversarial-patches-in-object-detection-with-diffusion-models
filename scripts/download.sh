@@ -7,10 +7,8 @@
 # This script should be idempotent — safe to run multiple times.
 # It should skip files that already exist.
 #
-# Update the storage estimate below as you add downloads.
-#
-# Estimated total download size: TODO GB
-# Estimated disk usage after extraction: TODO GB
+# Estimated total download size: 0 GB
+# Estimated disk usage after extraction: 0 GB
 #
 # This portability script must download to workspace-local paths such as
 # data/downloads/ and checkpoints/, so a future user with just the workspace

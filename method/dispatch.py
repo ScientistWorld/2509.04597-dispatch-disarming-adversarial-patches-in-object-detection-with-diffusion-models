@@ -12,7 +12,6 @@ import numpy as np
 import torch
 from PIL import Image
 from sklearn.cluster import KMeans
-from torchvision.transforms import functional as TF
 
 from diffusion import DDPM, TinyInpaintUNet
 
@@ -36,11 +35,14 @@ def checkerboard_mask(size: int, grids: int, invert: bool = False) -> torch.Tens
 
 
 def tensor_to_image(tensor: torch.Tensor) -> Image.Image:
-    return TF.to_pil_image(((tensor.detach().cpu().clamp(-1, 1) + 1.0) / 2.0).squeeze(0))
+    arr = ((tensor.detach().cpu().clamp(-1, 1) + 1.0) / 2.0).squeeze(0)
+    arr = (arr.permute(1, 2, 0).numpy() * 255.0).round().astype(np.uint8)
+    return Image.fromarray(arr)
 
 
 def image_to_tensor(image: Image.Image) -> torch.Tensor:
-    return TF.to_tensor(image.convert("RGB")) * 2.0 - 1.0
+    arr = np.asarray(image.convert("RGB"), dtype=np.float32) / 255.0
+    return torch.from_numpy(arr).permute(2, 0, 1) * 2.0 - 1.0
 
 
 def adversarial_mask(original: Image.Image, regenerated: Image.Image, blur: int = 5) -> np.ndarray:

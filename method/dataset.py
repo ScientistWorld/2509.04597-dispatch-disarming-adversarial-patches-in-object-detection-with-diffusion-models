@@ -5,9 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import torch
+import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
-from torchvision.transforms import functional as TF
 
 
 class CleanImageDataset(Dataset):
@@ -21,7 +21,8 @@ class CleanImageDataset(Dataset):
 
     def __getitem__(self, index: int) -> torch.Tensor:
         image = Image.open(self.paths[index]).convert("RGB")
-        tensor = TF.to_tensor(image) * 2.0 - 1.0
+        arr = np.asarray(image, dtype=np.float32) / 255.0
+        tensor = torch.from_numpy(arr).permute(2, 0, 1) * 2.0 - 1.0
         return tensor
 
 

@@ -16,9 +16,10 @@
 
 set -e
 
+uv pip install --system --index-url https://download.pytorch.org/whl/cpu \
+  torch==2.3.1+cpu
+
 uv pip install --system \
-  torch==2.3.1 \
-  torchvision==0.18.1 \
   pillow==10.4.0 \
   numpy==1.26.4 \
   scikit-learn==1.5.2 \
