@@ -9,8 +9,8 @@
         },
         "dispatch": {
           "clean_mAP5": 0.75,
-          "attack_mAP5": 0.5267857142857143,
-          "attack_AR": 0.5267857142857143
+          "attack_mAP5": 0.5357142857142857,
+          "attack_AR": 0.5357142857142857
         }
       }
     },
@@ -33,10 +33,10 @@
     "rectification_ablation": {
       "results": {
         "regenerated_only": {
-          "attack_mAP5": 0.49107142857142855
+          "attack_mAP5": 0.5178571428571429
         },
         "dispatch": {
-          "attack_mAP5": 0.5267857142857143
+          "attack_mAP5": 0.5357142857142857
         }
       }
     }

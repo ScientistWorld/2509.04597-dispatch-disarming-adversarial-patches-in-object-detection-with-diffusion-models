@@ -3,6 +3,6 @@
 # only after your turn ends. Sleeping blocks the entire pipeline.
 action: submit
 gpus: 0
-test: false
-milestone: secondary_claims
-notes: "Continuation audit fixed the evaluator contract comment. Submit current scripts/run.sh for a full CPU rebuild from source: regenerate data, train DDPM, run DISPATCH hiding/creating, evaluate, and validate fresh artifacts."
+test: true
+milestone: core_claim
+notes: "Fresh full rebuild confirmed hiding but regressed creating. Run a short CPU follow-up using the existing trained checkpoint with coarser DISPATCH checkerboard masks (N=8), then evaluate and validate."
