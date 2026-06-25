@@ -29,6 +29,16 @@
           "untargeted_ASR": 0.25
         }
       }
+    },
+    "rectification_ablation": {
+      "results": {
+        "regenerated_only": {
+          "attack_mAP5": 0.49107142857142855
+        },
+        "dispatch": {
+          "attack_mAP5": 0.5446428571428571
+        }
+      }
     }
   }
 }
