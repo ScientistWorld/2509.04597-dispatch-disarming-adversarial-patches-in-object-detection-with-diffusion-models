@@ -22,16 +22,23 @@ The fourth run made the synthetic hiding attack more faithful to the paper's pro
 
 After inspecting creating predictions, I found the creating metric was overcounting true-person detections whose boxes overlapped the patch. The evaluator now counts only unmatched detections on the patch; an evaluation-only job will rewrite `scoring/scores.json` with the corrected metric.
 
+The evaluation-only job completed with the corrected metric. Final reproduced scaled scores:
+
+- `inria_digital_hiding`: vanilla attack mAP.5/AR = 0.000/0.000; DISPATCH attack mAP.5/AR = 0.545/0.545; clean mAP.5 = 0.750.
+- `apricot_creating`: vanilla ASR = 0.325; DISPATCH ASR = 0.250.
+
+This supports `core_claim_plus`: the paper's regenerate-and-rectify method improves both hiding recovery and creating-patch suppression in the reusable scaled benchmark.
+
 ## Remaining
 
-- Run the evaluation-only job to refresh `scoring/scores.json` after the creating metric fix.
-- Inspect the corrected creating scores and decide whether they justify `core_claim_plus`; otherwise stop at `core_claim`.
-- Restore `scripts/run.sh` to a full or targeted reproduction run before any later training submission.
+- Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.
+- The full original INRIA/APRICOT plus large pretrained inpainting stack remains outside this scaled CPU reproduction.
 
 ## Issues
 
 - The original full INRIA/APRICOT plus MMDetection plus pretrained LDM setup is too large for a first-turn reproduction. This workspace starts with a scaled benchmark that preserves the algorithmic computation.
 - Earlier runs exposed an implementation-level diffusion issue: regenerated images were noisy or blurry, causing KMeans masks to cover benign object structure.
+- Final scripts use the successful longer clean-data inpainting training and finer complementary masks by default.
 
 ## Deviations from Paper
 

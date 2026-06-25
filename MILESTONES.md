@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 ## Progress Log
 
@@ -28,6 +28,11 @@
 - Completed the fourth compute job with stronger synthetic hiding patches and longer clean-data inpainting training.
 - DISPATCH recovered hiding attack mAP.5/AR to 0.545 while vanilla detection under the hiding attack was 0.000; clean-image performance was measured at 0.750.
 - Identified and fixed a method-agnostic creating-attack evaluator bug that counted true-person detections overlapping the patch as false patch detections; prepared an evaluation-only job to rewrite `scoring/scores.json`.
+
+### [2026-06-25 05:44] - core_claim_plus
+- Completed the evaluation-only job with the corrected creating-attack metric.
+- Confirmed DISPATCH improves both scaled hiding recovery (0.545 vs 0.000 attack mAP.5/AR) and scaled creating suppression (0.250 vs 0.325 ASR).
+- Restored `scripts/run.sh` and `scripts/method.sh` to the successful full reproduction defaults.
 
 ## Stop Justification
 - Not stopped.

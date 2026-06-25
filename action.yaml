@@ -1,5 +1,3 @@
-action: submit
-gpus: 0
-test: true
-milestone: core_claim
-notes: "Evaluation-only CPU job after fixing creating ASR to ignore matched true-person detections. Rewrites scoring/scores.json from saved outputs; hiding core claim is already reproduced on the scaled benchmark."
+action: done
+milestone: core_claim_plus
+notes: "Scaled DISPATCH reproduction complete: hiding recovery improves from 0.000 to 0.545 attack mAP5/AR, creating ASR improves from 0.325 to 0.250, clean mAP5 is measured, and scripts/defaults reproduce the successful run."
