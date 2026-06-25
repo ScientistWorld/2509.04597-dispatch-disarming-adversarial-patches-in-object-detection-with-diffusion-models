@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU smoke job for the scaled DISPATCH pipeline: generate synthetic data, train the small inpainting DDPM, run checkerboard regeneration/rectification on hiding and creating attacks, and write scoring/scores.json."
+notes: "CPU smoke job after audit fixes: generate synthetic data, train the small inpainting DDPM, run DISPATCH checkerboard regeneration/rectification on hiding and creating attacks, and write scoring/scores.json."
