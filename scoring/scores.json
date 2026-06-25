@@ -9,8 +9,8 @@
         },
         "dispatch": {
           "clean_mAP5": 0.75,
-          "attack_mAP5": 0.5446428571428571,
-          "attack_AR": 0.5446428571428571
+          "attack_mAP5": 0.5267857142857143,
+          "attack_AR": 0.5267857142857143
         }
       }
     },
@@ -23,10 +23,10 @@
           "untargeted_ASR": 0.325
         },
         "dispatch": {
-          "targeted_mAP5": 0.25,
-          "targeted_ASR": 0.25,
-          "untargeted_mAP5": 0.25,
-          "untargeted_ASR": 0.25
+          "targeted_mAP5": 0.425,
+          "targeted_ASR": 0.425,
+          "untargeted_mAP5": 0.425,
+          "untargeted_ASR": 0.425
         }
       }
     },
@@ -36,7 +36,7 @@
           "attack_mAP5": 0.49107142857142855
         },
         "dispatch": {
-          "attack_mAP5": 0.5446428571428571
+          "attack_mAP5": 0.5267857142857143
         }
       }
     }
