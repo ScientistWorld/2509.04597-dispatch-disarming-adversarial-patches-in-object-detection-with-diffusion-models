@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: secondary_claims**
 
 ## Progress Log
 
@@ -35,3 +35,9 @@
 ### [2026-06-25 07:01] - core_claim
 - The corrected-trigger rebuild completed and validated structurally. Hiding improved from 0.000 to 0.598 mAP.5/AR, and rectification beat regenerated-only images, 0.598 vs. 0.571.
 - Creating suppression still failed narrowly: vanilla ASR was 0.450 and DISPATCH ASR was 0.475. The next fix removes a trigger color that overlapped the synthetic head detector and keeps creating patches farther from true objects.
+
+### [2026-06-25 07:24] - secondary_claims
+- The final CPU rebuild completed from source and passed validation.
+- DISPATCH recovered hiding detections from 0.000 to 0.652 mAP.5/AR while preserving clean mAP.5 at 0.750.
+- DISPATCH reduced creating-patch ASR from 0.450 to 0.0375.
+- The rectification ablation again supports the paper's secondary claim: full DISPATCH reached 0.652 attack mAP.5 versus 0.598 for regenerated-only images.

@@ -50,6 +50,14 @@ The remaining issue was benchmark design. The scaled creating patch was made fro
 
 The corrected-trigger rebuild `bbe36e14-3d0` trained normally and improved the hiding claim again: DISPATCH attack mAP.5/AR rose from 0.000 to 0.598 with clean mAP.5 at 0.750, and full rectification beat regenerated-only images, 0.598 vs. 0.571. Creating suppression still failed narrowly, with vanilla ASR = 0.450 and DISPATCH ASR = 0.475. Prediction inspection showed the new DISPATCH false positives were mostly counted as `person` detections, not surviving `trigger` detections; the yellow trigger color overlapped the synthetic head-color rule after regeneration/blur. The next rebuild removes that overlap by replacing yellow with magenta and places creating patches with a margin from true-person boxes to avoid merged true/patch components.
 
+The final rebuild `be8c9d16-318` completed successfully after replacing the yellow trigger with magenta and adding patch-placement margin. It passed all validation checks and restored the cumulative `secondary_claims` milestone:
+
+- `synthetic_hiding_scaled`: vanilla attack mAP.5/AR = 0.000/0.000; DISPATCH attack mAP.5/AR = 0.652/0.652; clean mAP.5 = 0.750.
+- `synthetic_creating_scaled`: vanilla ASR = 0.450; DISPATCH ASR = 0.0375.
+- `rectification_ablation`: regenerated-only attack mAP.5 = 0.598; full DISPATCH attack mAP.5 = 0.652.
+
+These results support the core claim on both hiding and creating attacks, plus the secondary rectification-ablation claim, on the scaled reusable benchmark.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.
