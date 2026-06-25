@@ -39,4 +39,4 @@
 - Re-ran `python validate.py --compare`; all checks passed.
 
 ## Stop Justification
-- Not stopped.
+- Completed at milestone `core_claim_plus`.
