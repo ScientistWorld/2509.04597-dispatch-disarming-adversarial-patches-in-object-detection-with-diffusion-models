@@ -19,5 +19,10 @@
 - Creating-patch suppression remained strong, but hiding-patch recovery still failed because regenerated images were visibly noisy.
 - Switched the compact diffusion model to `x0` prediction and prepared another run.
 
+### [2026-06-25 05:19] - method_runs
+- Completed the third compute job with `x0` diffusion prediction.
+- Hiding recovery improved to 0.580 mAP.5/AR, but remained below the vanilla attack score of 0.696; creating-patch suppression regressed.
+- Strengthened the synthetic hiding attack, increased training, and switched to finer checkerboard regeneration for the next run.
+
 ## Stop Justification
 - Not stopped.

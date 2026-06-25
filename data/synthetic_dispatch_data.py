@@ -20,7 +20,8 @@ from PIL import Image, ImageDraw
 IMAGE_SIZE = 64
 PERSON_COLOR = (35, 115, 220)
 HEAD_COLOR = (240, 200, 130)
-PATCH_COLORS = [(35, 115, 220), (240, 200, 130), (20, 20, 20), (245, 245, 245)]
+HIDING_PATCH_COLORS = [(10, 10, 10), (245, 245, 245), (40, 220, 70), (190, 35, 210)]
+CREATING_PATCH_COLORS = [(35, 115, 220), (240, 200, 130), (20, 20, 20), (245, 245, 245)]
 
 
 def _draw_person(draw: ImageDraw.ImageDraw, box: tuple[int, int, int, int]) -> None:
@@ -41,14 +42,14 @@ def _draw_person(draw: ImageDraw.ImageDraw, box: tuple[int, int, int, int]) -> N
     draw.line((x1 - w // 4, arm_y, x1, torso_bot - 2), fill=PERSON_COLOR, width=3)
 
 
-def _patch_pattern(size: int, seed: int) -> Image.Image:
+def _patch_pattern(size: int, seed: int, colors: list[tuple[int, int, int]]) -> Image.Image:
     rng = random.Random(seed)
     patch = Image.new("RGB", (size, size), (0, 0, 0))
     draw = ImageDraw.Draw(patch)
     cell = 4
     for y in range(0, size, cell):
         for x in range(0, size, cell):
-            draw.rectangle((x, y, x + cell - 1, y + cell - 1), fill=rng.choice(PATCH_COLORS))
+            draw.rectangle((x, y, x + cell - 1, y + cell - 1), fill=rng.choice(colors))
     return patch
 
 
@@ -92,10 +93,10 @@ def make_example(index: int, split: str) -> tuple[Image.Image, Image.Image, Imag
     for k, (x0, y0, x1, y1) in enumerate(boxes):
         w = x1 - x0
         h = y1 - y0
-        p = max(12, int(((w * w + h * h) ** 0.5) * 0.28))
+        p = max(16, int(((w * w + h * h) ** 0.5) * 0.42))
         px = (x0 + x1 - p) // 2
-        py = y0 + int(0.38 * h)
-        hiding.paste(_patch_pattern(p, index * 13 + k), (px, py))
+        py = y0 + int(0.28 * h)
+        hiding.paste(_patch_pattern(p, index * 13 + k, HIDING_PATCH_COLORS), (px, py))
 
     creating = clean.copy()
     patch_size = 15
@@ -105,7 +106,7 @@ def make_example(index: int, split: str) -> tuple[Image.Image, Image.Image, Imag
         patch_box = (px, py, px + patch_size, py + patch_size)
         if all(_iou(patch_box, box) < 0.01 for box in boxes):
             break
-    creating.paste(_patch_pattern(patch_size, index * 17 + 3), (px, py))
+    creating.paste(_patch_pattern(patch_size, index * 17 + 3, CREATING_PATCH_COLORS), (px, py))
 
     meta = {
         "id": f"{split}_{index:04d}",

@@ -16,18 +16,20 @@ The first compute job completed end-to-end and wrote `scoring/scores.json`.
 
 Artifact inspection showed the hiding failure came from noisy diffusion regeneration, not from the evaluator. The sampler was using a one-step DDPM update across skipped timesteps, and training only used local block masks while inference uses complementary checkerboards. A second run fixed those issues but still produced noisy regenerated counterparts: DISPATCH hiding attack mAP.5/AR fell to 0.036/0.036, while creating-patch ASR stayed at 0.050.
 
-The current code switches the compact diffusion model to standard `x0` prediction, which is better matched to small clean-data inpainting while preserving DISPATCH's diffusion regeneration, KMeans mask localization, and masked rectification pipeline.
+The third run switched the compact diffusion model to standard `x0` prediction. Regeneration quality improved substantially and hiding recovery rose to 0.580 mAP.5/AR, but it still lagged the vanilla detector at 0.696. Creating-patch suppression regressed to 0.588 ASR because the blurrier generated counterpart caused the KMeans mask to select benign object regions instead of the decoy patch.
+
+The current code makes the synthetic hiding attack more faithful to the paper's problem by using a larger, non-person-colored patch, then trains longer with finer complementary checkerboard masks. This should both lower the vanilla hiding score into a meaningful attack regime and make the regenerated counterpart closer to the original outside adversarial content.
 
 ## Remaining
 
-- Rerun the compute job after switching the compact diffusion model to `x0` prediction.
+- Rerun the compute job after strengthening the synthetic hiding patch and increasing the clean-data inpainting budget.
 - Inspect the new `scoring/scores.json` and decide whether the scaled reproduction supports `core_claim` or needs another tuning pass.
 - If hiding recovery improves, expand to an additional setting; otherwise inspect regenerated images and mask coverage again.
 
 ## Issues
 
 - The original full INRIA/APRICOT plus MMDetection plus pretrained LDM setup is too large for a first-turn reproduction. This workspace starts with a scaled benchmark that preserves the algorithmic computation.
-- First and second runs exposed an implementation-level diffusion issue: regenerated images were noisy, causing KMeans masks to cover benign object structure.
+- Earlier runs exposed an implementation-level diffusion issue: regenerated images were noisy or blurry, causing KMeans masks to cover benign object structure.
 
 ## Deviations from Paper
 

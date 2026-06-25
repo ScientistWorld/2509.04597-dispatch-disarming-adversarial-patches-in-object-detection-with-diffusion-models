@@ -14,10 +14,10 @@ set -e
 cd /home/user
 
 export DEVICE="${DEVICE:-cpu}"
-export TRAIN_COUNT="${TRAIN_COUNT:-1200}"
+export TRAIN_COUNT="${TRAIN_COUNT:-2000}"
 export TEST_COUNT="${TEST_COUNT:-80}"
-export EPOCHS="${EPOCHS:-20}"
-export STEPS="${STEPS:-24}"
-export GRIDS="${GRIDS:-8}"
+export EPOCHS="${EPOCHS:-60}"
+export STEPS="${STEPS:-32}"
+export GRIDS="${GRIDS:-16}"
 
 bash scripts/reproduce.sh
