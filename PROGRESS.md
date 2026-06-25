@@ -58,6 +58,8 @@ The final rebuild `be8c9d16-318` completed successfully after replacing the yell
 
 These results support the core claim on both hiding and creating attacks, plus the secondary rectification-ablation claim, on the scaled reusable benchmark.
 
+After final validation, the scaled synthetic rows in `scoring/reference.json` were refreshed to these corrected benchmark values. The original paper-reported INRIA/APRICOT/physical rows remain unchanged; the synthetic rows are the like-for-like reference for this reusable reduced-scale gym.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

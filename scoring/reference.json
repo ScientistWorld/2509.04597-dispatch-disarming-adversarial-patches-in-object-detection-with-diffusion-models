@@ -62,7 +62,7 @@
       },
       "results": {
         "vanilla": {"type": "baseline", "attack_mAP5": 0.0, "attack_AR": 0.0, "clean_mAP5": 0.75},
-        "dispatch": {"type": "proposed", "attack_mAP5": 0.5446428571428571, "attack_AR": 0.5446428571428571, "clean_mAP5": 0.75}
+        "dispatch": {"type": "proposed", "attack_mAP5": 0.6517857142857143, "attack_AR": 0.6517857142857143, "clean_mAP5": 0.75}
       }
     },
     "synthetic_creating_scaled": {
@@ -76,8 +76,8 @@
         "untargeted_ASR": {"higher_is_better": false, "coefficient": -1.0}
       },
       "results": {
-        "vanilla": {"type": "baseline", "targeted_mAP5": 0.325, "targeted_ASR": 0.325, "untargeted_mAP5": 0.325, "untargeted_ASR": 0.325},
-        "dispatch": {"type": "proposed", "targeted_mAP5": 0.25, "targeted_ASR": 0.25, "untargeted_mAP5": 0.25, "untargeted_ASR": 0.25}
+        "vanilla": {"type": "baseline", "targeted_mAP5": 0.45, "targeted_ASR": 0.45, "untargeted_mAP5": 0.45, "untargeted_ASR": 0.45},
+        "dispatch": {"type": "proposed", "targeted_mAP5": 0.0375, "targeted_ASR": 0.0375, "untargeted_mAP5": 0.0375, "untargeted_ASR": 0.0375}
       }
     },
     "rectification_ablation": {
@@ -88,8 +88,8 @@
         "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0}
       },
       "results": {
-        "regenerated_only": {"type": "proposed", "attack_mAP5": 0.49107142857142855},
-        "dispatch": {"type": "proposed", "attack_mAP5": 0.5446428571428571}
+        "regenerated_only": {"type": "proposed", "attack_mAP5": 0.5982142857142857},
+        "dispatch": {"type": "proposed", "attack_mAP5": 0.6517857142857143}
       }
     }
   }
