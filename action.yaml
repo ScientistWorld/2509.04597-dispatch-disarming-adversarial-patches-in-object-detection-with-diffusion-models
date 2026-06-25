@@ -1,8 +1,5 @@
-# IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: none
-notes: "Fixed validation failure by adding paper-specific scoring/reference.json and removing a non-portable shared/ reference from scripts/download.sh."
+notes: "CPU smoke job for the scaled DISPATCH pipeline: generate synthetic data, train the small inpainting DDPM, run checkerboard regeneration/rectification on hiding and creating attacks, and write scoring/scores.json."
