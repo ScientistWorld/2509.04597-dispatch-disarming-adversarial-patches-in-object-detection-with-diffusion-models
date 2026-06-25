@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "N=8 did not fix creating suppression. Rebuild from scratch with the corrected noise-like OOD creating-trigger benchmark, then evaluate and validate fresh DISPATCH scores."
+notes: "Corrected-trigger rebuild still had person-detector artifacts from a yellow trigger color. Rebuild from scratch with magenta/red/cyan triggers and farther creating-patch placement, then evaluate and validate."
