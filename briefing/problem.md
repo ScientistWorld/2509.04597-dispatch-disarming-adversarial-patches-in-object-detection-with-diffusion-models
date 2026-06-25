@@ -1,17 +1,15 @@
 # Problem Definition
 
-What problem does this paper address? Write this so that someone with no knowledge of the paper can understand what needs to be solved and how success is measured.
-
-Do NOT describe the paper's method or solution here — only the problem itself. Think about if a future scientist agent try to solve this problem from scratch without knowing what approach the paper took. If you leak the solution, you compromise the benchmark.
-
 ## Research Question
 
-<!-- What problem or challenge does this paper tackle? What gap in existing work does it address? -->
+How can an inference-time defense preserve object detector performance when images contain adversarial patches that either hide real objects or create false detections?
+
+The defense should operate on input images before detection and should not require advance knowledge of patch shape, location, or visual pattern. It should improve detector behavior under attack while avoiding unnecessary damage to clean images.
 
 ## Why It Matters
 
-<!-- Why is this problem important? What would a good solution enable? Make it short -->
+Adversarial patches can be physically printed or digitally inserted, making them practical threats for surveillance, robotics, and other vision systems that rely on object detection.
 
 ## Success Criteria
 
-<!-- What would a successful solution look like? What properties should it have? This is about the goal, not the paper's specific approach. Make it short -->
+A successful solution should recover detections of real objects under hiding attacks, suppress false detections on adversarial patches under creating attacks, and keep clean-image detection performance close to the undefended detector.

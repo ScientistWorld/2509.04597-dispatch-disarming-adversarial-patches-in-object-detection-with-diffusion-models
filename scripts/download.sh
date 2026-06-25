@@ -18,10 +18,9 @@
 
 set -e
 
-cd "$(dirname "$0")"
+cd /home/user
 
-# TODO: implement downloads
-# Examples:
-#   wget -nc https://example.com/dataset.tar.gz -P data/
-#   python -c "from huggingface_hub import snapshot_download; snapshot_download('model/name', local_dir='checkpoints/')"
-#   huggingface-cli download Qwen/Qwen3-1.7B --local-dir /checkpoints/Qwen3-1.7B
+# This scaled reproduction uses only procedurally generated data and trains a
+# small inpainting diffusion model from scratch on those clean synthetic images.
+# No external datasets or model weights are required.
+mkdir -p data/downloads

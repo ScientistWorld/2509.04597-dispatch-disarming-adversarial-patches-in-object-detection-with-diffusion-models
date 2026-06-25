@@ -17,4 +17,4 @@ set -e
 
 cd /home/user
 
-# TODO: run baseline
+python baseline/run_vanilla.py --data-dir data/synthetic --outputs-dir outputs
