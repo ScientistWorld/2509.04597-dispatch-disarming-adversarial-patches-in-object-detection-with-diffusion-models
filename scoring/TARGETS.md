@@ -8,7 +8,7 @@ Tests whether a defense recovers correct object detections when adversarial patc
 - **Constraint metrics:** `clean_mAP5` should remain high, and `attack_AR` should improve alongside the primary metric.
 - **How to run:** `bash scripts/evaluate.sh` after method or baseline artifacts have been written to `outputs/`.
 
-## Constraint: synthetic_creating_scaled
+## Primary: synthetic_creating_scaled
 
 Tests whether a defense prevents adversarial patches from causing false object detections on the scaled synthetic benchmark.
 
