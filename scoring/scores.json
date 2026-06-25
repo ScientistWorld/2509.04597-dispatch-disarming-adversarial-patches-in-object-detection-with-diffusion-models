@@ -9,34 +9,34 @@
         },
         "dispatch": {
           "clean_mAP5": 0.75,
-          "attack_mAP5": 0.5357142857142857,
-          "attack_AR": 0.5357142857142857
+          "attack_mAP5": 0.5982142857142857,
+          "attack_AR": 0.5982142857142857
         }
       }
     },
     "synthetic_creating_scaled": {
       "results": {
         "vanilla": {
-          "targeted_mAP5": 0.325,
-          "targeted_ASR": 0.325,
-          "untargeted_mAP5": 0.325,
-          "untargeted_ASR": 0.325
+          "targeted_mAP5": 0.45,
+          "targeted_ASR": 0.45,
+          "untargeted_mAP5": 0.45,
+          "untargeted_ASR": 0.45
         },
         "dispatch": {
-          "targeted_mAP5": 0.425,
-          "targeted_ASR": 0.425,
-          "untargeted_mAP5": 0.425,
-          "untargeted_ASR": 0.425
+          "targeted_mAP5": 0.475,
+          "targeted_ASR": 0.475,
+          "untargeted_mAP5": 0.475,
+          "untargeted_ASR": 0.475
         }
       }
     },
     "rectification_ablation": {
       "results": {
         "regenerated_only": {
-          "attack_mAP5": 0.5178571428571429
+          "attack_mAP5": 0.5714285714285714
         },
         "dispatch": {
-          "attack_mAP5": 0.5357142857142857
+          "attack_mAP5": 0.5982142857142857
         }
       }
     }

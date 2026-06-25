@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "Fresh full rebuild confirmed hiding but regressed creating. Run a short CPU follow-up using the existing trained checkpoint with coarser DISPATCH checkerboard masks (N=8), then evaluate and validate."
+notes: "N=8 did not fix creating suppression. Rebuild from scratch with the corrected noise-like OOD creating-trigger benchmark, then evaluate and validate fresh DISPATCH scores."
