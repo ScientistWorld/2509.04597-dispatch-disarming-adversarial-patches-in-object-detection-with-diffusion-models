@@ -1,6 +1,6 @@
-# Run split scoring on the compute node.
-action: submit
+# Split scoring completed and reviewed.
+action: done
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "CPU split scoring: run evaluate_train.sh and evaluate_test.sh against existing final artifacts; populate scores_train/test."
+notes: "Hash-stratified synthetic split; 13 metric definitions / 26 numeric values per slice from CPU job 3728ae67-b68. Train/test comparable: DISPATCH hiding attack_mAP5 0.679 vs 0.625, creating untargeted_ASR 0.050 vs 0.050, rectification attack_mAP5 0.679 vs 0.625. No nulls; method sets match."
