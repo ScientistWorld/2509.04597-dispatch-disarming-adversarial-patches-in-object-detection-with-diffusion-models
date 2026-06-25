@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -23,6 +23,11 @@
 - Completed the third compute job with `x0` diffusion prediction.
 - Hiding recovery improved to 0.580 mAP.5/AR, but remained below the vanilla attack score of 0.696; creating-patch suppression regressed.
 - Strengthened the synthetic hiding attack, increased training, and switched to finer checkerboard regeneration for the next run.
+
+### [2026-06-25 05:41] - core_claim
+- Completed the fourth compute job with stronger synthetic hiding patches and longer clean-data inpainting training.
+- DISPATCH recovered hiding attack mAP.5/AR to 0.545 while vanilla detection under the hiding attack was 0.000; clean-image performance was measured at 0.750.
+- Identified and fixed a method-agnostic creating-attack evaluator bug that counted true-person detections overlapping the patch as false patch detections; prepared an evaluation-only job to rewrite `scoring/scores.json`.
 
 ## Stop Justification
 - Not stopped.

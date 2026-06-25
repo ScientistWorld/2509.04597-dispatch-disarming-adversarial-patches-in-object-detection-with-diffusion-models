@@ -85,5 +85,14 @@ def false_positive_rate_on_patch(
     for image_id, ann in annotations.items():
         patch_box = ann["creating_patch_box"]
         total += 1
-        successes += int(any(pred["score"] >= 0.3 and iou(pred["box"], patch_box) >= threshold for pred in predictions.get(image_id, [])))
+        false_patch_detection = False
+        for pred in predictions.get(image_id, []):
+            if pred["score"] < 0.3:
+                continue
+            if any(iou(pred["box"], gt) >= 0.5 for gt in ann["boxes"]):
+                continue
+            if iou(pred["box"], patch_box) >= threshold:
+                false_patch_detection = True
+                break
+        successes += int(false_patch_detection)
     return successes / max(1, total)

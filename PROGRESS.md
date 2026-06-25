@@ -18,13 +18,15 @@ Artifact inspection showed the hiding failure came from noisy diffusion regenera
 
 The third run switched the compact diffusion model to standard `x0` prediction. Regeneration quality improved substantially and hiding recovery rose to 0.580 mAP.5/AR, but it still lagged the vanilla detector at 0.696. Creating-patch suppression regressed to 0.588 ASR because the blurrier generated counterpart caused the KMeans mask to select benign object regions instead of the decoy patch.
 
-The current code makes the synthetic hiding attack more faithful to the paper's problem by using a larger, non-person-colored patch, then trains longer with finer complementary checkerboard masks. This should both lower the vanilla hiding score into a meaningful attack regime and make the regenerated counterpart closer to the original outside adversarial content.
+The fourth run made the synthetic hiding attack more faithful to the paper's problem by using a larger, non-person-colored patch, then trained longer with finer complementary checkerboard masks. This reached the core claim on the scaled hiding benchmark: vanilla attack mAP.5/AR = 0.000/0.000 and DISPATCH attack mAP.5/AR = 0.545/0.545, with clean mAP.5 measured at 0.750.
+
+After inspecting creating predictions, I found the creating metric was overcounting true-person detections whose boxes overlapped the patch. The evaluator now counts only unmatched detections on the patch; an evaluation-only job will rewrite `scoring/scores.json` with the corrected metric.
 
 ## Remaining
 
-- Rerun the compute job after strengthening the synthetic hiding patch and increasing the clean-data inpainting budget.
-- Inspect the new `scoring/scores.json` and decide whether the scaled reproduction supports `core_claim` or needs another tuning pass.
-- If hiding recovery improves, expand to an additional setting; otherwise inspect regenerated images and mask coverage again.
+- Run the evaluation-only job to refresh `scoring/scores.json` after the creating metric fix.
+- Inspect the corrected creating scores and decide whether they justify `core_claim_plus`; otherwise stop at `core_claim`.
+- Restore `scripts/run.sh` to a full or targeted reproduction run before any later training submission.
 
 ## Issues
 

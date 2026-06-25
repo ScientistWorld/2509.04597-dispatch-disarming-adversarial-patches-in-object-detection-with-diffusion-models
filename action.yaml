@@ -1,5 +1,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: method_runs
-notes: "Rerun scaled DISPATCH with stronger non-person hiding patches, 60-epoch clean inpainting training, 16x16 complementary checkerboard masks, and 32 DDIM steps. Goal is for hiding recovery to exceed vanilla while checking creating-patch suppression remains measured."
+milestone: core_claim
+notes: "Evaluation-only CPU job after fixing creating ASR to ignore matched true-person detections. Rewrites scoring/scores.json from saved outputs; hiding core claim is already reproduced on the scaled benchmark."
