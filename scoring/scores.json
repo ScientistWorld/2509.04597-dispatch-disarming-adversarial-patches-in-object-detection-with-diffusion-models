@@ -9,8 +9,8 @@
         },
         "dispatch": {
           "clean_mAP5": 0.75,
-          "attack_mAP5": 0.0625,
-          "attack_AR": 0.0625
+          "attack_mAP5": 0.03571428571428571,
+          "attack_AR": 0.03571428571428571
         }
       }
     },
