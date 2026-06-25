@@ -38,7 +38,7 @@ def main() -> None:
 
     scores = {
         "experiments": {
-            "inria_digital_hiding": {
+            "synthetic_hiding_scaled": {
                 "results": {
                     "vanilla": {
                         "clean_mAP5": clean_recall,
@@ -52,7 +52,7 @@ def main() -> None:
                     },
                 }
             },
-            "apricot_creating": {
+            "synthetic_creating_scaled": {
                 "results": {
                     "vanilla": {
                         "targeted_mAP5": creating_vanilla_asr,

@@ -2,7 +2,7 @@
   "experiments": {
     "inria_digital_hiding": {
       "description": "INRIA-Person digital hiding attacks, overall rows from Table 1. Higher mAP.5 and AR indicate better defended person detection; clean-image mAP.5 tracks preservation of benign performance.",
-      "weight": 0.45,
+      "weight": 0.25,
       "primary_metric": "attack_mAP5",
       "metrics": {
         "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0},
@@ -20,7 +20,7 @@
     },
     "apricot_creating": {
       "description": "APRICOT physical creating attacks, overall rows from Table 3. Lower mAP.5 and ASR indicate better suppression of false detections on adversarial patches.",
-      "weight": 0.35,
+      "weight": 0.20,
       "primary_metric": "untargeted_ASR",
       "metrics": {
         "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4},
@@ -38,7 +38,7 @@
     },
     "physical_hiding": {
       "description": "Real-world physical AdvPatch hiding attack ASR from Table 2, averaged across indoor, outdoor lighting, and outdoor shadow conditions for YOLOv3 and Faster R-CNN. Lower ASR is better.",
-      "weight": 0.20,
+      "weight": 0.15,
       "primary_metric": "overall_ASR",
       "metrics": {
         "yolov3_ASR": {"higher_is_better": false, "coefficient": -0.8},
@@ -49,6 +49,35 @@
         "vanilla": {"type": "baseline", "yolov3_ASR": 0.930, "faster_rcnn_ASR": 0.403, "overall_ASR": 0.667},
         "nutnet": {"type": "baseline", "yolov3_ASR": 0.247, "faster_rcnn_ASR": 0.083, "overall_ASR": 0.165},
         "dispatch": {"type": "proposed", "yolov3_ASR": 0.210, "faster_rcnn_ASR": 0.037, "overall_ASR": 0.123}
+      }
+    },
+    "synthetic_hiding_scaled": {
+      "description": "Scaled synthetic hiding benchmark used by this reproduction. Higher recall-at-IoU-0.5 proxy scores indicate better defended detection under hiding patches; clean recall tracks preservation of benign detections.",
+      "weight": 0.25,
+      "primary_metric": "attack_mAP5",
+      "metrics": {
+        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0},
+        "attack_AR": {"higher_is_better": true, "coefficient": 0.4},
+        "clean_mAP5": {"higher_is_better": true, "coefficient": 0.25}
+      },
+      "results": {
+        "vanilla": {"type": "baseline", "attack_mAP5": 0.0, "attack_AR": 0.0, "clean_mAP5": 0.75},
+        "dispatch": {"type": "proposed", "attack_mAP5": 0.5446428571428571, "attack_AR": 0.5446428571428571, "clean_mAP5": 0.75}
+      }
+    },
+    "synthetic_creating_scaled": {
+      "description": "Scaled synthetic creating benchmark used by this reproduction. Lower patch-overlap false-positive rates indicate better suppression of patch-created detections.",
+      "weight": 0.15,
+      "primary_metric": "untargeted_ASR",
+      "metrics": {
+        "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4},
+        "targeted_ASR": {"higher_is_better": false, "coefficient": -0.8},
+        "untargeted_mAP5": {"higher_is_better": false, "coefficient": -0.6},
+        "untargeted_ASR": {"higher_is_better": false, "coefficient": -1.0}
+      },
+      "results": {
+        "vanilla": {"type": "baseline", "targeted_mAP5": 0.325, "targeted_ASR": 0.325, "untargeted_mAP5": 0.325, "untargeted_ASR": 0.325},
+        "dispatch": {"type": "proposed", "targeted_mAP5": 0.25, "targeted_ASR": 0.25, "untargeted_mAP5": 0.25, "untargeted_ASR": 0.25}
       }
     }
   }

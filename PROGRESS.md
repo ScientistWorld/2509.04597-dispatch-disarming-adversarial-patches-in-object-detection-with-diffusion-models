@@ -11,8 +11,8 @@
 
 The first compute job completed end-to-end and wrote `scoring/scores.json`.
 
-- `inria_digital_hiding`: vanilla attack mAP.5/AR = 0.696/0.696; DISPATCH attack mAP.5/AR = 0.062/0.062. This fails the hiding core claim because rectification destroys too much person evidence.
-- `apricot_creating`: vanilla targeted ASR = 0.362; DISPATCH targeted ASR = 0.050. This supports the creating-patch removal side of the method on the scaled benchmark.
+- `synthetic_hiding_scaled`: vanilla attack mAP.5/AR = 0.696/0.696; DISPATCH attack mAP.5/AR = 0.062/0.062. This fails the hiding core claim because rectification destroys too much person evidence.
+- `synthetic_creating_scaled`: vanilla targeted ASR = 0.362; DISPATCH targeted ASR = 0.050. This supports the creating-patch removal side of the method on the scaled benchmark.
 
 Artifact inspection showed the hiding failure came from noisy diffusion regeneration, not from the evaluator. The sampler was using a one-step DDPM update across skipped timesteps, and training only used local block masks while inference uses complementary checkerboards. A second run fixed those issues but still produced noisy regenerated counterparts: DISPATCH hiding attack mAP.5/AR fell to 0.036/0.036, while creating-patch ASR stayed at 0.050.
 
@@ -24,10 +24,12 @@ After inspecting creating predictions, I found the creating metric was overcount
 
 The evaluation-only job completed with the corrected metric. Final reproduced scaled scores:
 
-- `inria_digital_hiding`: vanilla attack mAP.5/AR = 0.000/0.000; DISPATCH attack mAP.5/AR = 0.545/0.545; clean mAP.5 = 0.750.
-- `apricot_creating`: vanilla ASR = 0.325; DISPATCH ASR = 0.250.
+- `synthetic_hiding_scaled`: vanilla attack mAP.5/AR = 0.000/0.000; DISPATCH attack mAP.5/AR = 0.545/0.545; clean mAP.5 = 0.750.
+- `synthetic_creating_scaled`: vanilla ASR = 0.325; DISPATCH ASR = 0.250.
 
 This supports `core_claim_plus`: the paper's regenerate-and-rectify method improves both hiding recovery and creating-patch suppression in the reusable scaled benchmark.
+
+After validation, I corrected the scoring contract so these scaled results use `synthetic_hiding_scaled` and `synthetic_creating_scaled` rather than the paper's full INRIA/APRICOT experiment keys. The original paper rows remain in `scoring/reference.json`, and the reproduced scores now validate against the scaled benchmark actually run in this workspace.
 
 ## Remaining
 

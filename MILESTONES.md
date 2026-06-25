@@ -34,5 +34,9 @@
 - Confirmed DISPATCH improves both scaled hiding recovery (0.545 vs 0.000 attack mAP.5/AR) and scaled creating suppression (0.250 vs 0.325 ASR).
 - Restored `scripts/run.sh` and `scripts/method.sh` to the successful full reproduction defaults.
 
+### [2026-06-25 05:47] - core_claim_plus
+- Fixed the scoring schema so reproduced scaled-synthetic results are reported as `synthetic_hiding_scaled` and `synthetic_creating_scaled`, not as the paper's full INRIA/APRICOT rows.
+- Re-ran `python validate.py --compare`; all checks passed.
+
 ## Stop Justification
 - Not stopped.

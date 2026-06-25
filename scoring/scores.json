@@ -1,6 +1,6 @@
 {
   "experiments": {
-    "inria_digital_hiding": {
+    "synthetic_hiding_scaled": {
       "results": {
         "vanilla": {
           "clean_mAP5": 0.75,
@@ -14,7 +14,7 @@
         }
       }
     },
-    "apricot_creating": {
+    "synthetic_creating_scaled": {
       "results": {
         "vanilla": {
           "targeted_mAP5": 0.325,

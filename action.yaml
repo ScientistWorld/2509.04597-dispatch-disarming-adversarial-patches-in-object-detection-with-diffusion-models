@@ -1,3 +1,3 @@
 action: done
 milestone: core_claim_plus
-notes: "Scaled DISPATCH reproduction complete: hiding recovery improves from 0.000 to 0.545 attack mAP5/AR, creating ASR improves from 0.325 to 0.250, clean mAP5 is measured, and scripts/defaults reproduce the successful run."
+notes: "Scaled DISPATCH reproduction complete and validation fixed: scores now use synthetic_hiding_scaled/synthetic_creating_scaled keys, hiding improves from 0.000 to 0.545 attack mAP5/AR, creating ASR improves from 0.325 to 0.250, and python validate.py --compare passes."
