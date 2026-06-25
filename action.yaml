@@ -1,6 +1,5 @@
-# Split scoring completed and reviewed.
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: secondary_claims
-notes: "Packaging audit complete: synthetic data is generated locally, download.sh has no external artifacts to fetch, and data/downloads/.gitkeep is now trackable."
+notes: "CPU validation job to rerun the updated main evaluator with complete constraint metrics, regenerate split scores, and run validate.py --compare."
