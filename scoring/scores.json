@@ -17,16 +17,16 @@
     "apricot_creating": {
       "results": {
         "vanilla": {
-          "targeted_mAP5": 0.3625,
-          "targeted_ASR": 0.3625,
-          "untargeted_mAP5": 0.3625,
-          "untargeted_ASR": 0.3625
-        },
-        "dispatch": {
           "targeted_mAP5": 0.325,
           "targeted_ASR": 0.325,
           "untargeted_mAP5": 0.325,
           "untargeted_ASR": 0.325
+        },
+        "dispatch": {
+          "targeted_mAP5": 0.25,
+          "targeted_ASR": 0.25,
+          "untargeted_mAP5": 0.25,
+          "untargeted_ASR": 0.25
         }
       }
     }
