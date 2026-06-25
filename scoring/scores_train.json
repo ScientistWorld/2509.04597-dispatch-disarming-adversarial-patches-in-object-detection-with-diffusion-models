@@ -10,11 +10,11 @@
           "attack_precision": 0.0
         },
         "dispatch": {
-          "clean_mAP5": 0.7857142857142857,
-          "clean_precision": 0.88,
-          "attack_mAP5": 0.6785714285714286,
-          "attack_AR": 0.5416666666666666,
-          "attack_precision": 0.6551724137931034
+          "clean_mAP5": 0.8928571428571429,
+          "clean_precision": 0.9433962264150944,
+          "attack_mAP5": 0.5,
+          "attack_AR": 0.38690476190476186,
+          "attack_precision": 0.5283018867924528
         }
       }
     },
@@ -39,14 +39,14 @@
     "rectification_ablation": {
       "results": {
         "dispatch": {
-          "attack_mAP5": 0.6785714285714286,
-          "attack_AR": 0.5416666666666666,
-          "attack_precision": 0.6551724137931034
+          "attack_mAP5": 0.5,
+          "attack_AR": 0.38690476190476186,
+          "attack_precision": 0.5283018867924528
         },
         "regenerated_only": {
-          "attack_mAP5": 0.6428571428571429,
-          "attack_AR": 0.4583333333333333,
-          "attack_precision": 0.6792452830188679
+          "attack_mAP5": 0.42857142857142855,
+          "attack_AR": 0.3214285714285714,
+          "attack_precision": 0.4444444444444444
         }
       }
     }

@@ -10,11 +10,11 @@
           "attack_precision": 0.0
         },
         "dispatch": {
-          "clean_mAP5": 0.75,
-          "clean_precision": 0.8571428571428571,
-          "attack_mAP5": 0.6517857142857143,
-          "attack_AR": 0.5178571428571429,
-          "attack_precision": 0.6636363636363637
+          "clean_mAP5": 0.8035714285714286,
+          "clean_precision": 0.8910891089108911,
+          "attack_mAP5": 0.5,
+          "attack_AR": 0.39285714285714285,
+          "attack_precision": 0.5185185185185185
         }
       }
     },
@@ -32,21 +32,21 @@
           "targeted_ASR": 0.0375,
           "untargeted_mAP5": 0.0375,
           "untargeted_ASR": 0.0375,
-          "object_mAP5": 0.75
+          "object_mAP5": 0.7589285714285714
         }
       }
     },
     "rectification_ablation": {
       "results": {
-        "regenerated_only": {
-          "attack_mAP5": 0.5982142857142857,
-          "attack_AR": 0.44047619047619047,
-          "attack_precision": 0.6442307692307693
-        },
         "dispatch": {
-          "attack_mAP5": 0.6517857142857143,
-          "attack_AR": 0.5178571428571429,
-          "attack_precision": 0.6636363636363637
+          "attack_mAP5": 0.5,
+          "attack_AR": 0.39285714285714285,
+          "attack_precision": 0.5185185185185185
+        },
+        "regenerated_only": {
+          "attack_mAP5": 0.44642857142857145,
+          "attack_AR": 0.3363095238095238,
+          "attack_precision": 0.46296296296296297
         }
       }
     }
