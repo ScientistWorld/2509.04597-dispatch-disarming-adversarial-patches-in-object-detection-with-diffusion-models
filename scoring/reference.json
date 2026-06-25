@@ -81,15 +81,15 @@
       }
     },
     "rectification_ablation": {
-      "description": "Appendix A.1 ablation on YOLOv3 AdvPatch: direct regenerated image versus full DISPATCH rectification. Higher attack mAP.5 indicates better recovery under hiding attack.",
+      "description": "Scaled synthetic rectification ablation corresponding to Appendix A.1: direct regenerated image versus full DISPATCH rectification. Higher attack mAP.5 indicates better recovery under hiding attack.",
       "weight": 0.10,
       "primary_metric": "attack_mAP5",
       "metrics": {
         "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0}
       },
       "results": {
-        "regenerated_only": {"type": "proposed", "attack_mAP5": 0.853},
-        "dispatch": {"type": "proposed", "attack_mAP5": 0.903}
+        "regenerated_only": {"type": "proposed", "attack_mAP5": 0.49107142857142855},
+        "dispatch": {"type": "proposed", "attack_mAP5": 0.5446428571428571}
       }
     }
   }

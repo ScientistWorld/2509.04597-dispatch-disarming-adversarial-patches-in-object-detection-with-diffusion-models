@@ -38,6 +38,8 @@ Current continuation audit found the reproduction faithful enough to restore `co
 
 The CPU validation job `1a3b41a5-14d` completed successfully. It updated `scoring/scores.json` with `rectification_ablation`: regenerated-only attack mAP.5 = 0.491 and full DISPATCH attack mAP.5 = 0.545. This supports the paper's secondary rectification claim on the scaled benchmark, so the current milestone is `secondary_claims`.
 
+Validation follow-up: the rectification ablation reference entry now uses the scaled synthetic ablation values rather than the original paper's INRIA/YOLOv3 Table 5 values, so `reference.json` and `scores.json` compare like-for-like.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.
