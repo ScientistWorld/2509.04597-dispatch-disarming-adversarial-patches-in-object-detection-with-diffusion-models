@@ -4,13 +4,13 @@
       "results": {
         "vanilla": {
           "clean_mAP5": 0.75,
-          "attack_mAP5": 0.6964285714285714,
-          "attack_AR": 0.6964285714285714
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
         },
         "dispatch": {
           "clean_mAP5": 0.75,
-          "attack_mAP5": 0.5803571428571429,
-          "attack_AR": 0.5803571428571429
+          "attack_mAP5": 0.5446428571428571,
+          "attack_AR": 0.5446428571428571
         }
       }
     },
@@ -23,10 +23,10 @@
           "untargeted_ASR": 0.3625
         },
         "dispatch": {
-          "targeted_mAP5": 0.5875,
-          "targeted_ASR": 0.5875,
-          "untargeted_mAP5": 0.5875,
-          "untargeted_ASR": 0.5875
+          "targeted_mAP5": 0.325,
+          "targeted_ASR": 0.325,
+          "untargeted_mAP5": 0.325,
+          "untargeted_ASR": 0.325
         }
       }
     }
