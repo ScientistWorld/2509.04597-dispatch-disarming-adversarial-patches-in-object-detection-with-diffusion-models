@@ -42,6 +42,10 @@ Validation follow-up: the rectification ablation reference entry now uses the sc
 
 Continuation audit on 2026-06-25 found the implementation and method/evaluation separation intact. The only concrete issue was run verification: the latest completed job validated existing artifacts and started before the current end-to-end `scripts/run.sh` was in place. The next submitted CPU job will rebuild outputs and checkpoints from source, then run validation against the fresh artifacts.
 
+The full CPU rebuild job `350505bf-450` completed from source with a steadily decreasing DDPM training loss and passed all structural validation checks. It confirmed the hiding core claim, with DISPATCH improving attack mAP.5/AR from 0.000 to 0.527 while preserving clean mAP.5 at 0.750. It also confirmed the rectification ablation direction for hiding, with full DISPATCH at 0.527 versus regenerated-only at 0.491. However, the creating result regressed on the fresh rebuild: vanilla ASR was 0.325 and DISPATCH ASR was 0.425. Because milestones are cumulative, current status is downgraded to `core_claim` until creating-patch suppression is restored from fresh artifacts.
+
+Inspection of the creating predictions showed many new false positives are localized to the 15x15 synthetic patch after rectification. The likely cause is scale mismatch: the default `N=16` checkerboard creates 4x4 cells, matching the synthetic patch texture cell size and exposing too much patch context during regeneration. The next job reuses the freshly trained checkpoint and tests `N=8` to mask larger regions during the two DISPATCH inpainting passes.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

@@ -1,21 +1,22 @@
 #!/bin/bash
-# End-to-end CPU reproduction job submitted via action.yaml.
+# Focused CPU follow-up job submitted via action.yaml.
 #
-# Rebuilds the scaled DISPATCH benchmark artifacts from source rather than
-# relying on ignored outputs/checkpoints already present in this workspace.
+# Reuses the freshly trained checkpoint from the completed full rebuild and
+# tests a coarser checkerboard mask. The failed rebuild showed that N=16 can
+# preserve too much small-patch context for the scaled creating benchmark.
 
 set -e
 
 cd /home/user
 
-rm -rf outputs checkpoints
+rm -rf outputs
 
 export DEVICE="${DEVICE:-cpu}"
-export TRAIN_COUNT="${TRAIN_COUNT:-2000}"
-export TEST_COUNT="${TEST_COUNT:-80}"
-export EPOCHS="${EPOCHS:-60}"
-export GRIDS="${GRIDS:-16}"
+export GRIDS="${GRIDS:-8}"
 export STEPS="${STEPS:-32}"
 
-bash scripts/reproduce.sh
+bash scripts/baseline.sh
+python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant hiding --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
+python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant creating --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
+bash scripts/evaluate.sh
 python validate.py --compare

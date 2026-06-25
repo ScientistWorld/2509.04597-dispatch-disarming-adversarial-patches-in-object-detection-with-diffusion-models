@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: secondary_claims**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -23,3 +23,7 @@
 ### [2026-06-25 06:24] - secondary_claims
 - Added the rectification ablation matching the paper's Appendix A.1 claim.
 - Full DISPATCH rectification improved attack mAP.5 over regenerated-only images, 0.545 vs. 0.491, on the scaled benchmark.
+
+### [2026-06-25 06:28] - core_claim
+- A full CPU rebuild from source completed successfully, but the creating benchmark regressed: DISPATCH ASR was 0.425 versus vanilla 0.325.
+- Downgraded current milestone to the still-supported hiding core claim while testing a coarser checkerboard mask for creating-patch suppression.
