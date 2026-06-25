@@ -60,6 +60,8 @@ These results support the core claim on both hiding and creating attacks, plus t
 
 After final validation, the scaled synthetic rows in `scoring/reference.json` were refreshed to these corrected benchmark values. The original paper-reported INRIA/APRICOT/physical rows remain unchanged; the synthetic rows are the like-for-like reference for this reusable reduced-scale gym.
 
+Continuation audit on 2026-06-25 found a scoring-contract issue: `dispatch.clean_mAP5` was computed from raw clean images, so clean preservation was not actually measured on DISPATCH outputs. The method now processes the clean split into `outputs/dispatch_images/clean`, and the main plus train/test evaluators score that processed clean split. The next CPU rebuild will refresh `scoring/scores.json` under the corrected constraint metric; current milestone is conservatively downgraded to `method_runs` until that job completes.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

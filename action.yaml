@@ -1,3 +1,5 @@
-action: done
-milestone: secondary_claims
-notes: "Final verification passed after method-agnostic documentation cleanup and complete score metric refresh."
+action: submit
+gpus: 0
+test: true
+milestone: method_runs
+notes: "Fresh CPU rebuild after fixing clean-preservation scoring to use DISPATCH-processed clean images."

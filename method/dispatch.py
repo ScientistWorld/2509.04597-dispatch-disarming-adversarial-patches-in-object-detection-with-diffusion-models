@@ -109,7 +109,7 @@ def main() -> None:
     parser.add_argument("--checkpoint", default="checkpoints/dispatch_ddpm.pt")
     parser.add_argument("--data-dir", default="data/synthetic")
     parser.add_argument("--outputs-dir", default="outputs")
-    parser.add_argument("--variant", choices=["hiding", "creating"], required=True)
+    parser.add_argument("--variant", choices=["clean", "hiding", "creating"], required=True)
     parser.add_argument("--grids", type=int, default=8)
     parser.add_argument("--steps", type=int, default=20)
     parser.add_argument("--device", default="cpu")

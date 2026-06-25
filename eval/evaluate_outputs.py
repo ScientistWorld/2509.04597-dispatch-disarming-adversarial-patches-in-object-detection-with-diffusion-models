@@ -69,6 +69,10 @@ def main() -> None:
         outputs_dir / "clean_predictions.json",
         Path(args.data_dir) / "test" / "clean",
     )
+    dispatch_clean = load_or_detect(
+        outputs_dir / "dispatch_clean_predictions.json",
+        outputs_dir / "dispatch_images" / "clean",
+    )
     hiding_vanilla = load_or_detect(
         outputs_dir / "hiding_vanilla_predictions.json",
         Path(args.data_dir) / "test" / "hiding",
@@ -92,6 +96,8 @@ def main() -> None:
 
     clean_recall = recall_at_iou(clean, annotations)
     clean_precision = precision_at_iou(clean, annotations)
+    dispatch_clean_recall = recall_at_iou(dispatch_clean, annotations)
+    dispatch_clean_precision = precision_at_iou(dispatch_clean, annotations)
     hiding_vanilla_recall = recall_at_iou(hiding_vanilla, annotations)
     hiding_vanilla_ar = average_recall(hiding_vanilla, annotations)
     hiding_vanilla_precision = precision_at_iou(hiding_vanilla, annotations)
@@ -118,8 +124,8 @@ def main() -> None:
                         "attack_precision": hiding_vanilla_precision,
                     },
                     "dispatch": {
-                        "clean_mAP5": clean_recall,
-                        "clean_precision": clean_precision,
+                        "clean_mAP5": dispatch_clean_recall,
+                        "clean_precision": dispatch_clean_precision,
                         "attack_mAP5": hiding_dispatch_recall,
                         "attack_AR": hiding_dispatch_ar,
                         "attack_precision": hiding_dispatch_precision,

@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: secondary_claims**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -41,3 +41,8 @@
 - DISPATCH recovered hiding detections from 0.000 to 0.652 mAP.5/AR while preserving clean mAP.5 at 0.750.
 - DISPATCH reduced creating-patch ASR from 0.450 to 0.0375.
 - The rectification ablation again supports the paper's secondary claim: full DISPATCH reached 0.652 attack mAP.5 versus 0.598 for regenerated-only images.
+
+### [2026-06-25 07:48] - method_runs
+- Continuation audit found that the clean-preservation constraint was scored on raw clean images rather than clean images passed through DISPATCH.
+- Updated method and evaluation scripts to generate and score `outputs/dispatch_images/clean`.
+- Temporarily downgraded until a fresh rebuild verifies the corrected constraint metric.

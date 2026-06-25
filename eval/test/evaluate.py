@@ -223,10 +223,13 @@ def discover_method_sources(outputs_dir: Path, data_dir: Path) -> dict[str, dict
         }
     }
 
+    dispatch_clean = existing_dir(outputs_dir / "dispatch_images" / "clean")
     dispatch_hiding = existing_dir(outputs_dir / "dispatch_images" / "hiding")
     dispatch_creating = existing_dir(outputs_dir / "dispatch_images" / "creating")
     if dispatch_hiding or dispatch_creating:
-        sources["dispatch"] = {"clean": data_dir / "test" / "clean"}
+        sources["dispatch"] = {}
+        if dispatch_clean:
+            sources["dispatch"]["clean"] = dispatch_clean
         if dispatch_hiding:
             sources["dispatch"]["hiding"] = dispatch_hiding
         if dispatch_creating:
