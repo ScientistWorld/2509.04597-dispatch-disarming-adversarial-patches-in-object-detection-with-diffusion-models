@@ -18,7 +18,7 @@ Tests whether a defense prevents adversarial patches from causing false object d
 
 ## Secondary: rectification_ablation
 
-Tests whether final rectification is better than sending the regenerated image directly to the detector, matching the paper's Appendix A.1 ablation.
+Tests whether the final defended output is better than an ablated intermediate output supplied by the reference reproduction.
 
 - **Primary metric:** `attack_mAP5`, higher is better.
-- **How to run:** `bash scripts/evaluate.sh` after method artifacts have been written to `outputs/dispatch_images/` and `outputs/regenerated_images/`.
+- **How to run:** `bash scripts/evaluate.sh` after compatible method artifacts have been written to `outputs/`.

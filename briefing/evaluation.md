@@ -16,6 +16,6 @@ The paper's full-scale targets are recorded in `scoring/reference.json` from the
 
 ## Evaluation Protocol
 
-Run `scripts/reproduce.sh` to generate the scaled dataset, train the clean-data inpainting model, run the unprotected detector, run the defended pipeline, and write `scoring/scores.json`.
+Run `scripts/reproduce.sh` to generate the scaled dataset, run the baseline and defended image-processing pipelines, and write `scoring/scores.json`.
 
-Evaluation code lives in `eval/` and reads saved method image artifacts from `outputs/`. It derives detector predictions and metrics independently, without importing method code.
+Evaluation code lives in `eval/` and reads saved image artifacts from `outputs/`. It derives detector predictions and metrics independently, without importing method code. Any future method can be evaluated if it writes compatible defended images for the clean, hiding, and creating variants.

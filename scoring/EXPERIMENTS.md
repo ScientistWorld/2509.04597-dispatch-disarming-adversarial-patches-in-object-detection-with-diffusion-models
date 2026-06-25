@@ -10,4 +10,4 @@ This experiment tests whether the defended detector suppresses false detections 
 
 ## rectification_ablation
 
-This experiment checks whether the final defended image is more useful for detection than using a fully regenerated image directly. It establishes that improvements come from preserving benign regions while replacing suspicious ones, not merely from running a generator.
+This experiment compares the final defended output against an auxiliary ablation output produced by the reference reproduction. It checks whether the complete defended image is more useful for detection than the ablated alternative, without requiring future methods to use the same internal design.

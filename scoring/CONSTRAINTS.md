@@ -14,7 +14,7 @@ Keep the `scripts/evaluate.sh` interface and `scoring/scores.json` schema unchan
 
 ## Resource Scale
 
-For direct score comparisons, keep the image size, object style, patch placement rules, train/test split sizes, and checkpoint format fixed. A method may change how it processes images, but not the benchmark distribution or labels.
+For direct score comparisons, keep the image size, object style, patch placement rules, train/test split sizes, and output artifact format fixed. A method may change how it processes images, but not the benchmark distribution or labels.
 
 ## Compliance Checklist
 
