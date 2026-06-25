@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
-gpus: 0
-test: true
-milestone: secondary_claims
-notes: "Validated core DISPATCH reproduction plus rectification ablation. Scores support hiding recovery, creating suppression, and the secondary claim that rectification improves over regenerated-only detection."
+action: pending
+gpus: 1
+test: false
+milestone: core_claim_plus
+notes: ""
