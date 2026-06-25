@@ -23,6 +23,57 @@ def load_or_detect(path: Path, image_folder: Path) -> dict[str, list[dict]]:
     return predictions
 
 
+def existing_dir(path: Path) -> Path | None:
+    return path if path.exists() else None
+
+
+def discover_method_sources(outputs_dir: Path, data_dir: Path) -> dict[str, dict[str, Path]]:
+    sources: dict[str, dict[str, Path]] = {
+        "vanilla": {
+            "clean": data_dir / "test" / "clean",
+            "hiding": data_dir / "test" / "hiding",
+            "creating": data_dir / "test" / "creating",
+        }
+    }
+
+    dispatch_sources = {}
+    for variant in ("clean", "hiding", "creating"):
+        variant_dir = existing_dir(outputs_dir / "dispatch_images" / variant)
+        if variant_dir:
+            dispatch_sources[variant] = variant_dir
+    if "hiding" in dispatch_sources or "creating" in dispatch_sources:
+        sources["dispatch"] = dispatch_sources
+
+    regenerated_hiding = existing_dir(outputs_dir / "regenerated_images" / "hiding")
+    if regenerated_hiding:
+        sources["regenerated_only"] = {"hiding": regenerated_hiding}
+
+    method_root = outputs_dir / "methods"
+    if method_root.exists():
+        for method_dir in sorted(path for path in method_root.iterdir() if path.is_dir()):
+            method_sources = {}
+            for variant in ("clean", "hiding", "creating"):
+                variant_dir = existing_dir(method_dir / variant)
+                if variant_dir:
+                    method_sources[variant] = variant_dir
+            if method_sources:
+                sources[method_dir.name] = method_sources
+
+    for image_dir in sorted(outputs_dir.glob("*_images")):
+        if image_dir.name in {"dispatch_images", "regenerated_images"}:
+            continue
+        method_name = image_dir.name.removesuffix("_images")
+        method_sources = {}
+        for variant in ("clean", "hiding", "creating"):
+            variant_dir = existing_dir(image_dir / variant)
+            if variant_dir:
+                method_sources[variant] = variant_dir
+        if method_sources:
+            sources[method_name] = method_sources
+
+    return sources
+
+
 def person_detections(preds: list[dict]) -> list[dict]:
     return [pred for pred in preds if pred.get("class") == "person"]
 
@@ -55,6 +106,66 @@ def precision_at_iou(predictions: dict[str, list[dict]], annotations: dict[str, 
     return true_positive / max(1, true_positive + false_positive)
 
 
+def score_methods(
+    sources: dict[str, dict[str, Path]], annotations: dict[str, dict], outputs_dir: Path
+) -> dict[str, dict]:
+    scores = {
+        "experiments": {
+            "synthetic_hiding_scaled": {"results": {}},
+            "synthetic_creating_scaled": {"results": {}},
+            "rectification_ablation": {"results": {}},
+        }
+    }
+
+    for method_name, method_sources in sources.items():
+        if method_name != "regenerated_only" and "hiding" in method_sources:
+            if "clean" in method_sources:
+                clean_predictions = load_or_detect(
+                    outputs_dir / f"{method_name}_clean_predictions.json", method_sources["clean"]
+                )
+                clean_recall = recall_at_iou(clean_predictions, annotations)
+                clean_precision = precision_at_iou(clean_predictions, annotations)
+            else:
+                clean_recall = 0.0
+                clean_precision = 0.0
+
+            hiding_predictions = load_or_detect(
+                outputs_dir / f"{method_name}_hiding_predictions.json", method_sources["hiding"]
+            )
+            scores["experiments"]["synthetic_hiding_scaled"]["results"][method_name] = {
+                "clean_mAP5": clean_recall,
+                "clean_precision": clean_precision,
+                "attack_mAP5": recall_at_iou(hiding_predictions, annotations),
+                "attack_AR": average_recall(hiding_predictions, annotations),
+                "attack_precision": precision_at_iou(hiding_predictions, annotations),
+            }
+
+        if method_name != "regenerated_only" and "creating" in method_sources:
+            creating_predictions = load_or_detect(
+                outputs_dir / f"{method_name}_creating_predictions.json", method_sources["creating"]
+            )
+            creating_asr = false_positive_rate_on_patch(creating_predictions, annotations)
+            scores["experiments"]["synthetic_creating_scaled"]["results"][method_name] = {
+                "targeted_mAP5": creating_asr,
+                "targeted_ASR": creating_asr,
+                "untargeted_mAP5": creating_asr,
+                "untargeted_ASR": creating_asr,
+                "object_mAP5": recall_at_iou(creating_predictions, annotations),
+            }
+
+        if method_name in {"dispatch", "regenerated_only"} and "hiding" in method_sources:
+            hiding_predictions = load_or_detect(
+                outputs_dir / f"{method_name}_rectification_hiding_predictions.json", method_sources["hiding"]
+            )
+            scores["experiments"]["rectification_ablation"]["results"][method_name] = {
+                "attack_mAP5": recall_at_iou(hiding_predictions, annotations),
+                "attack_AR": average_recall(hiding_predictions, annotations),
+                "attack_precision": precision_at_iou(hiding_predictions, annotations),
+            }
+
+    return scores
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--outputs-dir", default="outputs")
@@ -64,108 +175,7 @@ def main() -> None:
 
     outputs_dir = Path(args.outputs_dir)
     annotations = load_annotations(Path(args.data_dir) / "test" / "annotations.json")
-
-    clean = load_or_detect(
-        outputs_dir / "clean_predictions.json",
-        Path(args.data_dir) / "test" / "clean",
-    )
-    dispatch_clean = load_or_detect(
-        outputs_dir / "dispatch_clean_predictions.json",
-        outputs_dir / "dispatch_images" / "clean",
-    )
-    hiding_vanilla = load_or_detect(
-        outputs_dir / "hiding_vanilla_predictions.json",
-        Path(args.data_dir) / "test" / "hiding",
-    )
-    hiding_dispatch = load_or_detect(
-        outputs_dir / "hiding_dispatch_predictions.json",
-        outputs_dir / "dispatch_images" / "hiding",
-    )
-    hiding_regenerated = load_or_detect(
-        outputs_dir / "hiding_regenerated_predictions.json",
-        outputs_dir / "regenerated_images" / "hiding",
-    )
-    creating_vanilla = load_or_detect(
-        outputs_dir / "creating_vanilla_predictions.json",
-        Path(args.data_dir) / "test" / "creating",
-    )
-    creating_dispatch = load_or_detect(
-        outputs_dir / "creating_dispatch_predictions.json",
-        outputs_dir / "dispatch_images" / "creating",
-    )
-
-    clean_recall = recall_at_iou(clean, annotations)
-    clean_precision = precision_at_iou(clean, annotations)
-    dispatch_clean_recall = recall_at_iou(dispatch_clean, annotations)
-    dispatch_clean_precision = precision_at_iou(dispatch_clean, annotations)
-    hiding_vanilla_recall = recall_at_iou(hiding_vanilla, annotations)
-    hiding_vanilla_ar = average_recall(hiding_vanilla, annotations)
-    hiding_vanilla_precision = precision_at_iou(hiding_vanilla, annotations)
-    hiding_dispatch_recall = recall_at_iou(hiding_dispatch, annotations)
-    hiding_dispatch_ar = average_recall(hiding_dispatch, annotations)
-    hiding_dispatch_precision = precision_at_iou(hiding_dispatch, annotations)
-    hiding_regenerated_recall = recall_at_iou(hiding_regenerated, annotations)
-    hiding_regenerated_ar = average_recall(hiding_regenerated, annotations)
-    hiding_regenerated_precision = precision_at_iou(hiding_regenerated, annotations)
-    creating_vanilla_asr = false_positive_rate_on_patch(creating_vanilla, annotations)
-    creating_dispatch_asr = false_positive_rate_on_patch(creating_dispatch, annotations)
-    creating_vanilla_object_recall = recall_at_iou(creating_vanilla, annotations)
-    creating_dispatch_object_recall = recall_at_iou(creating_dispatch, annotations)
-
-    scores = {
-        "experiments": {
-            "synthetic_hiding_scaled": {
-                "results": {
-                    "vanilla": {
-                        "clean_mAP5": clean_recall,
-                        "clean_precision": clean_precision,
-                        "attack_mAP5": hiding_vanilla_recall,
-                        "attack_AR": hiding_vanilla_ar,
-                        "attack_precision": hiding_vanilla_precision,
-                    },
-                    "dispatch": {
-                        "clean_mAP5": dispatch_clean_recall,
-                        "clean_precision": dispatch_clean_precision,
-                        "attack_mAP5": hiding_dispatch_recall,
-                        "attack_AR": hiding_dispatch_ar,
-                        "attack_precision": hiding_dispatch_precision,
-                    },
-                }
-            },
-            "synthetic_creating_scaled": {
-                "results": {
-                    "vanilla": {
-                        "targeted_mAP5": creating_vanilla_asr,
-                        "targeted_ASR": creating_vanilla_asr,
-                        "untargeted_mAP5": creating_vanilla_asr,
-                        "untargeted_ASR": creating_vanilla_asr,
-                        "object_mAP5": creating_vanilla_object_recall,
-                    },
-                    "dispatch": {
-                        "targeted_mAP5": creating_dispatch_asr,
-                        "targeted_ASR": creating_dispatch_asr,
-                        "untargeted_mAP5": creating_dispatch_asr,
-                        "untargeted_ASR": creating_dispatch_asr,
-                        "object_mAP5": creating_dispatch_object_recall,
-                    },
-                }
-            },
-            "rectification_ablation": {
-                "results": {
-                    "regenerated_only": {
-                        "attack_mAP5": hiding_regenerated_recall,
-                        "attack_AR": hiding_regenerated_ar,
-                        "attack_precision": hiding_regenerated_precision,
-                    },
-                    "dispatch": {
-                        "attack_mAP5": hiding_dispatch_recall,
-                        "attack_AR": hiding_dispatch_ar,
-                        "attack_precision": hiding_dispatch_precision,
-                    },
-                }
-            },
-        }
-    }
+    scores = score_methods(discover_method_sources(outputs_dir, Path(args.data_dir)), annotations, outputs_dir)
     score_path = Path(args.score_path)
     score_path.parent.mkdir(parents=True, exist_ok=True)
     with score_path.open("w") as f:

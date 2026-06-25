@@ -17,10 +17,12 @@
 # Usage:
 #   ./scripts/evaluate.sh
 #
-# The evaluator reads fixed artifacts produced by scripts/method.sh:
-#   outputs/dispatch_images/
-#   outputs/regenerated_images/
-#   data/synthetic/
+# The evaluator reads saved image artifacts:
+#   outputs/dispatch_images/{clean,hiding,creating}/ for the reference method
+#   outputs/regenerated_images/hiding/ for the reference ablation
+#   outputs/<method>_images/{clean,hiding,creating}/ for alternate methods
+#   outputs/methods/<method>/{clean,hiding,creating}/ for alternate methods
+#   data/synthetic/ for baseline images and annotations
 #
 # Called from method.sh after running DISPATCH, or independently after
 # compatible artifacts have already been written.

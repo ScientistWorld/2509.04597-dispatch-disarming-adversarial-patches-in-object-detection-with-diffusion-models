@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Fresh CPU rebuild after fixing clean-preservation scoring to use DISPATCH-processed clean images."
+notes: "Fresh CPU rebuild after fixing clean-preservation scoring and generalizing evaluate.sh artifact discovery."

@@ -62,6 +62,8 @@ After final validation, the scaled synthetic rows in `scoring/reference.json` we
 
 Continuation audit on 2026-06-25 found a scoring-contract issue: `dispatch.clean_mAP5` was computed from raw clean images, so clean preservation was not actually measured on DISPATCH outputs. The method now processes the clean split into `outputs/dispatch_images/clean`, and the main plus train/test evaluators score that processed clean split. The next CPU rebuild will refresh `scoring/scores.json` under the corrected constraint metric; current milestone is conservatively downgraded to `method_runs` until that job completes.
 
+Final-verification audit also found that the main `scripts/evaluate.sh` path was too specific to the reference method. The evaluator now discovers compatible saved image artifacts under `outputs/dispatch_images/`, `outputs/<method>_images/`, and `outputs/methods/<method>/`, matching the train/test evaluators. Non-vanilla methods only receive clean-preservation credit when they provide clean processed outputs.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

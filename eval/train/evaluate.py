@@ -247,7 +247,6 @@ def discover_method_sources(outputs_dir: Path, data_dir: Path) -> dict[str, dict
                 if variant_dir:
                     method_sources[variant] = variant_dir
             if method_sources:
-                method_sources.setdefault("clean", data_dir / "test" / "clean")
                 sources[method_dir.name] = method_sources
 
     for image_dir in sorted(outputs_dir.glob("*_images")):
@@ -260,7 +259,6 @@ def discover_method_sources(outputs_dir: Path, data_dir: Path) -> dict[str, dict
             if variant_dir:
                 method_sources[variant] = variant_dir
         if method_sources:
-            method_sources.setdefault("clean", data_dir / "test" / "clean")
             sources[method_name] = method_sources
 
     return sources

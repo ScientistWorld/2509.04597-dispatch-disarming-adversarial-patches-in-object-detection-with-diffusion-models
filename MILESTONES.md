@@ -45,4 +45,5 @@
 ### [2026-06-25 07:48] - method_runs
 - Continuation audit found that the clean-preservation constraint was scored on raw clean images rather than clean images passed through DISPATCH.
 - Updated method and evaluation scripts to generate and score `outputs/dispatch_images/clean`.
-- Temporarily downgraded until a fresh rebuild verifies the corrected constraint metric.
+- Updated the main evaluator to discover alternate method artifact folders and to avoid raw-clean fallback credit for non-vanilla methods.
+- Temporarily downgraded until a fresh rebuild verifies the corrected constraint metric and generic evaluator path.
