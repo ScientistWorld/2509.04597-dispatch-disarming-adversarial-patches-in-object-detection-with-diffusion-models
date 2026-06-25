@@ -31,6 +31,8 @@ This supports `core_claim_plus`: the paper's regenerate-and-rectify method impro
 
 After validation, I corrected the scoring contract so these scaled results use `synthetic_hiding_scaled` and `synthetic_creating_scaled` rather than the paper's full INRIA/APRICOT experiment keys. The original paper rows remain in `scoring/reference.json`, and the reproduced scores now validate against the scaled benchmark actually run in this workspace.
 
+The method/evaluation separation was tightened after review: `method/dispatch.py` now only writes DISPATCH rectified, regenerated, and mask images. `eval/evaluate_outputs.py` derives detector predictions from those images and writes `scoring/scores.json`, so future agents can replace the method while preserving the same output contract.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

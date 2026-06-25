@@ -6,12 +6,21 @@ import argparse
 import json
 from pathlib import Path
 
-from synthetic_detector import false_positive_rate_on_patch, load_annotations, recall_at_iou
+from synthetic_detector import detect_persons, false_positive_rate_on_patch, load_annotations, recall_at_iou
 
 
-def load_predictions(path: Path) -> dict[str, list[dict]]:
-    with path.open() as f:
-        return json.load(f)
+def detect_folder(folder: Path) -> dict[str, list[dict]]:
+    if not folder.exists():
+        raise FileNotFoundError(f"Missing image folder for evaluation: {folder}")
+    return {path.stem: detect_persons(path) for path in sorted(folder.glob("*.png"))}
+
+
+def load_or_detect(path: Path, image_folder: Path) -> dict[str, list[dict]]:
+    predictions = detect_folder(image_folder)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w") as f:
+        json.dump(predictions, f, indent=2)
+    return predictions
 
 
 def main() -> None:
@@ -24,11 +33,26 @@ def main() -> None:
     outputs_dir = Path(args.outputs_dir)
     annotations = load_annotations(Path(args.data_dir) / "test" / "annotations.json")
 
-    clean = load_predictions(outputs_dir / "clean_predictions.json")
-    hiding_vanilla = load_predictions(outputs_dir / "hiding_vanilla_predictions.json")
-    hiding_dispatch = load_predictions(outputs_dir / "hiding_dispatch_predictions.json")
-    creating_vanilla = load_predictions(outputs_dir / "creating_vanilla_predictions.json")
-    creating_dispatch = load_predictions(outputs_dir / "creating_dispatch_predictions.json")
+    clean = load_or_detect(
+        outputs_dir / "clean_predictions.json",
+        Path(args.data_dir) / "test" / "clean",
+    )
+    hiding_vanilla = load_or_detect(
+        outputs_dir / "hiding_vanilla_predictions.json",
+        Path(args.data_dir) / "test" / "hiding",
+    )
+    hiding_dispatch = load_or_detect(
+        outputs_dir / "hiding_dispatch_predictions.json",
+        outputs_dir / "dispatch_images" / "hiding",
+    )
+    creating_vanilla = load_or_detect(
+        outputs_dir / "creating_vanilla_predictions.json",
+        Path(args.data_dir) / "test" / "creating",
+    )
+    creating_dispatch = load_or_detect(
+        outputs_dir / "creating_dispatch_predictions.json",
+        outputs_dir / "dispatch_images" / "creating",
+    )
 
     clean_recall = recall_at_iou(clean, annotations)
     hiding_vanilla_recall = recall_at_iou(hiding_vanilla, annotations)

@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
-import sys
 
 import cv2
 import numpy as np
@@ -14,9 +12,6 @@ from PIL import Image
 from sklearn.cluster import KMeans
 
 from diffusion import DDPM, TinyInpaintUNet
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "eval"))
-from synthetic_detector import detect_persons  # noqa: E402
 
 
 def checkerboard_mask(size: int, grids: int, invert: bool = False) -> torch.Tensor:
@@ -108,11 +103,6 @@ def run_folder(args: argparse.Namespace) -> None:
         rectified.save(rectified_path)
         regenerated.save(regen_out / path.name)
         mask.save(mask_out / path.name)
-        predictions[path.stem] = detect_persons(rectified_path)
-
-    pred_name = f"{args.variant}_dispatch_predictions.json"
-    with (out_root / pred_name).open("w") as f:
-        json.dump(predictions, f, indent=2)
 
 
 def main() -> None:
