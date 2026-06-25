@@ -1,21 +1,22 @@
 # Verification Report
 
 ## Initial Assessment
-The workspace claimed `secondary_claims`. That milestone is justified: the saved scaled reproduction artifacts support the hiding recovery result, the creating-patch suppression result, and the rectification ablation result. The evaluator and split-score checks pass with `python validate.py --compare`.
+The workspace previously claimed `secondary_claims`, and the saved artifacts do show the intended scaled hiding, creating, and rectification-ablation effects. During final verification, however, the latest committed evaluator changes require a fresh run before that milestone can be honestly restored.
 
 ## Issues Found
-- minor: Several method-agnostic or method-safe documents exposed details of the reference implementation or training recipe, especially in `briefing/evaluation.md`, `scoring/EXPERIMENTS.md`, `scoring/TARGETS.md`, and `scoring/DIRECTION.md`.
-- minor: The main `scoring/scores.json` file had not been refreshed with newer constraint metrics already present in the evaluator and reference schema.
+- critical: Clean preservation for the reference method had been scored from raw clean images rather than clean images processed by the method. The code now expects `outputs/dispatch_images/clean`, but the current saved artifacts do not yet contain that folder.
+- critical: The main `scripts/evaluate.sh` path was too specialized to the reference method, while the gym contract requires scoring any method that writes compatible saved image artifacts.
 
 ## Fixes Applied
-- Reworded the problem-facing scoring and direction documents to describe the task, output contract, constraints, and allowed research direction without leaking architecture, algorithm, loss, or implementation details.
-- Recomputed the added metrics from existing saved prediction artifacts and filled matching scaled synthetic reference entries, with notes marking them as scaled reproduction references rather than full paper benchmark values.
-- Re-ran `python validate.py --compare`; all structure, import-separation, score, split-evaluation, and comparison checks passed.
+- Updated the method script to write clean, hiding, and creating defended images for the reference method.
+- Updated the main evaluator to discover compatible method artifact folders under `outputs/dispatch_images/`, `outputs/<method>_images/`, and `outputs/methods/<method>/`.
+- Removed raw-clean fallback credit for non-vanilla methods in the main, train, and test evaluators. A method now gets clean-preservation credit only when it writes clean processed outputs.
+- Left `action.yaml` set to submit a CPU test rebuild that will regenerate fresh artifacts and refresh all score files under the corrected scoring contract.
 
 ## Final Judgment
-The workspace is ready to serve as a scaled synthetic research gym. From-scratch agents can use `data/`, `eval/`, and the method-agnostic documentation without importing or knowing the reference method; improve-mode agents have the reproduced implementation and baseline artifacts available. The main limitation is that the gym uses a scaled synthetic benchmark rather than the full INRIA-Person/APRICOT evaluation from the paper.
+The workspace is not ready to mark done in this turn because the corrected evaluator has not yet been validated against fresh artifacts. The pending CPU rebuild should restore `secondary_claims` if it reproduces the previously observed hiding recovery, creating suppression, and rectification-ablation improvements while scoring the processed clean split.
 
-- Milestone: secondary_claims
-- Ready for gym use: yes
-- Confidence: high
-- Key limitation: scaled synthetic dataset rather than full INRIA-Person/APRICOT reproduction
+- Milestone: method_runs
+- Ready for gym use: partial
+- Confidence: medium
+- Key limitation: pending fresh score refresh after clean-output scoring fix
