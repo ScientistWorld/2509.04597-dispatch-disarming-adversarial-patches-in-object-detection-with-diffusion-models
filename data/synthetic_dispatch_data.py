@@ -21,7 +21,7 @@ IMAGE_SIZE = 64
 PERSON_COLOR = (35, 115, 220)
 HEAD_COLOR = (240, 200, 130)
 HIDING_PATCH_COLORS = [(10, 10, 10), (245, 245, 245), (40, 220, 70), (190, 35, 210)]
-CREATING_TRIGGER_COLORS = [(245, 35, 35), (35, 225, 235), (245, 230, 35)]
+CREATING_TRIGGER_COLORS = [(245, 35, 35), (35, 225, 235), (235, 35, 235)]
 CREATING_BENIGN_COLORS = [(80, 80, 80), (175, 175, 175), (120, 155, 120), (155, 120, 155)]
 
 
@@ -80,6 +80,16 @@ def _iou(a: tuple[int, int, int, int], b: tuple[int, int, int, int]) -> float:
     return inter / max(1, area_a + area_b - inter)
 
 
+def _expand_box(box: tuple[int, int, int, int], margin: int) -> tuple[int, int, int, int]:
+    x0, y0, x1, y1 = box
+    return (
+        max(0, x0 - margin),
+        max(0, y0 - margin),
+        min(IMAGE_SIZE, x1 + margin),
+        min(IMAGE_SIZE, y1 + margin),
+    )
+
+
 def make_example(index: int, split: str) -> tuple[Image.Image, Image.Image, Image.Image, dict]:
     rng = random.Random(index + (0 if split == "train" else 100_000))
     bg = tuple(rng.randint(178, 235) for _ in range(3))
@@ -100,12 +110,25 @@ def make_example(index: int, split: str) -> tuple[Image.Image, Image.Image, Imag
 
     creating = clean.copy()
     patch_size = 15
-    for _attempt in range(100):
+    patch_box = None
+    for _attempt in range(200):
         px = rng.randint(2, IMAGE_SIZE - patch_size - 2)
         py = rng.randint(2, IMAGE_SIZE - patch_size - 2)
-        patch_box = (px, py, px + patch_size, py + patch_size)
-        if all(_iou(patch_box, box) < 0.01 for box in boxes):
+        candidate = (px, py, px + patch_size, py + patch_size)
+        if all(_iou(candidate, _expand_box(box, 6)) < 0.01 for box in boxes):
+            patch_box = candidate
             break
+    if patch_box is None:
+        for _attempt in range(200):
+            px = rng.randint(2, IMAGE_SIZE - patch_size - 2)
+            py = rng.randint(2, IMAGE_SIZE - patch_size - 2)
+            candidate = (px, py, px + patch_size, py + patch_size)
+            if all(_iou(candidate, box) < 0.01 for box in boxes):
+                patch_box = candidate
+                break
+    if patch_box is None:
+        patch_box = (2, 2, 2 + patch_size, 2 + patch_size)
+    px, py = patch_box[0], patch_box[1]
     # Creating attacks in the paper are adversarial/noise-like patches that
     # induce false detections rather than patches that literally draw an
     # object. Only a deterministic subset is active, keeping the benchmark

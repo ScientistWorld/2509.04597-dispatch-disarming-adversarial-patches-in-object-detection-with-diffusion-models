@@ -31,3 +31,7 @@
 ### [2026-06-25 06:36] - core_claim
 - The coarser `N=8` follow-up completed and did not fix creating-patch suppression: DISPATCH ASR stayed at 0.425 versus vanilla 0.325.
 - Updated the scaled creating benchmark from person-colored decoys to noise-like out-of-distribution trigger patches, matching the paper's creating-attack threat more closely while keeping evaluation method-agnostic.
+
+### [2026-06-25 07:01] - core_claim
+- The corrected-trigger rebuild completed and validated structurally. Hiding improved from 0.000 to 0.598 mAP.5/AR, and rectification beat regenerated-only images, 0.598 vs. 0.571.
+- Creating suppression still failed narrowly: vanilla ASR was 0.450 and DISPATCH ASR was 0.475. The next fix removes a trigger color that overlapped the synthetic head detector and keeps creating patches farther from true objects.

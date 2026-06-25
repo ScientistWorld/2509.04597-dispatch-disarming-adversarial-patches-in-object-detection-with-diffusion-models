@@ -26,8 +26,8 @@ def _mask_creating_trigger_pixels(arr: np.ndarray) -> np.ndarray:
     r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
     red = (r > 210) & (g < 100) & (b < 100)
     cyan = (r < 100) & (g > 190) & (b > 190)
-    yellow = (r > 210) & (g > 180) & (b < 110)
-    return red | cyan | yellow
+    magenta = (r > 200) & (g < 100) & (b > 200)
+    return red | cyan | magenta
 
 
 def _connected_components(mask: np.ndarray) -> list[tuple[list[int], int]]:
