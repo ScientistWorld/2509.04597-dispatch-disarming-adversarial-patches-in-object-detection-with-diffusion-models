@@ -1,22 +1,22 @@
 #!/bin/bash
-# Focused CPU follow-up job submitted via action.yaml.
+# Full CPU reproduction job submitted via action.yaml.
 #
-# Reuses the freshly trained checkpoint from the completed full rebuild and
-# tests a coarser checkerboard mask. The failed rebuild showed that N=16 can
-# preserve too much small-patch context for the scaled creating benchmark.
+# Rebuilds synthetic data, retrains the clean-data inpainting DDPM, runs
+# DISPATCH on hiding and creating attacks, evaluates the written artifacts, and
+# validates the scoring contract.
 
 set -e
 
 cd /home/user
 
-rm -rf outputs
+rm -rf outputs checkpoints data/synthetic
 
 export DEVICE="${DEVICE:-cpu}"
-export GRIDS="${GRIDS:-8}"
+export TRAIN_COUNT="${TRAIN_COUNT:-2000}"
+export TEST_COUNT="${TEST_COUNT:-80}"
+export EPOCHS="${EPOCHS:-60}"
+export GRIDS="${GRIDS:-16}"
 export STEPS="${STEPS:-32}"
 
-bash scripts/baseline.sh
-python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant hiding --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
-python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant creating --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
-bash scripts/evaluate.sh
+bash scripts/reproduce.sh
 python validate.py --compare

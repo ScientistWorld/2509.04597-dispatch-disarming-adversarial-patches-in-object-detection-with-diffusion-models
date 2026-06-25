@@ -22,12 +22,18 @@ def _mask_person_pixels(arr: np.ndarray) -> np.ndarray:
     return body | head
 
 
-def detect_persons(image_path: Path) -> list[dict]:
-    arr = np.asarray(Image.open(image_path).convert("RGB"))
-    mask = _mask_person_pixels(arr)
+def _mask_creating_trigger_pixels(arr: np.ndarray) -> np.ndarray:
+    r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
+    red = (r > 210) & (g < 100) & (b < 100)
+    cyan = (r < 100) & (g > 190) & (b > 190)
+    yellow = (r > 210) & (g > 180) & (b < 110)
+    return red | cyan | yellow
+
+
+def _connected_components(mask: np.ndarray) -> list[tuple[list[int], int]]:
     h, w = mask.shape
     seen = np.zeros_like(mask, dtype=bool)
-    detections = []
+    components = []
     for y in range(h):
         for x in range(w):
             if not mask[y, x] or seen[y, x]:
@@ -43,15 +49,33 @@ def detect_persons(image_path: Path) -> list[dict]:
                     if 0 <= nx < w and 0 <= ny < h and mask[ny, nx] and not seen[ny, nx]:
                         seen[ny, nx] = True
                         q.append((nx, ny))
-            area = len(xs)
-            if area < 35:
-                continue
-            box = [min(xs), min(ys), max(xs) + 1, max(ys) + 1]
-            bw, bh = box[2] - box[0], box[3] - box[1]
-            if bh < 14 or bw < 7:
-                continue
-            score = min(1.0, area / 105.0)
-            detections.append({"box": box, "score": score})
+            components.append(([min(xs), min(ys), max(xs) + 1, max(ys) + 1], len(xs)))
+    return components
+
+
+def detect_persons(image_path: Path) -> list[dict]:
+    arr = np.asarray(Image.open(image_path).convert("RGB"))
+    detections = []
+    for box, area in _connected_components(_mask_person_pixels(arr)):
+        if area < 35:
+            continue
+        bw, bh = box[2] - box[0], box[3] - box[1]
+        if bh < 14 or bw < 7:
+            continue
+        score = min(1.0, area / 105.0)
+        detections.append({"box": box, "score": score, "class": "person"})
+
+    # The scaled creating benchmark models a detector vulnerability to a
+    # noise-like adversarial patch. This rule is deliberately image-only:
+    # evaluation reads whatever image a method writes and checks whether the
+    # high-saturation trigger survived strongly enough to cause a false box.
+    for box, area in _connected_components(_mask_creating_trigger_pixels(arr)):
+        if area < 45:
+            continue
+        bw, bh = box[2] - box[0], box[3] - box[1]
+        if bh < 6 or bw < 6:
+            continue
+        detections.append({"box": box, "score": min(1.0, area / 120.0), "class": "trigger"})
     return detections
 
 
