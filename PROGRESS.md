@@ -26,6 +26,7 @@ The evaluation-only job completed with the corrected metric. Final reproduced sc
 
 - `synthetic_hiding_scaled`: vanilla attack mAP.5/AR = 0.000/0.000; DISPATCH attack mAP.5/AR = 0.545/0.545; clean mAP.5 = 0.750.
 - `synthetic_creating_scaled`: vanilla ASR = 0.325; DISPATCH ASR = 0.250.
+- `rectification_ablation`: regenerated-only attack mAP.5 = 0.491; DISPATCH attack mAP.5 = 0.545.
 
 This supports `core_claim_plus`: the paper's regenerate-and-rectify method improves both hiding recovery and creating-patch suppression in the reusable scaled benchmark.
 
@@ -35,10 +36,13 @@ The method/evaluation separation was tightened after review: `method/dispatch.py
 
 Current continuation audit found the reproduction faithful enough to restore `core_claim_plus`. I added a rectification ablation target that compares detector performance on regenerated-only images against final DISPATCH rectified images, matching the paper's Appendix A.1 secondary claim. The next CPU validation job will write the new ablation scores.
 
+The CPU validation job `1a3b41a5-14d` completed successfully. It updated `scoring/scores.json` with `rectification_ablation`: regenerated-only attack mAP.5 = 0.491 and full DISPATCH attack mAP.5 = 0.545. This supports the paper's secondary rectification claim on the scaled benchmark, so the current milestone is `secondary_claims`.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.
 - The full original INRIA/APRICOT plus large pretrained inpainting stack remains outside this scaled CPU reproduction.
+- Reaching `majority` would require reproducing more than half of the original paper's reported detector/attack tables rather than the current scaled benchmark plus ablation.
 
 ## Issues
 
