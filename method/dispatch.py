@@ -65,13 +65,14 @@ def dispatch_image(
     grids: int,
     steps: int,
     device: torch.device,
+    prediction_type: str = "eps",
 ) -> tuple[Image.Image, Image.Image, Image.Image]:
     size = image.size[0]
     x = image_to_tensor(image).to(device)
     m0 = checkerboard_mask(size, grids, invert=False).to(device)
     m1 = checkerboard_mask(size, grids, invert=True).to(device)
-    r0 = ddpm.inpaint(model, x, m0, steps=steps)
-    r1 = ddpm.inpaint(model, x, m1, steps=steps)
+    r0 = ddpm.inpaint(model, x, m0, steps=steps, prediction_type=prediction_type)
+    r1 = ddpm.inpaint(model, x, m1, steps=steps, prediction_type=prediction_type)
     regen_tensor = r0 * m0 + r1 * m1
     regenerated = tensor_to_image(regen_tensor)
     mask = adversarial_mask(image, regenerated)
@@ -88,6 +89,7 @@ def run_folder(args: argparse.Namespace) -> None:
     model = TinyInpaintUNet(base=state.get("base_channels", 48)).to(device)
     model.load_state_dict(state["model"])
     ddpm = DDPM(timesteps=state["timesteps"], device=device)
+    prediction_type = state.get("prediction_type", "eps")
 
     out_root = Path(args.outputs_dir)
     image_out = out_root / "dispatch_images" / args.variant
@@ -99,7 +101,9 @@ def run_folder(args: argparse.Namespace) -> None:
     predictions = {}
     for path in sorted((Path(args.data_dir) / "test" / args.variant).glob("*.png")):
         image = Image.open(path).convert("RGB")
-        rectified, regenerated, mask = dispatch_image(image, model, ddpm, args.grids, args.steps, device)
+        rectified, regenerated, mask = dispatch_image(
+            image, model, ddpm, args.grids, args.steps, device, prediction_type=prediction_type
+        )
         rectified_path = image_out / path.name
         rectified.save(rectified_path)
         regenerated.save(regen_out / path.name)

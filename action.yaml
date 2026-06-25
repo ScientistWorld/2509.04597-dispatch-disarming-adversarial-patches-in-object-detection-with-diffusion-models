@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Rerun scaled DISPATCH after fixing skipped-timestep DDIM sampling, training on checkerboard masks, and aligning the KMeans rectification mask with the paper. Expect improved hiding recovery while preserving creating-patch suppression."
+notes: "Rerun scaled DISPATCH after switching the compact diffusion inpainting model to x0 prediction and increasing CPU training to 20 epochs. Goal is to improve regenerated counterparts enough for hiding-patch recovery while preserving creating-patch suppression."

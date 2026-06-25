@@ -14,5 +14,10 @@
 - Confirmed creating-patch suppression works on the scaled benchmark, but hiding-patch recovery fails because diffusion regeneration was noisy.
 - Fixed the sampler/training mismatch and prepared a second job to rerun the benchmark.
 
+### [2026-06-25 05:11] - method_runs
+- Completed the second compute job with skipped-timestep sampling and checkerboard-training fixes.
+- Creating-patch suppression remained strong, but hiding-patch recovery still failed because regenerated images were visibly noisy.
+- Switched the compact diffusion model to `x0` prediction and prepared another run.
+
 ## Stop Justification
 - Not stopped.

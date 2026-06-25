@@ -22,6 +22,7 @@ def main() -> None:
     parser.add_argument("--timesteps", type=int, default=80)
     parser.add_argument("--base-channels", type=int, default=32)
     parser.add_argument("--grids", type=int, default=8)
+    parser.add_argument("--prediction-type", choices=["eps", "x0"], default="x0")
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
 
@@ -44,7 +45,8 @@ def main() -> None:
             noise = torch.randn_like(x0)
             x_t = ddpm.q_sample(x0, t, noise)
             pred = model(x_t, masked, mask, t)
-            loss = ((pred - noise) ** 2 * mask).sum() / (mask.sum() * 3.0).clamp_min(1.0)
+            target = x0 if args.prediction_type == "x0" else noise
+            loss = ((pred - target) ** 2 * mask).sum() / (mask.sum() * 3.0).clamp_min(1.0)
             opt.zero_grad(set_to_none=True)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -60,6 +62,7 @@ def main() -> None:
             "model": model.state_dict(),
             "timesteps": args.timesteps,
             "base_channels": args.base_channels,
+            "prediction_type": args.prediction_type,
             "steps": step,
         },
         ckpt,

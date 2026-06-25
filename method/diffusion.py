@@ -77,6 +77,7 @@ class DDPM:
         image: torch.Tensor,
         mask: torch.Tensor,
         steps: int = 20,
+        prediction_type: str = "eps",
     ) -> torch.Tensor:
         """RePaint-style DDPM inpainting.
 
@@ -94,9 +95,17 @@ class DDPM:
         schedule = torch.linspace(self.timesteps - 1, 0, steps, device=self.device).long()
         for idx, t_scalar in enumerate(schedule):
             t = t_scalar.repeat(image.shape[0])
-            eps = model(x, masked, mask, t)
             alpha_bar = self.alpha_bars[t_scalar]
-            pred_x0 = (x - (1.0 - alpha_bar).sqrt() * eps) / alpha_bar.sqrt()
+            pred = model(x, masked, mask, t)
+            if prediction_type == "x0":
+                pred_x0 = pred
+                denom = torch.sqrt(1.0 - alpha_bar).clamp_min(1e-6)
+                eps = (x - alpha_bar.sqrt() * pred_x0) / denom
+            elif prediction_type == "eps":
+                eps = pred
+                pred_x0 = (x - (1.0 - alpha_bar).sqrt() * eps) / alpha_bar.sqrt()
+            else:
+                raise ValueError(f"Unsupported prediction_type: {prediction_type}")
             pred_x0 = pred_x0.clamp(-1.0, 1.0)
             if idx < len(schedule) - 1:
                 next_t_scalar = schedule[idx + 1]

@@ -14,9 +14,9 @@ set -e
 cd /home/user
 
 export DEVICE="${DEVICE:-cpu}"
-export TRAIN_COUNT="${TRAIN_COUNT:-1000}"
+export TRAIN_COUNT="${TRAIN_COUNT:-1200}"
 export TEST_COUNT="${TEST_COUNT:-80}"
-export EPOCHS="${EPOCHS:-12}"
+export EPOCHS="${EPOCHS:-20}"
 export STEPS="${STEPS:-24}"
 export GRIDS="${GRIDS:-8}"
 
