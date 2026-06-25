@@ -3,4 +3,4 @@ action: done
 gpus: 0
 test: false
 milestone: secondary_claims
-notes: "Hash-stratified synthetic split; 13 metric definitions / 26 numeric values per slice from CPU job 3728ae67-b68. Train/test comparable: DISPATCH hiding attack_mAP5 0.679 vs 0.625, creating untargeted_ASR 0.050 vs 0.050, rectification attack_mAP5 0.679 vs 0.625. No nulls; method sets match."
+notes: "Packaging audit complete: synthetic data is generated locally, download.sh has no external artifacts to fetch, and data/downloads/.gitkeep is now trackable."
