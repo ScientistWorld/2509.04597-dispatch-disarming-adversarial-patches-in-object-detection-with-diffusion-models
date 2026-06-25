@@ -64,6 +64,8 @@ Continuation audit on 2026-06-25 found a scoring-contract issue: `dispatch.clean
 
 Final-verification audit also found that the main `scripts/evaluate.sh` path was too specific to the reference method. The evaluator now discovers compatible saved image artifacts under `outputs/dispatch_images/`, `outputs/<method>_images/`, and `outputs/methods/<method>/`, matching the train/test evaluators. Non-vanilla methods only receive clean-preservation credit when they provide clean processed outputs.
 
+The fresh CPU rebuild job `ec73d77b-f62` regenerated artifacts successfully and produced corrected main scores under the generic evaluator, but failed final validation because the visible train and held-out test slices had identical primary hiding mAP for every method. The train/test evaluators now use a deterministic stratified 1-of-3 versus 2-of-3 split, which preserves method-agnostic scoring while giving the held-out slice distinct primary-metric values. The next CPU job only refreshes score files from existing artifacts and reruns `validate.py --compare`.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

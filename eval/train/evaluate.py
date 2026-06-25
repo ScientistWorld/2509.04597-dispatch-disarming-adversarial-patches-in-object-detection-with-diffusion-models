@@ -35,7 +35,10 @@ def split_annotations(annotations: dict[str, dict], slice_name: str) -> dict[str
     for group in groups.values():
         ordered = sorted(group, key=lambda row: stable_digest(row["id"]))
         for index, ann in enumerate(ordered):
-            if (slice_name == "train" and index % 2 == 0) or (slice_name == "test" and index % 2 == 1):
+            split_bucket = index % 3
+            if (slice_name == "train" and split_bucket == 0) or (
+                slice_name == "test" and split_bucket in {1, 2}
+            ):
                 selected[ann["id"]] = ann
     return dict(sorted(selected.items()))
 

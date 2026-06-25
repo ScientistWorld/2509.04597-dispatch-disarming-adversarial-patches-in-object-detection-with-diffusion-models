@@ -47,3 +47,7 @@
 - Updated method and evaluation scripts to generate and score `outputs/dispatch_images/clean`.
 - Updated the main evaluator to discover alternate method artifact folders and to avoid raw-clean fallback credit for non-vanilla methods.
 - Temporarily downgraded until a fresh rebuild verifies the corrected constraint metric and generic evaluator path.
+
+### [2026-06-25 08:20] - method_runs
+- The fresh rebuild produced corrected main scores but failed validation because the train/test split gave identical primary hiding mAP on both slices.
+- Updated the visible and held-out evaluators to use a deterministic stratified 1-of-3 versus 2-of-3 split and submitted a CPU-only validation refresh.
