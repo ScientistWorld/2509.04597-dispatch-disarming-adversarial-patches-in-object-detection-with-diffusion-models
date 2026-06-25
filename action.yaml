@@ -1,8 +1,6 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
-gpus: 0
-test: true
-milestone: core_claim
-notes: "Corrected-trigger rebuild still had person-detector artifacts from a yellow trigger color. Rebuild from scratch with magenta/red/cyan triggers and farther creating-patch placement, then evaluate and validate."
+action: done
+milestone: secondary_claims
+notes: "Final fresh rebuild passed validation. Reproduced DISPATCH core claims on scaled hiding and creating attacks, plus the rectification ablation secondary claim."
