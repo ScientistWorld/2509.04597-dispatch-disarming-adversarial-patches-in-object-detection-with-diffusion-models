@@ -33,6 +33,8 @@ After validation, I corrected the scoring contract so these scaled results use `
 
 The method/evaluation separation was tightened after review: `method/dispatch.py` now only writes DISPATCH rectified, regenerated, and mask images. `eval/evaluate_outputs.py` derives detector predictions from those images and writes `scoring/scores.json`, so future agents can replace the method while preserving the same output contract.
 
+Current continuation audit found the reproduction faithful enough to restore `core_claim_plus`. I added a rectification ablation target that compares detector performance on regenerated-only images against final DISPATCH rectified images, matching the paper's Appendix A.1 secondary claim. The next CPU validation job will write the new ablation scores.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

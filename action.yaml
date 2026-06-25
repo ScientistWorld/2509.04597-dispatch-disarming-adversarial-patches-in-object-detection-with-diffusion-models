@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim_plus
-notes: "CPU validation: re-evaluate existing DISPATCH artifacts after method/eval separation cleanup and run validate.py --compare."
+notes: "CPU validation: re-evaluate existing DISPATCH artifacts, including the regenerated-only rectification ablation, and run validate.py --compare."

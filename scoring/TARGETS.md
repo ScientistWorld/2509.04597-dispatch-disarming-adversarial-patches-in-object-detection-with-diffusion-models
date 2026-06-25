@@ -15,3 +15,10 @@ Tests whether a defense prevents adversarial patches from causing false object d
 - **Primary metric:** `untargeted_ASR`, lower is better.
 - **Constraint metrics:** `targeted_ASR`, `targeted_mAP5`, and `untargeted_mAP5` should also remain low.
 - **How to run:** `bash scripts/evaluate.sh` after method or baseline artifacts have been written to `outputs/`.
+
+## Secondary: rectification_ablation
+
+Tests whether final rectification is better than sending the regenerated image directly to the detector, matching the paper's Appendix A.1 ablation.
+
+- **Primary metric:** `attack_mAP5`, higher is better.
+- **How to run:** `bash scripts/evaluate.sh` after method artifacts have been written to `outputs/dispatch_images/` and `outputs/regenerated_images/`.

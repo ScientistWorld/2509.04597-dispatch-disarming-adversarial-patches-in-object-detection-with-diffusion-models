@@ -45,6 +45,10 @@ def main() -> None:
         outputs_dir / "hiding_dispatch_predictions.json",
         outputs_dir / "dispatch_images" / "hiding",
     )
+    hiding_regenerated = load_or_detect(
+        outputs_dir / "hiding_regenerated_predictions.json",
+        outputs_dir / "regenerated_images" / "hiding",
+    )
     creating_vanilla = load_or_detect(
         outputs_dir / "creating_vanilla_predictions.json",
         Path(args.data_dir) / "test" / "creating",
@@ -57,6 +61,7 @@ def main() -> None:
     clean_recall = recall_at_iou(clean, annotations)
     hiding_vanilla_recall = recall_at_iou(hiding_vanilla, annotations)
     hiding_dispatch_recall = recall_at_iou(hiding_dispatch, annotations)
+    hiding_regenerated_recall = recall_at_iou(hiding_regenerated, annotations)
     creating_vanilla_asr = false_positive_rate_on_patch(creating_vanilla, annotations)
     creating_dispatch_asr = false_positive_rate_on_patch(creating_dispatch, annotations)
 
@@ -89,6 +94,16 @@ def main() -> None:
                         "targeted_ASR": creating_dispatch_asr,
                         "untargeted_mAP5": creating_dispatch_asr,
                         "untargeted_ASR": creating_dispatch_asr,
+                    },
+                }
+            },
+            "rectification_ablation": {
+                "results": {
+                    "regenerated_only": {
+                        "attack_mAP5": hiding_regenerated_recall,
+                    },
+                    "dispatch": {
+                        "attack_mAP5": hiding_dispatch_recall,
                     },
                 }
             },

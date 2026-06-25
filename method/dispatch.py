@@ -93,7 +93,6 @@ def run_folder(args: argparse.Namespace) -> None:
     for folder in [image_out, regen_out, mask_out]:
         folder.mkdir(parents=True, exist_ok=True)
 
-    predictions = {}
     for path in sorted((Path(args.data_dir) / "test" / args.variant).glob("*.png")):
         image = Image.open(path).convert("RGB")
         rectified, regenerated, mask = dispatch_image(

@@ -20,7 +20,7 @@
     },
     "apricot_creating": {
       "description": "APRICOT physical creating attacks, overall rows from Table 3. Lower mAP.5 and ASR indicate better suppression of false detections on adversarial patches.",
-      "weight": 0.20,
+      "weight": 0.15,
       "primary_metric": "untargeted_ASR",
       "metrics": {
         "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4},
@@ -38,7 +38,7 @@
     },
     "physical_hiding": {
       "description": "Real-world physical AdvPatch hiding attack ASR from Table 2, averaged across indoor, outdoor lighting, and outdoor shadow conditions for YOLOv3 and Faster R-CNN. Lower ASR is better.",
-      "weight": 0.15,
+      "weight": 0.10,
       "primary_metric": "overall_ASR",
       "metrics": {
         "yolov3_ASR": {"higher_is_better": false, "coefficient": -0.8},
@@ -78,6 +78,18 @@
       "results": {
         "vanilla": {"type": "baseline", "targeted_mAP5": 0.325, "targeted_ASR": 0.325, "untargeted_mAP5": 0.325, "untargeted_ASR": 0.325},
         "dispatch": {"type": "proposed", "targeted_mAP5": 0.25, "targeted_ASR": 0.25, "untargeted_mAP5": 0.25, "untargeted_ASR": 0.25}
+      }
+    },
+    "rectification_ablation": {
+      "description": "Appendix A.1 ablation on YOLOv3 AdvPatch: direct regenerated image versus full DISPATCH rectification. Higher attack mAP.5 indicates better recovery under hiding attack.",
+      "weight": 0.10,
+      "primary_metric": "attack_mAP5",
+      "metrics": {
+        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0}
+      },
+      "results": {
+        "regenerated_only": {"type": "proposed", "attack_mAP5": 0.853},
+        "dispatch": {"type": "proposed", "attack_mAP5": 0.903}
       }
     }
   }
