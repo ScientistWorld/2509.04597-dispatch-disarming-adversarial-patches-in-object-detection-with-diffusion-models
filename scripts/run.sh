@@ -1,22 +1,12 @@
 #!/bin/bash
-# Full CPU reproduction job submitted via action.yaml.
+# Split scoring job submitted via action.yaml.
 #
-# Rebuilds synthetic data, retrains the clean-data inpainting DDPM, runs
-# DISPATCH on hiding and creating attacks, evaluates the written artifacts, and
-# validates the scoring contract.
+# Scores the visible train slice and held-out test slice against the saved
+# final artifacts. This intentionally does not retrain or regenerate methods.
 
 set -e
 
 cd /home/user
 
-rm -rf outputs checkpoints data/synthetic
-
-export DEVICE="${DEVICE:-cpu}"
-export TRAIN_COUNT="${TRAIN_COUNT:-2000}"
-export TEST_COUNT="${TEST_COUNT:-80}"
-export EPOCHS="${EPOCHS:-60}"
-export GRIDS="${GRIDS:-16}"
-export STEPS="${STEPS:-32}"
-
-bash scripts/reproduce.sh
-python validate.py --compare
+bash scripts/evaluate_train.sh /home/user/checkpoints
+bash scripts/evaluate_test.sh /home/user/checkpoints
