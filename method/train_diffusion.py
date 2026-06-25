@@ -8,7 +8,7 @@ from pathlib import Path
 import torch
 from torch.utils.data import DataLoader
 
-from dataset import CleanImageDataset, random_block_mask
+from dataset import CleanImageDataset, random_dispatch_mask
 from diffusion import DDPM, TinyInpaintUNet
 
 
@@ -21,6 +21,7 @@ def main() -> None:
     parser.add_argument("--lr", type=float, default=2e-4)
     parser.add_argument("--timesteps", type=int, default=80)
     parser.add_argument("--base-channels", type=int, default=32)
+    parser.add_argument("--grids", type=int, default=8)
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
 
@@ -37,7 +38,7 @@ def main() -> None:
         running = 0.0
         for x0 in loader:
             x0 = x0.to(device)
-            mask = random_block_mask(x0.shape[0], x0.shape[2], x0.shape[3], device)
+            mask = random_dispatch_mask(x0.shape[0], x0.shape[2], x0.shape[3], device, grids=args.grids)
             masked = x0 * (1.0 - mask)
             t = torch.randint(0, args.timesteps, (x0.shape[0],), device=device)
             noise = torch.randn_like(x0)

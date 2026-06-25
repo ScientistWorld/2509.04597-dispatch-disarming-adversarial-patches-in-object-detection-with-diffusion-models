@@ -9,17 +9,23 @@
 
 ## Results
 
-No compute job has completed yet. The next submitted job will train the scaled inpainting model and write `scoring/scores.json`.
+The first compute job completed end-to-end and wrote `scoring/scores.json`.
+
+- `inria_digital_hiding`: vanilla attack mAP.5/AR = 0.696/0.696; DISPATCH attack mAP.5/AR = 0.062/0.062. This fails the hiding core claim because rectification destroys too much person evidence.
+- `apricot_creating`: vanilla targeted ASR = 0.362; DISPATCH targeted ASR = 0.050. This supports the creating-patch removal side of the method on the scaled benchmark.
+
+Artifact inspection showed the hiding failure came from noisy diffusion regeneration, not from the evaluator. The sampler was using a one-step DDPM update across skipped timesteps, and training only used local block masks while inference uses complementary checkerboards. The current code fixes both issues and reruns the benchmark.
 
 ## Remaining
 
-- Run the first compute job to verify the container, training loop, DISPATCH inference, and evaluation.
-- Inspect `scoring/scores.json` and decide whether the scaled reproduction supports `core_claim` or needs tuning.
-- Commit job results and update milestones after the job returns.
+- Rerun the compute job after the sampler/training-mask fixes.
+- Inspect the new `scoring/scores.json` and decide whether the scaled reproduction supports `core_claim` or needs another tuning pass.
+- If hiding recovery improves, expand to an additional setting; otherwise inspect regenerated images and mask coverage again.
 
 ## Issues
 
 - The original full INRIA/APRICOT plus MMDetection plus pretrained LDM setup is too large for a first-turn reproduction. This workspace starts with a scaled benchmark that preserves the algorithmic computation.
+- First run exposed an implementation-level diffusion issue: skipped-timestep sampling produced noisy regenerated images, causing KMeans masks to cover benign object structure.
 
 ## Deviations from Paper
 

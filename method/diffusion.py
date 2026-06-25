@@ -95,17 +95,19 @@ class DDPM:
         for idx, t_scalar in enumerate(schedule):
             t = t_scalar.repeat(image.shape[0])
             eps = model(x, masked, mask, t)
-            beta = self.betas[t_scalar]
-            alpha = self.alphas[t_scalar]
             alpha_bar = self.alpha_bars[t_scalar]
-            mean = (x - beta / (1.0 - alpha_bar).sqrt() * eps) / alpha.sqrt()
+            pred_x0 = (x - (1.0 - alpha_bar).sqrt() * eps) / alpha_bar.sqrt()
+            pred_x0 = pred_x0.clamp(-1.0, 1.0)
             if idx < len(schedule) - 1:
-                noise = torch.randn_like(x)
-                x = mean + beta.sqrt() * noise
-                keep_t = schedule[idx + 1].repeat(image.shape[0])
-                keep = self.q_sample(image, keep_t, torch.randn_like(image))
+                next_t_scalar = schedule[idx + 1]
+                next_alpha_bar = self.alpha_bars[next_t_scalar]
+                # Deterministic DDIM update supports the skipped schedule used
+                # in the scaled reproduction without injecting excess noise.
+                x = next_alpha_bar.sqrt() * pred_x0 + (1.0 - next_alpha_bar).sqrt() * eps
+                keep_t = next_t_scalar.repeat(image.shape[0])
+                keep_noise = torch.randn_like(image)
+                keep = self.q_sample(image, keep_t, keep_noise)
                 x = mask * x + (1.0 - mask) * keep
             else:
-                x = mean
-                x = mask * x + (1.0 - mask) * image
+                x = mask * pred_x0 + (1.0 - mask) * image
         return x.clamp(-1.0, 1.0)

@@ -36,3 +36,28 @@ def random_block_mask(batch: int, height: int, width: int, device: torch.device)
             y = int(torch.randint(0, max(1, height - size), (1,), device=device).item())
             mask[i, :, y : y + size, x : x + size] = 1.0
     return mask
+
+
+def random_checkerboard_mask(batch: int, height: int, width: int, device: torch.device, grids: int = 8) -> torch.Tensor:
+    """Complementary grid masks matching DISPATCH's regeneration pattern."""
+    cell_h = max(1, height // grids)
+    cell_w = max(1, width // grids)
+    base = torch.zeros((1, 1, height, width), device=device)
+    for gy in range(grids):
+        for gx in range(grids):
+            y0 = gy * cell_h
+            x0 = gx * cell_w
+            y1 = height if gy == grids - 1 else min(height, (gy + 1) * cell_h)
+            x1 = width if gx == grids - 1 else min(width, (gx + 1) * cell_w)
+            base[:, :, y0:y1, x0:x1] = float((gx + gy) % 2)
+    masks = base.repeat(batch, 1, 1, 1)
+    invert = torch.rand((batch, 1, 1, 1), device=device) > 0.5
+    return torch.where(invert, 1.0 - masks, masks)
+
+
+def random_dispatch_mask(batch: int, height: int, width: int, device: torch.device, grids: int = 8) -> torch.Tensor:
+    """Mix local holes and checkerboard holes so training covers both regimes."""
+    block = random_block_mask(batch, height, width, device)
+    checker = random_checkerboard_mask(batch, height, width, device, grids=grids)
+    choose_checker = torch.rand((batch, 1, 1, 1), device=device) < 0.5
+    return torch.where(choose_checker, checker, block)

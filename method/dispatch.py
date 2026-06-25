@@ -54,8 +54,6 @@ def adversarial_mask(original: Image.Image, regenerated: Image.Image, blur: int 
     km = KMeans(n_clusters=2, n_init=10, random_state=0).fit(flat)
     high = int(np.argmax(km.cluster_centers_.reshape(-1)))
     mask = (km.labels_.reshape(dist.shape) == high).astype(np.float32)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
-    mask = cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=1)
     return mask[..., None]
 
 
