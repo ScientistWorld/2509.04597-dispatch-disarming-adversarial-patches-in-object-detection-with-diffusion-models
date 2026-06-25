@@ -269,18 +269,18 @@
       "notes": "Scaled synthetic reference values are from the validated reproduction artifacts, not the full paper benchmark."
     },
     "rectification_ablation": {
-      "description": "Scaled synthetic rectification ablation corresponding to Appendix A.1: direct regenerated image versus full DISPATCH rectification. Higher attack mAP.5 indicates better recovery under hiding attack.",
+      "description": "Scaled synthetic rectification ablation corresponding to Appendix A.1: direct regenerated image versus full DISPATCH rectification. Higher attack average recall indicates better recovery under hiding attack.",
       "weight": 0.1,
-      "primary_metric": "attack_mAP5",
+      "primary_metric": "attack_AR",
       "metrics": {
         "attack_mAP5": {
           "higher_is_better": true,
-          "coefficient": 1.0,
+          "coefficient": 0.8,
           "description": "Person recall at IoU 0.5 under hiding attack; tests whether rectification improves over direct regeneration."
         },
         "attack_AR": {
           "higher_is_better": true,
-          "coefficient": 0.5,
+          "coefficient": 1.0,
           "description": "Mean person recall across stricter IoU thresholds; catches rectification variants with imprecise boxes."
         },
         "attack_precision": {

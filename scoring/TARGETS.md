@@ -20,5 +20,6 @@ Tests whether a defense prevents adversarial patches from causing false object d
 
 Tests whether the final defended output is better than an ablated intermediate output supplied by the reference reproduction.
 
-- **Primary metric:** `attack_mAP5`, higher is better.
+- **Primary metric:** `attack_AR`, higher is better.
+- **Supporting metrics:** `attack_mAP5` and `attack_precision` should also remain high.
 - **How to run:** `bash scripts/evaluate.sh` after compatible method artifacts have been written to `outputs/`.

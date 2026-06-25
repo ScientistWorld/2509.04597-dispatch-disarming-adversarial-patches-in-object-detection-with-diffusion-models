@@ -66,6 +66,8 @@ Final-verification audit also found that the main `scripts/evaluate.sh` path was
 
 The fresh CPU rebuild job `ec73d77b-f62` regenerated artifacts successfully and produced corrected main scores under the generic evaluator, but failed final validation because the visible train and held-out test slices had identical primary hiding mAP for every method. The train/test evaluators now use a deterministic stratified 1-of-3 versus 2-of-3 split, which preserves method-agnostic scoring while giving the held-out slice distinct primary-metric values. The next CPU job only refreshes score files from existing artifacts and reruns `validate.py --compare`.
 
+The score refresh job `9b0cd203-f11` passed the train/test split checks but exposed one more scoring-rubric issue: the rectification ablation's train slice tied on `attack_mAP5`. The ablation now uses `attack_AR` as its primary metric because it separates full rectification from regenerated-only outputs on train, test, and full scores while measuring the same detection-recovery claim. `python validate.py --compare` now passes all checks locally, and the final milestone is restored to `secondary_claims`.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.

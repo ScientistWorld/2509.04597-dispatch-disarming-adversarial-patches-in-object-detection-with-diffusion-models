@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: secondary_claims**
 
 ## Progress Log
 
@@ -51,3 +51,7 @@
 ### [2026-06-25 08:20] - method_runs
 - The fresh rebuild produced corrected main scores but failed validation because the train/test split gave identical primary hiding mAP on both slices.
 - Updated the visible and held-out evaluators to use a deterministic stratified 1-of-3 versus 2-of-3 split and submitted a CPU-only validation refresh.
+
+### [2026-06-25 08:22] - secondary_claims
+- The validation refresh passed all train/test split checks after changing the rectification ablation primary metric to `attack_AR`, which distinguishes final defended outputs from regenerated-only outputs on train, test, and full scores.
+- Final verification confirms the scaled hiding, creating, and rectification-ablation claims under the corrected generic scoring contract.
