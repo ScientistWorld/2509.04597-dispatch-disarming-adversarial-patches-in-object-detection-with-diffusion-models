@@ -1,0 +1,54 @@
+{
+  "experiments": {
+    "synthetic_hiding_scaled": {
+      "results": {
+        "vanilla": {
+          "clean_mAP5": 0.7857142857142857,
+          "clean_precision": 0.88,
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "attack_precision": 0.0
+        },
+        "dispatch": {
+          "clean_mAP5": 0.7857142857142857,
+          "clean_precision": 0.88,
+          "attack_mAP5": 0.6785714285714286,
+          "attack_AR": 0.5416666666666666,
+          "attack_precision": 0.6551724137931034
+        }
+      }
+    },
+    "synthetic_creating_scaled": {
+      "results": {
+        "vanilla": {
+          "targeted_mAP5": 0.45,
+          "targeted_ASR": 0.45,
+          "untargeted_mAP5": 0.45,
+          "untargeted_ASR": 0.45,
+          "object_mAP5": 0.7857142857142857
+        },
+        "dispatch": {
+          "targeted_mAP5": 0.025,
+          "targeted_ASR": 0.025,
+          "untargeted_mAP5": 0.025,
+          "untargeted_ASR": 0.05,
+          "object_mAP5": 0.7857142857142857
+        }
+      }
+    },
+    "rectification_ablation": {
+      "results": {
+        "dispatch": {
+          "attack_mAP5": 0.6785714285714286,
+          "attack_AR": 0.5416666666666666,
+          "attack_precision": 0.6551724137931034
+        },
+        "regenerated_only": {
+          "attack_mAP5": 0.6428571428571429,
+          "attack_AR": 0.4583333333333333,
+          "attack_precision": 0.6792452830188679
+        }
+      }
+    }
+  }
+}
