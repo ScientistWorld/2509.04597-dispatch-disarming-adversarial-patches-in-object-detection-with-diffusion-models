@@ -14,11 +14,16 @@
 # Experiment and metric names must match the keys in scoring/reference.json.
 # This file is read by the system for automated comparison.
 #
-# Example usage:
-#   ./evaluate.sh <method_and_run_name>                             # evaluate with defaults
-#   ./evaluate.sh <method_and_run_name> checkpoints/epoch_10.pt     # evaluate a specific checkpoint
+# Usage:
+#   ./scripts/evaluate.sh
 #
-# Called from run.sh after training, or independently.
+# The evaluator reads fixed artifacts produced by scripts/method.sh:
+#   outputs/dispatch_images/
+#   outputs/regenerated_images/
+#   data/synthetic/
+#
+# Called from method.sh after running DISPATCH, or independently after
+# compatible artifacts have already been written.
 
 set -e
 

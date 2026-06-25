@@ -40,6 +40,8 @@ The CPU validation job `1a3b41a5-14d` completed successfully. It updated `scorin
 
 Validation follow-up: the rectification ablation reference entry now uses the scaled synthetic ablation values rather than the original paper's INRIA/YOLOv3 Table 5 values, so `reference.json` and `scores.json` compare like-for-like.
 
+Continuation audit on 2026-06-25 found the implementation and method/evaluation separation intact. The only concrete issue was run verification: the latest completed job validated existing artifacts and started before the current end-to-end `scripts/run.sh` was in place. The next submitted CPU job will rebuild outputs and checkpoints from source, then run validation against the fresh artifacts.
+
 ## Remaining
 
 - Higher milestones would require adding more of the paper's detector/dataset matrix, such as physical hiding or additional object detector variants.
