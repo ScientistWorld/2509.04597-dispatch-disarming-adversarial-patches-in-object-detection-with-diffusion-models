@@ -114,15 +114,47 @@ def iou(a: list[int] | tuple[int, int, int, int], b: list[int] | tuple[int, int,
     return inter / max(1, area_a + area_b - inter)
 
 
+def person_detections(preds: list[dict]) -> list[dict]:
+    return [pred for pred in preds if pred.get("class") == "person"]
+
+
 def recall_at_iou(predictions: dict[str, list[dict]], annotations: dict[str, dict], threshold: float = 0.5) -> float:
     hits = 0
     total = 0
     for image_id, ann in annotations.items():
-        preds = predictions.get(image_id, [])
+        preds = person_detections(predictions.get(image_id, []))
         for gt in ann["boxes"]:
             total += 1
             hits += int(any(iou(pred["box"], gt) >= threshold for pred in preds))
     return hits / max(1, total)
+
+
+def average_recall(predictions: dict[str, list[dict]], annotations: dict[str, dict]) -> float:
+    thresholds = (0.5, 0.6, 0.7)
+    return sum(recall_at_iou(predictions, annotations, threshold) for threshold in thresholds) / len(thresholds)
+
+
+def precision_at_iou(predictions: dict[str, list[dict]], annotations: dict[str, dict], threshold: float = 0.5) -> float:
+    true_positive = 0
+    false_positive = 0
+    for image_id, ann in annotations.items():
+        matched_gt: set[int] = set()
+        for pred in person_detections(predictions.get(image_id, [])):
+            best_idx = -1
+            best_iou = 0.0
+            for idx, gt in enumerate(ann["boxes"]):
+                if idx in matched_gt:
+                    continue
+                overlap = iou(pred["box"], gt)
+                if overlap > best_iou:
+                    best_iou = overlap
+                    best_idx = idx
+            if best_iou >= threshold:
+                matched_gt.add(best_idx)
+                true_positive += 1
+            else:
+                false_positive += 1
+    return true_positive / max(1, true_positive + false_positive)
 
 
 def false_positive_rate_on_patch(
@@ -260,20 +292,22 @@ def score_methods(
             hiding_recall = recall_at_iou(hiding_predictions, annotations)
             scores["experiments"]["synthetic_hiding_scaled"]["results"][method_name] = {
                 "clean_mAP5": clean_recall,
+                "clean_precision": precision_at_iou(clean_predictions, annotations) if "clean" in method_sources else 0.0,
                 "attack_mAP5": hiding_recall,
-                "attack_AR": hiding_recall,
+                "attack_AR": average_recall(hiding_predictions, annotations),
+                "attack_precision": precision_at_iou(hiding_predictions, annotations),
             }
 
         if method_name != "regenerated_only" and "creating" in method_sources:
             creating_predictions = write_prediction_cache(
                 cache_dir, method_name, "creating", method_sources["creating"], image_ids
             )
-            creating_asr = false_positive_rate_on_patch(creating_predictions, annotations)
             scores["experiments"]["synthetic_creating_scaled"]["results"][method_name] = {
-                "targeted_mAP5": creating_asr,
-                "targeted_ASR": creating_asr,
-                "untargeted_mAP5": creating_asr,
-                "untargeted_ASR": creating_asr,
+                "targeted_mAP5": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.5),
+                "targeted_ASR": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.3),
+                "untargeted_mAP5": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.1),
+                "untargeted_ASR": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.01),
+                "object_mAP5": recall_at_iou(creating_predictions, annotations),
             }
 
         if method_name in {"dispatch", "regenerated_only"} and "hiding" in method_sources:
@@ -281,7 +315,9 @@ def score_methods(
                 cache_dir, method_name, "rectification_hiding", method_sources["hiding"], image_ids
             )
             scores["experiments"]["rectification_ablation"]["results"][method_name] = {
-                "attack_mAP5": recall_at_iou(hiding_predictions, annotations)
+                "attack_mAP5": recall_at_iou(hiding_predictions, annotations),
+                "attack_AR": average_recall(hiding_predictions, annotations),
+                "attack_precision": precision_at_iou(hiding_predictions, annotations),
             }
 
     if clean_predictions is None and "vanilla" in sources and "clean" in sources["vanilla"]:

@@ -5,9 +5,9 @@
       "weight": 0.25,
       "primary_metric": "attack_mAP5",
       "metrics": {
-        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0},
-        "attack_AR": {"higher_is_better": true, "coefficient": 0.4},
-        "clean_mAP5": {"higher_is_better": true, "coefficient": 0.25}
+        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0, "description": "Detection quality on attacked hiding images; higher means the defense recovers more true people."},
+        "attack_AR": {"higher_is_better": true, "coefficient": 0.4, "description": "Average recall under hiding attacks; complements mAP.5 with recall-oriented recovery."},
+        "clean_mAP5": {"higher_is_better": true, "coefficient": 0.25, "description": "Clean-image detection quality; guards against defenses that damage benign inputs."}
       },
       "results": {
         "vanilla": {"type": "baseline", "attack_mAP5": 0.686, "attack_AR": 0.627, "clean_mAP5": 0.939},
@@ -23,10 +23,10 @@
       "weight": 0.15,
       "primary_metric": "untargeted_ASR",
       "metrics": {
-        "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4},
-        "targeted_ASR": {"higher_is_better": false, "coefficient": -0.8},
-        "untargeted_mAP5": {"higher_is_better": false, "coefficient": -0.6},
-        "untargeted_ASR": {"higher_is_better": false, "coefficient": -1.0}
+        "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4, "description": "Patch-region detection quality for targeted creating attacks; lower means fewer target-like false detections."},
+        "targeted_ASR": {"higher_is_better": false, "coefficient": -0.8, "description": "Targeted creating attack success rate; lower means the patch less often causes the target false detection."},
+        "untargeted_mAP5": {"higher_is_better": false, "coefficient": -0.6, "description": "Patch-region detection quality for untargeted creating attacks; lower means fewer false detections of any class."},
+        "untargeted_ASR": {"higher_is_better": false, "coefficient": -1.0, "description": "Untargeted creating attack success rate; the headline metric for suppressing patch-created objects."}
       },
       "results": {
         "vanilla": {"type": "baseline", "targeted_mAP5": 0.059, "targeted_ASR": 0.082, "untargeted_mAP5": 0.207, "untargeted_ASR": 0.424},
@@ -41,9 +41,9 @@
       "weight": 0.10,
       "primary_metric": "overall_ASR",
       "metrics": {
-        "yolov3_ASR": {"higher_is_better": false, "coefficient": -0.8},
-        "faster_rcnn_ASR": {"higher_is_better": false, "coefficient": -0.8},
-        "overall_ASR": {"higher_is_better": false, "coefficient": -1.0}
+        "yolov3_ASR": {"higher_is_better": false, "coefficient": -0.8, "description": "Physical hiding attack success rate against YOLOv3; lower means the person remains detectable."},
+        "faster_rcnn_ASR": {"higher_is_better": false, "coefficient": -0.8, "description": "Physical hiding attack success rate against Faster R-CNN; lower means the person remains detectable."},
+        "overall_ASR": {"higher_is_better": false, "coefficient": -1.0, "description": "Average physical hiding attack success rate across detectors and environments; lower is better."}
       },
       "results": {
         "vanilla": {"type": "baseline", "yolov3_ASR": 0.930, "faster_rcnn_ASR": 0.403, "overall_ASR": 0.667},
@@ -56,9 +56,11 @@
       "weight": 0.25,
       "primary_metric": "attack_mAP5",
       "metrics": {
-        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0},
-        "attack_AR": {"higher_is_better": true, "coefficient": 0.4},
-        "clean_mAP5": {"higher_is_better": true, "coefficient": 0.25}
+        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0, "description": "Person recall at IoU 0.5 on hiding-attack images; the scaled proxy for defended detection quality."},
+        "attack_AR": {"higher_is_better": true, "coefficient": 0.5, "description": "Mean person recall across stricter IoU thresholds on hiding-attack images; catches sloppy boxes tuned only for IoU 0.5."},
+        "attack_precision": {"higher_is_better": true, "coefficient": 0.35, "description": "Person precision on hiding-attack images; penalizes methods that recover recall by hallucinating extra people."},
+        "clean_mAP5": {"higher_is_better": true, "coefficient": 0.25, "description": "Person recall at IoU 0.5 on clean images; preserves the paper's benign-performance constraint."},
+        "clean_precision": {"higher_is_better": true, "coefficient": 0.15, "description": "Person precision on clean images; catches defenses that introduce benign-scene false positives."}
       },
       "results": {
         "vanilla": {"type": "baseline", "attack_mAP5": 0.0, "attack_AR": 0.0, "clean_mAP5": 0.75},
@@ -70,10 +72,11 @@
       "weight": 0.15,
       "primary_metric": "untargeted_ASR",
       "metrics": {
-        "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4},
-        "targeted_ASR": {"higher_is_better": false, "coefficient": -0.8},
-        "untargeted_mAP5": {"higher_is_better": false, "coefficient": -0.6},
-        "untargeted_ASR": {"higher_is_better": false, "coefficient": -1.0}
+        "targeted_mAP5": {"higher_is_better": false, "coefficient": -0.4, "description": "Strict patch-overlap false-positive rate on creating images; lower means fewer target-like detections centered on the patch."},
+        "targeted_ASR": {"higher_is_better": false, "coefficient": -0.6, "description": "Moderate-overlap false-positive rate on creating images; lower means stronger suppression of patch-created objects."},
+        "untargeted_mAP5": {"higher_is_better": false, "coefficient": -0.7, "description": "Loose patch-overlap false-positive rate on creating images; lower catches broad false detections near the patch."},
+        "untargeted_ASR": {"higher_is_better": false, "coefficient": -1.0, "description": "Any-overlap patch false-positive rate on creating images; the hardest-to-game creating suppression metric."},
+        "object_mAP5": {"higher_is_better": true, "coefficient": 0.25, "description": "Person recall on creating images; prevents methods from suppressing patches by erasing all objects."}
       },
       "results": {
         "vanilla": {"type": "baseline", "targeted_mAP5": 0.45, "targeted_ASR": 0.45, "untargeted_mAP5": 0.45, "untargeted_ASR": 0.45},
@@ -85,7 +88,9 @@
       "weight": 0.10,
       "primary_metric": "attack_mAP5",
       "metrics": {
-        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0}
+        "attack_mAP5": {"higher_is_better": true, "coefficient": 1.0, "description": "Person recall at IoU 0.5 under hiding attack; tests whether rectification improves over direct regeneration."},
+        "attack_AR": {"higher_is_better": true, "coefficient": 0.5, "description": "Mean person recall across stricter IoU thresholds; catches rectification variants with imprecise boxes."},
+        "attack_precision": {"higher_is_better": true, "coefficient": 0.35, "description": "Person precision under hiding attack; penalizes rectification variants that add false people."}
       },
       "results": {
         "regenerated_only": {"type": "proposed", "attack_mAP5": 0.5982142857142857},
