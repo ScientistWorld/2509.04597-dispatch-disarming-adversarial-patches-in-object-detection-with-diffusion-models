@@ -1,0 +1,15 @@
+{
+  "scripts/evaluate_test.sh": "624d9ae04d27984b0b4a309c743ef7a12e1d8c0138b4cc0d4f12a343bc718d01",
+  "scripts/evaluate_train.sh": "b181fdda399e101c31cd8c050b2c24371ff78ba103bda03567e74dfe74871801",
+  "eval/test/evaluate.py": "35121cf46fb1f73d579e547e42bd23ac0ef3a5319b5abbfc72f1a683b035b099",
+  "eval/train/evaluate.py": "cc4250dc269ea8f3816582392458e4fe1c2e53ce4d2a80df9c00f6f30ff524eb",
+  "eval/synthetic_detector.py": "0d4aa2a0cd19b03ddeb7903c6db3aab04f65230fbf5ad19b4cbc13c8ab9445cc",
+  "method/dispatch.py": "14b0ae4eceaab07319a8e0482f9c69190473b4d3ae0cff8ea80d3abec8ac66cb",
+  "method/diffusion.py": "accf7f62401d29aa9adac8f9e4265b2621ae281781a6da9af7b47b33361ff136",
+  "method/train_diffusion.py": "d06a484fddd00ce468b949a4eb06b89719f6ef8b41b6e3372088d592b8067b3b",
+  "data/synthetic_dispatch_data.py": "c29ea1bd92adbc73a122eb8ae6582d342a169c649cb28c1ab4a61b393ad56f57",
+  "data/synthetic/test/annotations.json": "95e645be0ea57d246af7c3a5c10ebd248830cd86d1f429f2d808bc152fe21f1a",
+  "scoring/reference.json": "934d40469b613e6976e9a001d92befbba46efb205b9d122a217c306de77d572a",
+  "scoring/scores_test.json": "e12c459d94b46253cb358b4d3a240e0fa8a1d8da299ec3267a2cf58ec3384988",
+  "scoring/scores_train.json": "6b8d10e54a450d7356db7a5613e7e6e87536345e71a12a03d6d91a4ae4df12e1"
+}

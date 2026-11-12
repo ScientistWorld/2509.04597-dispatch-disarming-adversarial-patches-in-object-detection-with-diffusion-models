@@ -1,0 +1,5 @@
+.state/
+artifacts/
+checkpoints/
+__pycache__/
+*.pyc

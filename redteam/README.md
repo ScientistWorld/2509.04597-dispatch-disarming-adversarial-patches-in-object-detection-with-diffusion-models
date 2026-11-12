@@ -1,0 +1,11 @@
+# Gym scoring audit
+
+All candidate entry points are `redteam/<case>/run.sh`. They install image artifacts as the future agent would, run the public training evaluator, then run `bash scripts/evaluate_test.sh` with no arguments in a separate process. They never import or modify hidden evaluation code, monkeypatch its execution, or change Python's module search path for evaluation. The candidate implementation only uses the visible method, synthetic generator/data and documented artifact interface.
+
+`scenario.py` saves each run's exact train/test JSON and evaluator exit codes in its case folder. Hidden test logs are saved there too. `common.py` snapshots the original data, outputs and score files under ignored `.state/`, restores them before and after each case, and preserves reference outputs for the expressly permitted artifact reuse checks. The checkpoint and candidate-image caches stay under ignored `artifacts/`.
+
+`run_bundle.py` bundles all cases in one CPU job and skips completed cases on resume. Training uses the original 2000 clean images and original model, objective, masks, optimizer, batch size, learning rate, grids, and 32-step inference. Seed 0 saves 1-, 60-, and 120-epoch checkpoints, and seeds 1 and 2 each train for 60 epochs. The longer-trained variant uses 120 epochs; it is a genuine quality probe, not an assertion that more training must improve every score. Seeded runs additionally seed inference noise. Single-thread execution and a zero-worker DataLoader avoid oversubscribing the CPU job, without changing the training algorithm.
+
+Every `shortcut_` case is explicitly a shortcut attempt. Ties that avoid actually solving part or all of the problem count as paying shortcuts. Failed evaluator exits are recorded as failures; leftover score files are not claimed as successful runs. Numeric/cache forgery deliberately accompanies blank output images so reuse of a real method cannot disguise whether forgery worked.
+
+The final report is `REDTEAM.md`. Actual future-attempt metric standard deviations are unknown; the report will use the stated ranking formula with a disclosed audit cohort, distinguish dominance results that hold under any positive scaling, and retain all raw metrics.
