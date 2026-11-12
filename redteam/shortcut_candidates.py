@@ -21,10 +21,23 @@ def draw_boxes(records):
     for row in records:
         image = Image.new('RGB', (64, 64), (215, 215, 215))
         draw = ImageDraw.Draw(image)
-        for x0, y0, x1, y1 in row['boxes']:
-            draw.rectangle((x0, y0, x1 - 1, y1 - 1), fill=(35, 115, 220))
+        render_separate_boxes(draw, row['boxes'], (35, 115, 220))
         for variant in VARIANTS:
             image.save(out / variant / f"{row['id']}.png")
+
+
+def render_separate_boxes(draw, boxes, color):
+    # This shortcut draws the answers for the exposed color detector. Leave a
+    # column between adjacent boxes so the detector cannot merge two people.
+    ordered = sorted(boxes, key=lambda b: b[0] + b[2])
+    boundaries = [(left[0] + left[2] + right[0] + right[2]) // 4
+                  for left, right in zip(ordered, ordered[1:])]
+    for index, (x0, y0, x1, y1) in enumerate(ordered):
+        if index:
+            x0 = max(x0, boundaries[index - 1] + 1)
+        if index < len(boundaries):
+            x1 = min(x1, boundaries[index])
+        draw.rectangle((x0, y0, x1 - 1, y1 - 1), fill=color)
 
 
 def prepare(name):
@@ -162,8 +175,7 @@ def brute_force_templates():
                     chosen.append(box)
             im = Image.new('RGB', (64, 64), (215, 215, 215))
             draw = ImageDraw.Draw(im)
-            for x0, y0, x1, y1 in chosen:
-                draw.rectangle((x0, y0, x1 - 1, y1 - 1), fill=PERSON_COLOR)
+            render_separate_boxes(draw, chosen, PERSON_COLOR)
             im.save(output / variant / path.name)
     dump(ROOT / 'redteam/shortcut_bruteforce_templates/search.json',
          {'shape_templates': len(templates), 'total_position_candidates': search_count,

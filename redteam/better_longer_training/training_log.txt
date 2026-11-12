@@ -1,0 +1,5 @@
+seed=0 epoch=1 loss=0.2196735
+seed=0 epoch=2 loss=0.0792664
+seed=0 epoch=3 loss=0.0460004
+seed=0 epoch=4 loss=0.0395579
+seed=0 epoch=5 loss=0.0360675

@@ -1,0 +1,49 @@
+{
+  "experiments": {
+    "synthetic_hiding_scaled": {
+      "results": {
+        "dispatch": {
+          "clean_mAP5": 1.0,
+          "clean_precision": 1.0,
+          "attack_mAP5": 1.0,
+          "attack_AR": 1.0,
+          "attack_precision": 1.0
+        },
+        "vanilla": {
+          "clean_mAP5": 0.37735849056603776,
+          "clean_precision": 0.30303030303030304,
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "attack_precision": 0.0
+        }
+      }
+    },
+    "synthetic_creating_scaled": {
+      "results": {
+        "dispatch": {
+          "targeted_mAP5": 0.0,
+          "targeted_ASR": 0.0,
+          "untargeted_mAP5": 0.0,
+          "untargeted_ASR": 0.0,
+          "object_mAP5": 1.0
+        },
+        "vanilla": {
+          "targeted_mAP5": 0.0,
+          "targeted_ASR": 0.0,
+          "untargeted_mAP5": 0.0,
+          "untargeted_ASR": 0.0,
+          "object_mAP5": 0.37735849056603776
+        }
+      }
+    },
+    "rectification_ablation": {
+      "results": {
+        "dispatch": {
+          "attack_mAP5": 1.0,
+          "attack_AR": 1.0,
+          "attack_precision": 1.0
+        }
+      }
+    }
+  }
+}

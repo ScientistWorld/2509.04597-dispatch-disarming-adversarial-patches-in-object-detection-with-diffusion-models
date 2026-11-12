@@ -1,0 +1,49 @@
+{
+  "experiments": {
+    "synthetic_hiding_scaled": {
+      "results": {
+        "vanilla": {
+          "clean_mAP5": 0.7435897435897436,
+          "clean_precision": 0.8529411764705882,
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "attack_precision": 0.0
+        },
+        "dispatch": {
+          "clean_mAP5": 0.7435897435897436,
+          "clean_precision": 0.8529411764705882,
+          "attack_mAP5": 0.5128205128205128,
+          "attack_AR": 0.4188034188034188,
+          "attack_precision": 0.5405405405405406
+        }
+      }
+    },
+    "synthetic_creating_scaled": {
+      "results": {
+        "vanilla": {
+          "targeted_mAP5": 0.4642857142857143,
+          "targeted_ASR": 0.4642857142857143,
+          "untargeted_mAP5": 0.4642857142857143,
+          "untargeted_ASR": 0.4642857142857143,
+          "object_mAP5": 0.7692307692307693
+        },
+        "dispatch": {
+          "targeted_mAP5": 0.03571428571428571,
+          "targeted_ASR": 0.03571428571428571,
+          "untargeted_mAP5": 0.07142857142857142,
+          "untargeted_ASR": 0.10714285714285714,
+          "object_mAP5": 0.717948717948718
+        }
+      }
+    },
+    "rectification_ablation": {
+      "results": {
+        "dispatch": {
+          "attack_mAP5": 0.5128205128205128,
+          "attack_AR": 0.4188034188034188,
+          "attack_precision": 0.5405405405405406
+        }
+      }
+    }
+  }
+}

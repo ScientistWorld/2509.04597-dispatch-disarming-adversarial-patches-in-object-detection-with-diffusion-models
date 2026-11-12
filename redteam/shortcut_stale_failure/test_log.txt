@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/user/eval/test/evaluate.py", line 389, in <module>
+    main()
+  File "/home/user/eval/test/evaluate.py", line 374, in main
+    scores = score_methods(
+             ^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 320, in score_methods
+    hiding_predictions = write_prediction_cache(
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 200, in write_prediction_cache
+    predictions = detect_folder(image_folder, image_ids)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 192, in detect_folder
+    raise FileNotFoundError(f"Missing image for evaluation: {image_path}")
+FileNotFoundError: Missing image for evaluation: outputs/dispatch_images/hiding/test_0001.png

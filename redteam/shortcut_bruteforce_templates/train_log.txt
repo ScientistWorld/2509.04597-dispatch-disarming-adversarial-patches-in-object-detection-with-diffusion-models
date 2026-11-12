@@ -1,0 +1,49 @@
+{
+  "experiments": {
+    "synthetic_hiding_scaled": {
+      "results": {
+        "vanilla": {
+          "clean_mAP5": 0.7435897435897436,
+          "clean_precision": 0.8529411764705882,
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "attack_precision": 0.0
+        },
+        "dispatch": {
+          "clean_mAP5": 0.8461538461538461,
+          "clean_precision": 0.9428571428571428,
+          "attack_mAP5": 0.8461538461538461,
+          "attack_AR": 0.8119658119658119,
+          "attack_precision": 0.9428571428571428
+        }
+      }
+    },
+    "synthetic_creating_scaled": {
+      "results": {
+        "vanilla": {
+          "targeted_mAP5": 0.4642857142857143,
+          "targeted_ASR": 0.4642857142857143,
+          "untargeted_mAP5": 0.4642857142857143,
+          "untargeted_ASR": 0.4642857142857143,
+          "object_mAP5": 0.7692307692307693
+        },
+        "dispatch": {
+          "targeted_mAP5": 0.0,
+          "targeted_ASR": 0.0,
+          "untargeted_mAP5": 0.0,
+          "untargeted_ASR": 0.0,
+          "object_mAP5": 0.8461538461538461
+        }
+      }
+    },
+    "rectification_ablation": {
+      "results": {
+        "dispatch": {
+          "attack_mAP5": 0.8461538461538461,
+          "attack_AR": 0.8119658119658119,
+          "attack_precision": 0.9428571428571428
+        }
+      }
+    }
+  }
+}

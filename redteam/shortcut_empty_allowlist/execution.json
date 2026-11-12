@@ -1,0 +1,8 @@
+{
+  "train_exit": null,
+  "test_exit": 0,
+  "test_seconds": 0.47700875499867834,
+  "test_command": "bash scripts/evaluate_test.sh",
+  "fresh_process": true,
+  "evaluator_modified": false
+}
