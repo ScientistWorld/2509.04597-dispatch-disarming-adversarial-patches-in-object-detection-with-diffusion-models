@@ -1,8 +1,4 @@
-# Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends.
-action: pending
+action: submit
 gpus: 0
 test: false
-milestone: secondary_claims
-notes: ""
+notes: "Resume audit with per-epoch optimizer/RNG checkpoints; retain completed shortcuts, finish three seeds and 1/60/120 epoch quality checks."
