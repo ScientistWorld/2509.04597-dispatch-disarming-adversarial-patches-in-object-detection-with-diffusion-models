@@ -26,6 +26,8 @@ def main():
     torch.manual_seed(a.seed)
     torch.set_num_threads(1)
     dataset = CleanImageDataset('/home/user/data/synthetic/train/clean')
+    # Identical tensors, cached once to avoid 2000 remote PNG reads per epoch.
+    dataset = [dataset[index] for index in range(len(dataset))]
     loader = DataLoader(dataset, batch_size=64, shuffle=True, num_workers=0, drop_last=True)
     model = TinyInpaintUNet(base=32)
     ddpm = DDPM(timesteps=80, device='cpu')
@@ -65,6 +67,12 @@ def main():
         print(f'seed={a.seed} epoch={epoch} loss={total / len(loader):.7f}', flush=True)
         history.append({'epoch': epoch, 'loss': total / len(loader),
                         'seconds': time.monotonic() - started})
+        if epoch in {1, 60, 120, a.epochs}:
+            path = artifact_dir / f'seed{a.seed}_epoch{epoch}.pt'
+            temporary = path.with_suffix('.tmp.pt')
+            torch.save({'model': model.state_dict(), 'timesteps': 80, 'base_channels': 32,
+                        'prediction_type': 'x0', 'steps': epoch * len(loader)}, temporary)
+            os.replace(temporary, path)
         # Atomic epoch checkpoints survive SLURM drain/restart and preserve the
         # original training trajectory, including data order and diffusion noise.
         resume_tmp = resume_path.with_suffix('.tmp.pt')
@@ -74,12 +82,6 @@ def main():
                     'torch_rng': torch.get_rng_state()}, resume_tmp)
         os.replace(resume_tmp, resume_path)
         history_path.write_text(json.dumps(history, indent=2) + '\n')
-        if epoch in {1, 60, 120, a.epochs}:
-            path = artifact_dir / f'seed{a.seed}_epoch{epoch}.pt'
-            temporary = path.with_suffix('.tmp.pt')
-            torch.save({'model': model.state_dict(), 'timesteps': 80, 'base_channels': 32,
-                        'prediction_type': 'x0', 'steps': epoch * len(loader)}, temporary)
-            os.replace(temporary, path)
 
 if __name__ == '__main__':
     main()
