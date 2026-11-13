@@ -1,5 +1,5 @@
 action: submit
 gpus: 1
-test: true
+test: false
 milestone: secondary_claims
-notes: "Smoke test of the rebuilt gym (INRIA + Faster R-CNN + pretrained LDM DISPATCH): tiny patch budgets, 6 items/variant, train+test evaluators, shortcut probes."
+notes: "Build INRIA visible slice + hidden test assets (white-box patches vs Faster R-CNN), run reference DISPATCH/baselines through train/test/main evaluators, then variants, seeds, simple baselines and shortcut probes."
