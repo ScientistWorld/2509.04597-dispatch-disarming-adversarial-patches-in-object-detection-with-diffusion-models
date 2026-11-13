@@ -1,8 +1,5 @@
-# Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends.
-action: pending
-gpus: 0
-test: false
+action: submit
+gpus: 1
+test: true
 milestone: secondary_claims
-notes: ""
+notes: "Smoke test of the rebuilt gym (INRIA + Faster R-CNN + pretrained LDM DISPATCH): tiny patch budgets, 6 items/variant, train+test evaluators, shortcut probes."
