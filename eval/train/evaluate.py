@@ -104,7 +104,9 @@ def main() -> None:
     save_dir = Path(args.save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    tmp = Path(tempfile.mkdtemp(prefix="dispatch_eval_train_"))
+    tmp_root = Path(os.environ.get("GYM_TMPDIR", ROOT / "outputs"))
+    tmp_root.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.mkdtemp(prefix=".eval_train_", dir=tmp_root))
     try:
         inputs = {}
         in_dir = tmp / "inputs"
@@ -131,26 +133,31 @@ def main() -> None:
                 status[name] = "skipped: reserved or invalid name"
                 continue
             print(f"defense {name}", flush=True)
-            run_in, run_out = tmp / name / "in", tmp / name / "out"
-            shutil.copytree(in_dir, run_in)
-            run_out.mkdir(parents=True)
-            err = run_defense(ddir / "defend.sh", run_in, run_out, args.timeout, save_dir / "logs" / f"{name}.log")
-            arrays = None
-            if err is None:
-                arrays, err = load_outputs(run_out, items, inputs)
-            if err is not None:
-                results[name], status[name] = worst_scores(), f"failed: {err}"
-                continue
-            scores, all_preds[name] = evaluate(arrays)
-            fails = constraint_failures(scores, vanilla)
-            if fails:
-                results[name], status[name] = worst_scores(), "failed constraint: " + "; ".join(fails)
-            else:
-                results[name], status[name] = scores, "ok"
-            keep = save_dir / name
-            shutil.rmtree(keep, ignore_errors=True)
-            shutil.copytree(run_out, keep)
-            shutil.rmtree(tmp / name, ignore_errors=True)
+            results[name], status[name] = worst_scores(), "failed: evaluation did not complete"
+            try:
+                run_in, run_out = tmp / name / "in", tmp / name / "out"
+                shutil.copytree(in_dir, run_in)
+                run_out.mkdir(parents=True)
+                err = run_defense(ddir / "defend.sh", run_in, run_out, args.timeout, save_dir / "logs" / f"{name}.log")
+                arrays = None
+                if err is None:
+                    arrays, err = load_outputs(run_out, items, inputs)
+                if err is not None:
+                    status[name] = f"failed: {err}"
+                    continue
+                scores, all_preds[name] = evaluate(arrays)
+                fails = constraint_failures(scores, vanilla)
+                if fails:
+                    status[name] = "failed constraint: " + "; ".join(fails)
+                else:
+                    results[name], status[name] = scores, "ok"
+                keep = save_dir / name
+                shutil.rmtree(keep, ignore_errors=True)
+                shutil.copytree(run_out, keep)
+            except Exception as exc:  # noqa: BLE001  - any evaluation error fails only this defense
+                results[name], status[name] = worst_scores(), f"failed: {type(exc).__name__}: {str(exc)[:300]}"
+            finally:
+                shutil.rmtree(tmp / name, ignore_errors=True)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

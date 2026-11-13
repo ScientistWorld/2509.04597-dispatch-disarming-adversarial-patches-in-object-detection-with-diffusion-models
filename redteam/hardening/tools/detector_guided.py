@@ -46,7 +46,7 @@ def utility(model, arr: np.ndarray, device) -> float:
 def main() -> None:
     in_dir, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
     out_dir.mkdir(parents=True, exist_ok=True)
-    work = Path(tempfile.mkdtemp(prefix="detguided_"))
+    work = Path(tempfile.mkdtemp(prefix=".detguided_", dir=out_dir.parent))
     cands = [in_dir]
     for seed in (0, 1, 2):
         d = work / f"s{seed}"

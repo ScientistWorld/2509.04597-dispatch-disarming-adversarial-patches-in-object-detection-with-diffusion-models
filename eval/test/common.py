@@ -150,7 +150,7 @@ def load_detector(device: torch.device):
 def detect(model, images: list[np.ndarray], device: torch.device, batch: int = 8) -> list[dict]:
     out = []
     for i in range(0, len(images), batch):
-        tensors = [torch.from_numpy(a).permute(2, 0, 1).float().div(255.0).to(device) for a in images[i : i + batch]]
+        tensors = [torch.from_numpy(np.array(a)).permute(2, 0, 1).float().div(255.0).to(device) for a in images[i : i + batch]]
         for r in model(tensors):
             out.append(
                 {

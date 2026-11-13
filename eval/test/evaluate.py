@@ -162,7 +162,9 @@ def main() -> None:
 
     signal.signal(signal.SIGTERM, restore)
 
-    tmp = Path(tempfile.mkdtemp(prefix="dispatch_eval_"))
+    tmp_root = Path(os.environ.get("GYM_TMPDIR", ROOT / "outputs"))
+    tmp_root.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.mkdtemp(prefix=".eval_test_", dir=tmp_root))
     results, status = {}, {}
     try:
         inputs = {}
@@ -186,25 +188,31 @@ def main() -> None:
                 status[name] = "skipped: reserved or invalid name"
                 continue
             print(f"defense {name}", flush=True)
-            run_in, run_out = tmp / name / "in", tmp / name / "out"
-            shutil.copytree(in_dir, run_in)
-            run_out.mkdir(parents=True)
-            err = run_defense(ddir / "defend.sh", run_in, run_out, args.timeout, log_dir / "logs" / f"{name}.log", locks)
-            arrays = None
-            if err is None and tampered:
-                err = "fixed inputs altered: " + ", ".join(tampered[:3])
-            if err is None:
-                arrays, err = load_outputs(run_out, items, inputs)
-            if err is not None:
-                results[name], status[name] = worst_scores(), f"failed: {err}"
-            else:
-                scores = evaluate(arrays)
-                fails = constraint_failures(scores, vanilla)
-                if fails:
-                    results[name], status[name] = worst_scores(), "failed constraint: " + "; ".join(fails)
+            results[name], status[name] = worst_scores(), "failed: evaluation did not complete"
+            try:
+                run_in, run_out = tmp / name / "in", tmp / name / "out"
+                shutil.copytree(in_dir, run_in)
+                run_out.mkdir(parents=True)
+                err = run_defense(ddir / "defend.sh", run_in, run_out, args.timeout, log_dir / "logs" / f"{name}.log", locks)
+                arrays = None
+                if err is None and tampered:
+                    err = "fixed inputs altered: " + ", ".join(tampered[:3])
+                if err is None:
+                    arrays, err = load_outputs(run_out, items, inputs)
+                if err is not None:
+                    status[name] = f"failed: {err}"
                 else:
-                    results[name], status[name] = scores, "ok"
-            shutil.rmtree(tmp / name, ignore_errors=True)
+                    scores = evaluate(arrays)
+                    fails = constraint_failures(scores, vanilla)
+                    if fails:
+                        status[name] = "failed constraint: " + "; ".join(fails)
+                    else:
+                        results[name], status[name] = scores, "ok"
+            except Exception as exc:  # noqa: BLE001  - any evaluation error fails only this defense
+                results[name], status[name] = worst_scores(), f"failed: {type(exc).__name__}: {str(exc)[:300]}"
+            finally:
+                locks.__exit__(None, None, None)
+                shutil.rmtree(tmp / name, ignore_errors=True)
     finally:
         locks.__exit__(None, None, None)
         shutil.rmtree(tmp, ignore_errors=True)

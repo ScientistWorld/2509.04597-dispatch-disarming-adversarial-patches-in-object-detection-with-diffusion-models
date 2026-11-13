@@ -128,7 +128,8 @@ def optimise_hiding_patch(model, data: list[tuple[torch.Tensor, list]], kind: st
             ov = box_iou(pp, gt)  # [P, G]
             person = pr[:, PERSON][:, None].expand_as(ov)
             near = torch.where(ov >= 0.3, person, torch.zeros_like(person))
-            det.append(near.max(dim=0).values.mean())
+            top = near.topk(min(10, near.shape[0]), dim=0).values  # [k, G]
+            det.append((0.5 * top[0] + 0.5 * top.mean(dim=0)).mean())
         det_loss = torch.stack(det).mean()
         loss = det_loss + torch.clamp(2.5 * tv_loss(patch), min=0.1)
         opt.zero_grad()
@@ -136,7 +137,7 @@ def optimise_hiding_patch(model, data: list[tuple[torch.Tensor, list]], kind: st
         opt.step()
         with torch.no_grad():
             param.clamp_(0, 1)
-        if it % 50 == 0 or it == iters - 1:
+        if it % 250 == 0 or it == iters - 1:
             log(f"  hiding[{kind},{seed}] it={it} det={det_loss.item():.4f} tv={tv_loss(patch).item():.4f} t={time.time() - t0:.0f}s")
     return (render(param, kind).detach().cpu().permute(1, 2, 0).numpy() * 255).round().astype(np.uint8)
 
@@ -192,6 +193,6 @@ def optimise_creating_patch(model, data: list[tuple[torch.Tensor, list]], target
         opt.step()
         with torch.no_grad():
             param.clamp_(0, 1)
-        if it % 50 == 0 or it == iters - 1:
+        if it % 100 == 0 or it == iters - 1:
             log(f"  creating[{target},{seed}] it={it} nll={det_loss.item():.4f} t={time.time() - t0:.0f}s")
     return (param.detach().clamp(0, 1).cpu().permute(1, 2, 0).numpy() * 255).round().astype(np.uint8)

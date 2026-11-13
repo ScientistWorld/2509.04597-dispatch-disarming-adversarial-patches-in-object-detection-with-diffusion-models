@@ -58,8 +58,8 @@ def to_tensor(img: Image.Image) -> torch.Tensor:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-dir", default=str(ROOT / "data" / "inria_slice"))
-    ap.add_argument("--hide-iters", type=int, default=1000)
-    ap.add_argument("--create-iters", type=int, default=400)
+    ap.add_argument("--hide-iters", type=int, default=3000)
+    ap.add_argument("--create-iters", type=int, default=600)
     ap.add_argument("--per-variant", type=int, default=0, help="limit items per variant (smoke tests)")
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = ap.parse_args()
