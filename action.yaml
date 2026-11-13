@@ -1,2 +1,8 @@
-action: done
-notes: "Audit committed as 26efa22: 20 cases, nine paying shortcuts, longer-training gain below seed spread; original gym files and artifacts restored."
+# Once you set action to 'submit' or 'done', STOP immediately.
+# Do NOT sleep, poll, or wait for jobs. The system reads this file
+# only after your turn ends.
+action: pending
+gpus: 0
+test: false
+milestone: secondary_claims
+notes: ""
