@@ -1,351 +1,168 @@
-"""Visible train-slice evaluator for the synthetic DISPATCH benchmark.
+"""Visible-slice evaluator: runs every defense on disk and scores it.
 
-This evaluator scores saved image artifacts. It does not import or execute
-method code; any method that writes compatible image folders can be scored.
+Contract (see defenses/README.md): a defense is a directory
+``defenses/<name>/`` containing ``defend.sh``.  The evaluator calls
+``bash defenses/<name>/defend.sh <input_dir> <output_dir>`` from the
+workspace root.  <input_dir> holds the benchmark images as ``<id>.png``
+(clean, hiding-attacked and creating-attacked images, mixed, with opaque
+names).  The defense must write one RGB PNG with the same name and size per
+input to <output_dir>.  The evaluator then runs the protected detector on
+the outputs and computes every metric itself.
+
+A defense that fails (non-zero exit, timeout, missing / unreadable /
+wrongly sized outputs) or violates the clean-preservation constraint
+receives the worst value of every metric in every experiment.  The
+undefended detector ("vanilla") is always scored on the same inputs.
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-from collections import deque
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import time
 from pathlib import Path
 
 import numpy as np
+import torch
 from PIL import Image
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import (  # noqa: E402
+    ROOT,
+    compose,
+    constraint_failures,
+    detect,
+    load_detector,
+    score_predictions,
+    worst_scores,
+)
 
-SLICE = "train"
-SPLIT_SEED = "dispatch-synthetic-eval-split-v1"
-
-
-def load_annotations(path: Path) -> dict[str, dict]:
-    with path.open() as f:
-        return {row["id"]: row for row in json.load(f)}
-
-
-def split_annotations(annotations: dict[str, dict], slice_name: str) -> dict[str, dict]:
-    groups: dict[tuple[int, bool], list[dict]] = {}
-    for ann in annotations.values():
-        key = (len(ann["boxes"]), bool(ann.get("creating_active", False)))
-        groups.setdefault(key, []).append(ann)
-
-    selected: dict[str, dict] = {}
-    for group in groups.values():
-        ordered = sorted(group, key=lambda row: stable_digest(row["id"]))
-        for index, ann in enumerate(ordered):
-            split_bucket = index % 3
-            if (slice_name == "train" and split_bucket == 0) or (
-                slice_name == "test" and split_bucket in {1, 2}
-            ):
-                selected[ann["id"]] = ann
-    return dict(sorted(selected.items()))
+NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.\-]*$")
 
 
-def stable_digest(image_id: str) -> str:
-    return hashlib.sha256(f"{SPLIT_SEED}:{image_id}".encode("utf-8")).hexdigest()
+def discover(defenses_dir: Path) -> list[Path]:
+    if not defenses_dir.is_dir():
+        return []
+    return sorted(p for p in defenses_dir.iterdir() if p.is_dir() and (p / "defend.sh").is_file())
 
 
-def mask_person_pixels(arr: np.ndarray) -> np.ndarray:
-    r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
-    body = (b > 145) & (g > 55) & (g < 165) & (r < 90)
-    head = (r > 190) & (g > 155) & (b < 175)
-    return body | head
-
-
-def mask_creating_trigger_pixels(arr: np.ndarray) -> np.ndarray:
-    r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
-    red = (r > 210) & (g < 100) & (b < 100)
-    cyan = (r < 100) & (g > 190) & (b > 190)
-    magenta = (r > 200) & (g < 100) & (b > 200)
-    return red | cyan | magenta
-
-
-def connected_components(mask: np.ndarray) -> list[tuple[list[int], int]]:
-    h, w = mask.shape
-    seen = np.zeros_like(mask, dtype=bool)
-    components = []
-    for y in range(h):
-        for x in range(w):
-            if not mask[y, x] or seen[y, x]:
-                continue
-            q = deque([(x, y)])
-            seen[y, x] = True
-            xs, ys = [], []
-            while q:
-                cx, cy = q.popleft()
-                xs.append(cx)
-                ys.append(cy)
-                for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
-                    if 0 <= nx < w and 0 <= ny < h and mask[ny, nx] and not seen[ny, nx]:
-                        seen[ny, nx] = True
-                        q.append((nx, ny))
-            components.append(([min(xs), min(ys), max(xs) + 1, max(ys) + 1], len(xs)))
-    return components
-
-
-def detect_persons(image_path: Path) -> list[dict]:
-    arr = np.asarray(Image.open(image_path).convert("RGB"))
-    detections = []
-    for box, area in connected_components(mask_person_pixels(arr)):
-        if area < 35:
-            continue
-        bw, bh = box[2] - box[0], box[3] - box[1]
-        if bh < 14 or bw < 7:
-            continue
-        detections.append({"box": box, "score": min(1.0, area / 105.0), "class": "person"})
-
-    for box, area in connected_components(mask_creating_trigger_pixels(arr)):
-        if area < 45:
-            continue
-        bw, bh = box[2] - box[0], box[3] - box[1]
-        if bh < 6 or bw < 6:
-            continue
-        detections.append({"box": box, "score": min(1.0, area / 120.0), "class": "trigger"})
-    return detections
-
-
-def iou(a: list[int] | tuple[int, int, int, int], b: list[int] | tuple[int, int, int, int]) -> float:
-    ax0, ay0, ax1, ay1 = a
-    bx0, by0, bx1, by1 = b
-    ix0, iy0 = max(ax0, bx0), max(ay0, by0)
-    ix1, iy1 = min(ax1, bx1), min(ay1, by1)
-    inter = max(0, ix1 - ix0) * max(0, iy1 - iy0)
-    area_a = (ax1 - ax0) * (ay1 - ay0)
-    area_b = (bx1 - bx0) * (by1 - by0)
-    return inter / max(1, area_a + area_b - inter)
-
-
-def person_detections(preds: list[dict]) -> list[dict]:
-    return [pred for pred in preds if pred.get("class") == "person"]
-
-
-def recall_at_iou(predictions: dict[str, list[dict]], annotations: dict[str, dict], threshold: float = 0.5) -> float:
-    hits = 0
-    total = 0
-    for image_id, ann in annotations.items():
-        preds = person_detections(predictions.get(image_id, []))
-        for gt in ann["boxes"]:
-            total += 1
-            hits += int(any(iou(pred["box"], gt) >= threshold for pred in preds))
-    return hits / max(1, total)
-
-
-def average_recall(predictions: dict[str, list[dict]], annotations: dict[str, dict]) -> float:
-    thresholds = (0.5, 0.6, 0.7)
-    return sum(recall_at_iou(predictions, annotations, threshold) for threshold in thresholds) / len(thresholds)
-
-
-def precision_at_iou(predictions: dict[str, list[dict]], annotations: dict[str, dict], threshold: float = 0.5) -> float:
-    true_positive = 0
-    false_positive = 0
-    for image_id, ann in annotations.items():
-        matched_gt: set[int] = set()
-        for pred in person_detections(predictions.get(image_id, [])):
-            best_idx = -1
-            best_iou = 0.0
-            for idx, gt in enumerate(ann["boxes"]):
-                if idx in matched_gt:
-                    continue
-                overlap = iou(pred["box"], gt)
-                if overlap > best_iou:
-                    best_iou = overlap
-                    best_idx = idx
-            if best_iou >= threshold:
-                matched_gt.add(best_idx)
-                true_positive += 1
-            else:
-                false_positive += 1
-    return true_positive / max(1, true_positive + false_positive)
-
-
-def false_positive_rate_on_patch(
-    predictions: dict[str, list[dict]], annotations: dict[str, dict], threshold: float = 0.1
-) -> float:
-    successes = 0
-    total = 0
-    for image_id, ann in annotations.items():
-        patch_box = ann["creating_patch_box"]
-        total += 1
-        false_patch_detection = False
-        for pred in predictions.get(image_id, []):
-            if pred["score"] < 0.3:
-                continue
-            if any(iou(pred["box"], gt) >= 0.5 for gt in ann["boxes"]):
-                continue
-            if iou(pred["box"], patch_box) >= threshold:
-                false_patch_detection = True
-                break
-        successes += int(false_patch_detection)
-    return successes / max(1, total)
-
-
-def detect_folder(folder: Path, image_ids: list[str]) -> dict[str, list[dict]]:
-    if not folder.exists():
-        raise FileNotFoundError(f"Missing image folder for evaluation: {folder}")
-    predictions = {}
-    for image_id in image_ids:
-        image_path = folder / f"{image_id}.png"
-        if not image_path.exists():
-            raise FileNotFoundError(f"Missing image for evaluation: {image_path}")
-        predictions[image_id] = detect_persons(image_path)
-    return predictions
-
-
-def write_prediction_cache(
-    cache_dir: Path, method_name: str, variant: str, image_folder: Path, image_ids: list[str]
-) -> dict[str, list[dict]]:
-    predictions = detect_folder(image_folder, image_ids)
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_path = cache_dir / f"{method_name}_{variant}_predictions.json"
-    payload = {
-        "slice": SLICE,
-        "method": method_name,
-        "variant": variant,
-        "image_folder": str(image_folder),
-        "image_ids": image_ids,
-        "predictions": predictions,
-    }
-    with cache_path.open("w") as f:
-        json.dump(payload, f, indent=2)
-    return predictions
-
-
-def existing_dir(path: Path) -> Path | None:
-    return path if path.exists() else None
-
-
-def discover_method_sources(outputs_dir: Path, data_dir: Path) -> dict[str, dict[str, Path]]:
-    sources: dict[str, dict[str, Path]] = {
-        "vanilla": {
-            "clean": data_dir / "test" / "clean",
-            "hiding": data_dir / "test" / "hiding",
-            "creating": data_dir / "test" / "creating",
-        }
-    }
-
-    dispatch_clean = existing_dir(outputs_dir / "dispatch_images" / "clean")
-    dispatch_hiding = existing_dir(outputs_dir / "dispatch_images" / "hiding")
-    dispatch_creating = existing_dir(outputs_dir / "dispatch_images" / "creating")
-    if dispatch_hiding or dispatch_creating:
-        sources["dispatch"] = {}
-        if dispatch_clean:
-            sources["dispatch"]["clean"] = dispatch_clean
-        if dispatch_hiding:
-            sources["dispatch"]["hiding"] = dispatch_hiding
-        if dispatch_creating:
-            sources["dispatch"]["creating"] = dispatch_creating
-
-    regenerated_hiding = existing_dir(outputs_dir / "regenerated_images" / "hiding")
-    if regenerated_hiding:
-        sources["regenerated_only"] = {"hiding": regenerated_hiding}
-
-    method_root = outputs_dir / "methods"
-    if method_root.exists():
-        for method_dir in sorted(path for path in method_root.iterdir() if path.is_dir()):
-            method_sources = {}
-            for variant in ("clean", "hiding", "creating"):
-                variant_dir = existing_dir(method_dir / variant)
-                if variant_dir:
-                    method_sources[variant] = variant_dir
-            if method_sources:
-                sources[method_dir.name] = method_sources
-
-    for image_dir in sorted(outputs_dir.glob("*_images")):
-        if image_dir.name in {"dispatch_images", "regenerated_images"}:
-            continue
-        method_name = image_dir.name.removesuffix("_images")
-        method_sources = {}
-        for variant in ("clean", "hiding", "creating"):
-            variant_dir = existing_dir(image_dir / variant)
-            if variant_dir:
-                method_sources[variant] = variant_dir
-        if method_sources:
-            sources[method_name] = method_sources
-
-    return sources
-
-
-def score_methods(
-    sources: dict[str, dict[str, Path]], annotations: dict[str, dict], cache_dir: Path
-) -> dict[str, dict]:
-    image_ids = list(annotations)
-    clean_predictions: dict[str, list[dict]] | None = None
-
-    scores = {
-        "experiments": {
-            "synthetic_hiding_scaled": {"results": {}},
-            "synthetic_creating_scaled": {"results": {}},
-            "rectification_ablation": {"results": {}},
-        }
-    }
-
-    for method_name, method_sources in sources.items():
-        if method_name != "regenerated_only" and "hiding" in method_sources:
-            if "clean" in method_sources:
-                clean_predictions = write_prediction_cache(
-                    cache_dir, method_name, "clean", method_sources["clean"], image_ids
-                )
-                clean_recall = recall_at_iou(clean_predictions, annotations)
-            else:
-                clean_recall = 0.0
-            hiding_predictions = write_prediction_cache(
-                cache_dir, method_name, "hiding", method_sources["hiding"], image_ids
+def run_defense(script: Path, in_dir: Path, out_dir: Path, timeout: float, log_path: Path) -> str | None:
+    env = dict(os.environ)
+    env["PYTHONHASHSEED"] = "0"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    start = time.time()
+    try:
+        with log_path.open("w") as log:
+            proc = subprocess.run(
+                ["bash", str(script), str(in_dir), str(out_dir)],
+                cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=timeout,
             )
-            hiding_recall = recall_at_iou(hiding_predictions, annotations)
-            scores["experiments"]["synthetic_hiding_scaled"]["results"][method_name] = {
-                "clean_mAP5": clean_recall,
-                "clean_precision": precision_at_iou(clean_predictions, annotations) if "clean" in method_sources else 0.0,
-                "attack_mAP5": hiding_recall,
-                "attack_AR": average_recall(hiding_predictions, annotations),
-                "attack_precision": precision_at_iou(hiding_predictions, annotations),
-            }
+    except subprocess.TimeoutExpired:
+        return f"timeout after {timeout:.0f}s"
+    print(f"  {script.parent.name}: exit {proc.returncode} in {time.time() - start:.0f}s", flush=True)
+    if proc.returncode != 0:
+        return f"exit code {proc.returncode}"
+    return None
 
-        if method_name != "regenerated_only" and "creating" in method_sources:
-            creating_predictions = write_prediction_cache(
-                cache_dir, method_name, "creating", method_sources["creating"], image_ids
-            )
-            scores["experiments"]["synthetic_creating_scaled"]["results"][method_name] = {
-                "targeted_mAP5": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.5),
-                "targeted_ASR": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.3),
-                "untargeted_mAP5": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.1),
-                "untargeted_ASR": false_positive_rate_on_patch(creating_predictions, annotations, threshold=0.01),
-                "object_mAP5": recall_at_iou(creating_predictions, annotations),
-            }
 
-        if method_name in {"dispatch", "regenerated_only"} and "hiding" in method_sources:
-            hiding_predictions = write_prediction_cache(
-                cache_dir, method_name, "rectification_hiding", method_sources["hiding"], image_ids
-            )
-            scores["experiments"]["rectification_ablation"]["results"][method_name] = {
-                "attack_mAP5": recall_at_iou(hiding_predictions, annotations),
-                "attack_AR": average_recall(hiding_predictions, annotations),
-                "attack_precision": precision_at_iou(hiding_predictions, annotations),
-            }
-
-    if clean_predictions is None and "vanilla" in sources and "clean" in sources["vanilla"]:
-        write_prediction_cache(cache_dir, "vanilla", "clean", sources["vanilla"]["clean"], image_ids)
-
-    return scores
+def load_outputs(out_dir: Path, items: list[dict], inputs: dict[str, np.ndarray]) -> tuple[list[np.ndarray] | None, str | None]:
+    arrays = []
+    for it in items:
+        path = out_dir / f"{it['id']}.png"
+        if not path.is_file():
+            return None, f"missing output {path.name}"
+        try:
+            with Image.open(path) as im:
+                arr = np.asarray(im.convert("RGB"))
+        except Exception as exc:  # noqa: BLE001
+            return None, f"unreadable output {path.name}: {exc}"
+        if arr.shape != inputs[it["id"]].shape:
+            return None, f"output {path.name} has shape {arr.shape}, expected {inputs[it['id']].shape}"
+        arrays.append(arr)
+    return arrays, None
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--outputs-dir", default="outputs")
-    parser.add_argument("--data-dir", default="data/synthetic")
-    parser.add_argument("--score-path", default="scoring/scores_train.json")
-    args = parser.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--slice-dir", default=str(ROOT / "data" / "inria_slice"))
+    ap.add_argument("--defenses-dir", default=str(ROOT / "defenses"))
+    ap.add_argument("--score-path", default=str(ROOT / "scoring" / "scores_train.json"))
+    ap.add_argument("--save-dir", default=str(ROOT / "outputs" / "eval_train"))
+    ap.add_argument("--timeout", type=float, default=float(os.environ.get("GYM_DEFENSE_TIMEOUT", 4 * 3600)))
+    args = ap.parse_args()
 
-    outputs_dir = Path(args.outputs_dir)
-    data_dir = Path(args.data_dir)
-    annotations = split_annotations(load_annotations(data_dir / "test" / "annotations.json"), SLICE)
-    scores = score_methods(discover_method_sources(outputs_dir, data_dir), annotations, outputs_dir / f"eval_{SLICE}")
+    slice_dir = Path(args.slice_dir)
+    spec = json.loads((slice_dir / "spec.json").read_text())
+    items = spec["items"]
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    save_dir = Path(args.save_dir)
+    save_dir.mkdir(parents=True, exist_ok=True)
 
+    tmp = Path(tempfile.mkdtemp(prefix="dispatch_eval_train_"))
+    try:
+        inputs = {}
+        in_dir = tmp / "inputs"
+        in_dir.mkdir()
+        (save_dir / "inputs").mkdir(exist_ok=True)
+        for it in items:
+            img = compose(it, slice_dir / "patches")
+            inputs[it["id"]] = np.asarray(img)
+            img.save(in_dir / f"{it['id']}.png")
+            img.save(save_dir / "inputs" / f"{it['id']}.png")
+        detector = load_detector(device)
+
+        def evaluate(arrays: list[np.ndarray]) -> tuple[dict, list]:
+            preds = detect(detector, arrays, device)
+            return score_predictions(items, preds), preds
+
+        results, status, all_preds = {}, {}, {}
+        vanilla, all_preds["vanilla"] = evaluate([inputs[it["id"]] for it in items])
+        results["vanilla"], status["vanilla"] = vanilla, "ok (undefended detector, computed by the evaluator)"
+
+        for ddir in discover(Path(args.defenses_dir)):
+            name = ddir.name
+            if name == "vanilla" or not NAME_RE.match(name):
+                status[name] = "skipped: reserved or invalid name"
+                continue
+            print(f"defense {name}", flush=True)
+            run_in, run_out = tmp / name / "in", tmp / name / "out"
+            shutil.copytree(in_dir, run_in)
+            run_out.mkdir(parents=True)
+            err = run_defense(ddir / "defend.sh", run_in, run_out, args.timeout, save_dir / "logs" / f"{name}.log")
+            arrays = None
+            if err is None:
+                arrays, err = load_outputs(run_out, items, inputs)
+            if err is not None:
+                results[name], status[name] = worst_scores(), f"failed: {err}"
+                continue
+            scores, all_preds[name] = evaluate(arrays)
+            fails = constraint_failures(scores, vanilla)
+            if fails:
+                results[name], status[name] = worst_scores(), "failed constraint: " + "; ".join(fails)
+            else:
+                results[name], status[name] = scores, "ok"
+            keep = save_dir / name
+            shutil.rmtree(keep, ignore_errors=True)
+            shutil.copytree(run_out, keep)
+            shutil.rmtree(tmp / name, ignore_errors=True)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    scores = {"experiments": {}}
+    for exp in ("inria_digital_hiding", "inria_hiding_large_patch", "creating_digital"):
+        scores["experiments"][exp] = {"results": {m: r[exp] for m, r in results.items()}}
     score_path = Path(args.score_path)
     score_path.parent.mkdir(parents=True, exist_ok=True)
-    with score_path.open("w") as f:
-        json.dump(scores, f, indent=2)
+    score_path.write_text(json.dumps(scores, indent=2))
+    (save_dir / "status.json").write_text(json.dumps(status, indent=2))
+    (save_dir / "predictions.json").write_text(json.dumps({"items": items, "predictions": all_preds}))
+    print(json.dumps(status, indent=2))
     print(json.dumps(scores, indent=2))
 
 

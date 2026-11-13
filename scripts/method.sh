@@ -1,26 +1,10 @@
 #!/bin/bash
-# Run the paper's proposed method.
-#
-# This script trains/runs the paper's method using code in method/.
-#
-# Usage:
-#   bash scripts/method.sh
-
-set -e
-
-cd /home/user
-
-DEVICE="${DEVICE:-cpu}"
-EPOCHS="${EPOCHS:-60}"
-STEPS="${STEPS:-32}"
-GRIDS="${GRIDS:-16}"
-TRAIN_COUNT="${TRAIN_COUNT:-2000}"
-TEST_COUNT="${TEST_COUNT:-80}"
-
-python data/synthetic_dispatch_data.py --output-dir data/synthetic --train-count "$TRAIN_COUNT" --test-count "$TEST_COUNT"
-python method/train_diffusion.py --data-dir data/synthetic/train/clean --checkpoint checkpoints/dispatch_ddpm.pt --epochs "$EPOCHS" --grids "$GRIDS" --device "$DEVICE"
-bash scripts/baseline.sh
-python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant clean --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
-python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant hiding --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
-python method/dispatch.py --checkpoint checkpoints/dispatch_ddpm.pt --data-dir data/synthetic --outputs-dir outputs --variant creating --steps "$STEPS" --grids "$GRIDS" --device "$DEVICE"
-bash scripts/evaluate.sh
+# Run the paper's method (DISPATCH) on a directory of PNG images.
+#   bash scripts/method.sh <input_dir> <output_dir> [extra method/dispatch.py flags]
+# Defaults: the public slice inputs written by scripts/evaluate.sh.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+IN="${1:-outputs/eval/inputs}"
+OUT="${2:-outputs/dispatch_demo}"
+shift $(( $# > 2 ? 2 : $# ))
+python method/dispatch.py --input-dir "$IN" --output-dir "$OUT" "$@"
