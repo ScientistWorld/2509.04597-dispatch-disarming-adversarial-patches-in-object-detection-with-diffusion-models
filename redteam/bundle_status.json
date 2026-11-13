@@ -1,0 +1,24 @@
+{
+  "cases": [
+    "reference",
+    "weak_identity",
+    "weak_no_rectification",
+    "shortcut_blank",
+    "shortcut_clean_copy",
+    "shortcut_visible_labels",
+    "shortcut_rebuild_answers",
+    "shortcut_selective_omission",
+    "shortcut_empty_allowlist",
+    "shortcut_cache_score_forgery",
+    "shortcut_stale_failure",
+    "shortcut_ground_truth",
+    "shortcut_replace_fixed_inputs",
+    "shortcut_bruteforce_templates",
+    "better_longer_training",
+    "weak_one_epoch",
+    "reference_seed0",
+    "reference_seed1",
+    "reference_seed2"
+  ],
+  "failed": []
+}

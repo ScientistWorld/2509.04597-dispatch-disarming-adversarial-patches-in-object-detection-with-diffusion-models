@@ -1,5 +1,14 @@
-seed=0 epoch=1 loss=0.2196735
-seed=0 epoch=2 loss=0.0792664
-seed=0 epoch=3 loss=0.0460004
-seed=0 epoch=4 loss=0.0395579
-seed=0 epoch=5 loss=0.0360675
+resume seed=0 at epoch=108
+seed=0 epoch=108 loss=0.0037233
+seed=0 epoch=109 loss=0.0037210
+seed=0 epoch=110 loss=0.0036796
+seed=0 epoch=111 loss=0.0036395
+seed=0 epoch=112 loss=0.0035769
+seed=0 epoch=113 loss=0.0036697
+seed=0 epoch=114 loss=0.0036427
+seed=0 epoch=115 loss=0.0033867
+seed=0 epoch=116 loss=0.0034220
+seed=0 epoch=117 loss=0.0034115
+seed=0 epoch=118 loss=0.0033490
+seed=0 epoch=119 loss=0.0034153
+seed=0 epoch=120 loss=0.0033084

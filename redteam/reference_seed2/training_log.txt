@@ -1,0 +1,3 @@
+resume seed=2 at epoch=59
+seed=2 epoch=59 loss=0.0053129
+seed=2 epoch=60 loss=0.0052578

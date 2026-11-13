@@ -1,0 +1,3 @@
+inferred clean
+inferred hiding
+inferred creating

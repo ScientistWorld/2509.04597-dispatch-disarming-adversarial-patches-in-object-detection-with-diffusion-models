@@ -10,11 +10,11 @@
           "attack_precision": 0.0
         },
         "dispatch": {
-          "clean_mAP5": 0.8461538461538461,
-          "clean_precision": 0.9428571428571428,
-          "attack_mAP5": 0.8461538461538461,
-          "attack_AR": 0.8119658119658119,
-          "attack_precision": 0.9428571428571428
+          "clean_mAP5": 1.0,
+          "clean_precision": 1.0,
+          "attack_mAP5": 1.0,
+          "attack_AR": 1.0,
+          "attack_precision": 1.0
         }
       }
     },
@@ -32,16 +32,16 @@
           "targeted_ASR": 0.0,
           "untargeted_mAP5": 0.0,
           "untargeted_ASR": 0.0,
-          "object_mAP5": 0.8461538461538461
+          "object_mAP5": 1.0
         }
       }
     },
     "rectification_ablation": {
       "results": {
         "dispatch": {
-          "attack_mAP5": 0.8461538461538461,
-          "attack_AR": 0.8119658119658119,
-          "attack_precision": 0.9428571428571428
+          "attack_mAP5": 1.0,
+          "attack_AR": 1.0,
+          "attack_precision": 1.0
         }
       }
     }

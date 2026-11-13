@@ -1,0 +1,13 @@
+{
+  "training_seed": 0,
+  "inference_seed": 0,
+  "epochs": 120,
+  "training_images": 2000,
+  "image_size": 64,
+  "grids": 16,
+  "steps": 32,
+  "batch_size": 64,
+  "base_channels": 32,
+  "timesteps": 80,
+  "learning_rate": 0.0002
+}
