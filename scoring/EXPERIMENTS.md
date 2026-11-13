@@ -1,13 +1,30 @@
 # Experiment Overview
 
-## synthetic_hiding_scaled
+Every experiment runs the defense once on a mixed set of clean and attacked
+INRIA-Person images and scores the protected detector's outputs on the defended
+images.  The patches are optimised white-box against that detector; the hidden
+test uses patches and images that are never released.
 
-This experiment tests whether the defended detector can still find true objects after an adversarial patch has been applied to each object. It also checks that clean-image performance is preserved, so improvements under attack are not obtained by damaging the normal detection task.
+## inria_digital_hiding
 
-## synthetic_creating_scaled
+Establishes whether a defense restores person detection when every person
+carries an adversarial patch of the standard size (0.2 of the person's box
+diagonal), and whether it does so without degrading detection on clean images.
+Benefit: detection quality on attacked images.  Constraint: detection quality on
+clean images, which must stay within 0.05 mAP.5 of the undefended detector and is
+also scored.
 
-This experiment tests whether the defended detector suppresses false detections caused by adversarial patch regions. Lower patch-triggered false-positive rates indicate better protection against creating attacks.
+## inria_hiding_large_patch
 
-## rectification_ablation
+Establishes how well the defense holds up when the hiding patches are larger
+(0.3 of the box diagonal), where the undefended detector loses most people and
+known defenses degrade sharply.  This is the benchmark's main source of headroom.
 
-This experiment compares the final defended output against an auxiliary ablation output produced by the reference reproduction. It checks whether the complete defended image is more useful for detection than the ablated alternative, without requiring future methods to use the same internal design.
+## creating_digital
+
+Establishes whether the defense suppresses false detections caused by a
+patch designed to make the detector report a specific object class, placed in
+empty background and degraded like a printed, photographed patch.  Benefit:
+lower attack success and lower patch-detection AP (targeted and any class).
+Constraint: person detection on the same images, which must stay within 0.05
+mAP.5 of the undefended detector and is also scored.

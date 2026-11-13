@@ -2,18 +2,30 @@
 
 ## Research Problem
 
-This benchmark concerns inference-time defenses for adversarial patches in object detection. The goal is to make detector outputs robust to localized adversarial content while preserving normal detections.
+Inference-time defenses for object detectors against localized adversarial
+patches: transform each input image so that the fixed, protected detector finds
+real objects despite hiding patches, ignores patch-created objects, and behaves
+as before on benign images.
 
 ## Approach Scope
 
-Scientist agents should work within inference-time image preprocessing defenses for localized adversarial patches. They may change how defended images are produced, as long as the method remains a detector-agnostic image-processing defense for object detection.
+Any image-to-image preprocessing that works per image without knowledge of the
+attack: generative regeneration or inpainting, patch localisation and removal,
+purification, ensembles of such steps, models trained on clean or self-attacked
+data, different masks, samplers or backbones.  Methods may use the public slice,
+the INRIA-Person *training-side* images they are given, public pretrained models
+and their own attacks to develop and tune.
 
 ## Out of Bounds
 
-Training a new detector to ignore the benchmark patches is out of bounds because it changes the protected system rather than improving the defense.
-
-Changing the task to classification, segmentation, or image-level attack detection is out of bounds.
-
-Hardcoding the synthetic patch pattern, labels, or test boxes into the method is out of bounds.
-
-Replacing the defense with a detector-specific rule that bypasses image preprocessing is out of bounds for this paper's research direction.
+* Querying the protected detector, or any copy or proxy of it, inside the defense
+  (detector-guided selection or optimisation).  The defense must be detector-agnostic.
+* Retraining or replacing the protected detector, or changing the evaluator.
+* Looking up evaluation images or their annotations in external copies of
+  INRIA-Person (or any other dataset), or reading anything other than the
+  provided input directory while the defense runs.
+* Hard-coding the released patches, patch colours, placements or target classes
+  (template matching the public patches scores well only on the public slice).
+* Treating the inputs as a batch to exploit cross-image structure (e.g. finding
+  a pattern repeated across images); each output must depend only on its own input.
+* Changing the task (classification, segmentation, attack detection with rejection).
