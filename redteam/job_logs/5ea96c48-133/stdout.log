@@ -1,0 +1,122 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 53e9ca69
+[hive] host: node
+[hive] node_id: 868872fece703ae952cd25ec147e959ecb8748519e606babfcafe624
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 14:00:36 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2509.04597:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+RUN reference
+reference: train=0, hidden_test=0
+RUN weak_identity
+weak_identity: train=None, hidden_test=0
+RUN weak_no_rectification
+weak_no_rectification: train=None, hidden_test=0
+RUN shortcut_blank
+shortcut_blank: train=None, hidden_test=0
+RUN shortcut_clean_copy
+shortcut_clean_copy: train=None, hidden_test=0
+RUN shortcut_visible_labels
+shortcut_visible_labels: train=None, hidden_test=0
+RUN shortcut_rebuild_answers
+shortcut_rebuild_answers: train=None, hidden_test=0
+RUN shortcut_selective_omission
+shortcut_selective_omission: train=None, hidden_test=0
+RUN shortcut_empty_allowlist
+shortcut_empty_allowlist: train=None, hidden_test=0
+RUN shortcut_cache_score_forgery
+shortcut_cache_score_forgery: train=None, hidden_test=0
+RUN shortcut_stale_failure
+shortcut_stale_failure: train=None, hidden_test=1
+RUN shortcut_ground_truth
+shortcut_ground_truth: train=None, hidden_test=0
+RUN shortcut_replace_fixed_inputs
+shortcut_replace_fixed_inputs: train=None, hidden_test=0
+RUN shortcut_bruteforce_templates
+shortcut_bruteforce_templates: train=None, hidden_test=0
+RUN better_longer_training
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 53e9ca69
+[hive] host: node
+[hive] node_id: ce2ca34c66760f8c3aeb55add2b16983c53310473262942f91006082
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 14:04:54 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2509.04597:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+already completed reference
+already completed weak_identity
+already completed weak_no_rectification
+already completed shortcut_blank
+already completed shortcut_clean_copy
+already completed shortcut_visible_labels
+already completed shortcut_rebuild_answers
+already completed shortcut_selective_omission
+already completed shortcut_empty_allowlist
+already completed shortcut_cache_score_forgery
+already completed shortcut_stale_failure
+already completed shortcut_ground_truth
+already completed shortcut_replace_fixed_inputs
+already completed shortcut_bruteforce_templates
+RUN better_longer_training
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 53e9ca69
+[hive] host: node
+[hive] node_id: 48a614c8718a94fc59d2495e7133b65e0111b3c77aab63155cca22bb
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 15:00:38 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2509.04597:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+already completed reference
+already completed weak_identity
+already completed weak_no_rectification
+already completed shortcut_blank
+already completed shortcut_clean_copy
+already completed shortcut_visible_labels
+already completed shortcut_rebuild_answers
+already completed shortcut_selective_omission
+already completed shortcut_empty_allowlist
+already completed shortcut_cache_score_forgery
+already completed shortcut_stale_failure
+already completed shortcut_ground_truth
+already completed shortcut_replace_fixed_inputs
+already completed shortcut_bruteforce_templates
+RUN better_longer_training
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 53e9ca69
+[hive] host: node
+[hive] node_id: f30246fdcfb92943b29cbe493071465e07336985cf71b779dbbd8b1e
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 15:11:14 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2509.04597:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+already completed reference
+already completed weak_identity
+already completed weak_no_rectification
+already completed shortcut_blank
+already completed shortcut_clean_copy
+already completed shortcut_visible_labels
+already completed shortcut_rebuild_answers
+already completed shortcut_selective_omission
+already completed shortcut_empty_allowlist
+already completed shortcut_cache_score_forgery
+already completed shortcut_stale_failure
+already completed shortcut_ground_truth
+already completed shortcut_replace_fixed_inputs
+already completed shortcut_bruteforce_templates
+RUN better_longer_training

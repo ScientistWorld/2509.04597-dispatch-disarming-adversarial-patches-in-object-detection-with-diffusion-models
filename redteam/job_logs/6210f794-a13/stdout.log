@@ -1,0 +1,54 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 8224d279
+[hive] host: node
+[hive] node_id: 445267a45ad596b85a97dee96173aa9bc7eef909b6d4d7b5ee9ee809
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-12 23:54:10 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2509.04597:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2509.04597/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+already completed reference
+already completed weak_identity
+already completed weak_no_rectification
+already completed shortcut_blank
+already completed shortcut_clean_copy
+already completed shortcut_visible_labels
+already completed shortcut_rebuild_answers
+already completed shortcut_selective_omission
+already completed shortcut_empty_allowlist
+already completed shortcut_cache_score_forgery
+already completed shortcut_stale_failure
+already completed shortcut_ground_truth
+already completed shortcut_replace_fixed_inputs
+already completed shortcut_bruteforce_templates
+RUN shortcut_blank_creating_only
+shortcut_blank_creating_only: train=None, hidden_test=0
+already completed better_longer_training
+already completed weak_one_epoch
+already completed reference_seed0
+already completed reference_seed1
+already completed reference_seed2
+reference: +0.00000000
+weak_identity: -2.42915863
+weak_no_rectification: -0.38242437
+shortcut_blank: -1.01731501
+shortcut_clean_copy: +0.65321339
+shortcut_visible_labels: +1.21013770
+shortcut_rebuild_answers: +1.21013770
+shortcut_selective_omission: +0.09265570
+shortcut_empty_allowlist: +0.00000000
+shortcut_cache_score_forgery: -1.01731501
+shortcut_ground_truth: +1.21013770
+shortcut_replace_fixed_inputs: +0.65321339
+shortcut_bruteforce_templates: +1.21013770
+shortcut_blank_creating_only: +0.06699330
+better_longer_training: -0.20611376
+weak_one_epoch: -1.01731501
+reference_seed0: -0.25741276
+reference_seed1: -0.23161467
+reference_seed2: -0.19189346
+three-seed rank spread: 0.06551930235459122
+longer training matched gain: 0.051299001636659236
