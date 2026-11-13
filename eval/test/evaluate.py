@@ -45,6 +45,7 @@ from common import (  # noqa: E402
     constraint_failures,
     detect,
     load_detector,
+    pick_device,
     score_predictions,
     sha256_file,
     worst_scores,
@@ -150,7 +151,7 @@ def main() -> None:
     tampered = check_pins(assets, items)
     if tampered:
         print(f"FIXED INPUTS ALTERED: {tampered[:5]} -> every defense is scored as failed", flush=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = pick_device()
     log_dir = Path(args.log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
 

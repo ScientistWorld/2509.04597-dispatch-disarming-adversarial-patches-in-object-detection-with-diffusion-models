@@ -41,6 +41,19 @@ from ldm_inpaint import DEFAULT_CKPT, LDMInpainter  # noqa: E402
 REGEN_SIZE = 512
 
 
+def pick_device() -> str:
+    """The visible CUDA device with the most free memory (nodes can be shared), else CPU."""
+    if not torch.cuda.is_available():
+        return "cpu"
+    free = []
+    for i in range(torch.cuda.device_count()):
+        try:
+            free.append((torch.cuda.mem_get_info(i)[0], i))
+        except Exception:  # noqa: BLE001
+            continue
+    return f"cuda:{max(free)[1]}" if free else "cuda"
+
+
 def checkerboard_masks(size: int, grids: int) -> tuple[torch.Tensor, torch.Tensor]:
     """Complementary checkerboard masks m0 and m1 (1 = region to regenerate)."""
     idx = (torch.arange(size) * grids) // size
@@ -157,7 +170,7 @@ def main() -> None:
     parser.add_argument("--ensemble", type=int, default=1, help="average this many regenerations")
     parser.add_argument("--dilate", type=int, default=0, help="dilate the adversarial mask by this many pixels")
     parser.add_argument("--batch", type=int, default=int(os.environ.get("DISPATCH_BATCH", "4")))
-    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--device", default=None)
     parser.add_argument("--debug-dir", default=None, help="also save regenerated images and masks here")
     args = parser.parse_args()
 
@@ -165,6 +178,7 @@ def main() -> None:
     in_dir, out_dir = Path(args.input_dir), Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     paths = sorted(in_dir.glob("*.png"))
+    args.device = args.device or pick_device()
     model = Dispatch(Path(args.checkpoint), args.device, args.grids, args.steps, args.seed, args.blur)
     start = time.time()
     for i in range(0, len(paths), args.batch):

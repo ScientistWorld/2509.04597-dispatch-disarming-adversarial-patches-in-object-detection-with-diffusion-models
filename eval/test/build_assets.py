@@ -26,7 +26,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from attack import background_box, hiding_center, optimise_creating_patch, optimise_hiding_patch  # noqa: E402
-from common import DETECTOR_WEIGHTS, INRIA_DIR, ROOT, detect, inria_images, load_detector, prepare, sha256_file  # noqa: E402
+from common import DETECTOR_WEIGHTS, INRIA_DIR, ROOT, detect, inria_images, load_detector, pick_device, prepare, sha256_file  # noqa: E402
 
 SALT = "dispatch-inria-hidden-test-v2-44556860a99a6aa7"
 SPLIT = "Test"
@@ -54,13 +54,15 @@ def main() -> None:
     ap.add_argument("--out-dir", default=str(ROOT / "eval" / "test" / "assets"))
     ap.add_argument("--hide-iters", type=int, default=3000)
     ap.add_argument("--create-iters", type=int, default=600)
+    ap.add_argument("--batch", type=int, default=8, help="images per patch-optimisation step")
     ap.add_argument("--per-variant", type=int, default=0, help="limit items per variant (smoke tests)")
-    ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    ap.add_argument("--device", default=None)
     args = ap.parse_args()
 
     out = Path(args.out_dir)
     (out / "patches").mkdir(parents=True, exist_ok=True)
-    device = torch.device(args.device)
+    device = torch.device(args.device) if args.device else pick_device()
+    print(f"device {device}", flush=True)
     model = load_detector(device)
     for p in model.parameters():
         p.requires_grad_(False)
@@ -76,9 +78,9 @@ def main() -> None:
             continue
         print(f"optimising {pname}", flush=True)
         if role == "hide":
-            arr = optimise_hiding_patch(model, attack_data, arg, seed, args.hide_iters, device)
+            arr = optimise_hiding_patch(model, attack_data, arg, seed, args.hide_iters, device, batch=args.batch)
         else:
-            arr = optimise_creating_patch(model, attack_data, arg, seed, args.create_iters, device)
+            arr = optimise_creating_patch(model, attack_data, arg, seed, args.create_iters, device, batch=args.batch)
         Image.fromarray(arr).save(path)
 
     eval_names = inria_images(SPLIT)

@@ -53,7 +53,9 @@ def main() -> None:
         subprocess.run([sys.executable, str(ROOT / "method/dispatch.py"), "--input-dir", str(in_dir), "--output-dir", str(d),
                         "--seed", str(seed)], check=True, cwd=ROOT)
         cands.append(d)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
+    if torch.cuda.is_available():
+        device = torch.device(f"cuda:{max((torch.cuda.mem_get_info(i)[0], i) for i in range(torch.cuda.device_count()))[1]}")
     model = detector(device)
     picks = [0] * len(cands)
     for p in sorted(in_dir.glob("*.png")):

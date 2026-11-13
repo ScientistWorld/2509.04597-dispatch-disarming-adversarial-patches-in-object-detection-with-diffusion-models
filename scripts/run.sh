@@ -12,19 +12,21 @@ chmod -R u+rwX eval/test data/downloads/INRIAPerson/Test data/downloads/torchvis
 rm -rf outputs/.eval_t* tmp/smoke
 mkdir -p outputs redteam/hardening/results
 R=redteam/hardening/results
-nvidia-smi --query-gpu=name,memory.total --format=csv || true
+nvidia-smi || true
+python -c "import torch; [print('cuda', i, torch.cuda.get_device_name(i), 'free GB %.1f' % (torch.cuda.mem_get_info(i)[0] / 1e9)) for i in range(torch.cuda.device_count())]"
 T0=$(date +%s)
 el() { echo "[elapsed $(( $(date +%s) - T0 ))s] $*"; }
 
 # 1. Assets ---------------------------------------------------------------------------
 if [ ! -f data/inria_slice/spec.json ]; then
   el "build visible slice"
-  python eval/train/build_slice.py 2>&1 | tee $R/build_slice.log
+  python eval/train/build_slice.py > $R/build_slice.log 2>&1 || python eval/train/build_slice.py --batch 4 >> $R/build_slice.log 2>&1
+  grep -E "device|it=(0|2999|599) |wrote|Error" $R/build_slice.log
 fi
 if [ ! -f eval/test/assets/spec.json ]; then
   el "build hidden test assets"
-  python eval/test/build_assets.py > outputs/build_assets.log 2>&1
-  grep -E "it=(0|2999|599) |wrote" outputs/build_assets.log
+  python eval/test/build_assets.py > outputs/build_assets.log 2>&1 || python eval/test/build_assets.py --batch 4 >> outputs/build_assets.log 2>&1
+  grep -E "device|it=(0|2999|599) |wrote|Error" outputs/build_assets.log
 fi
 [ -f data/inria_slice/spec.json ] && [ -f eval/test/assets/spec.json ] || { echo "ASSET BUILD FAILED"; exit 1; }
 

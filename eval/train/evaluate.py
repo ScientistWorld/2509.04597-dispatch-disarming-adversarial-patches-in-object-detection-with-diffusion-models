@@ -39,6 +39,7 @@ from common import (  # noqa: E402
     constraint_failures,
     detect,
     load_detector,
+    pick_device,
     score_predictions,
     worst_scores,
 )
@@ -100,7 +101,7 @@ def main() -> None:
     slice_dir = Path(args.slice_dir)
     spec = json.loads((slice_dir / "spec.json").read_text())
     items = spec["items"]
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = pick_device()
     save_dir = Path(args.save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
 

@@ -121,6 +121,20 @@ def compose(item: dict, patch_dir: Path) -> Image.Image:
 
 
 # ── Detector ────────────────────────────────────────────────────────────────
+def pick_device() -> torch.device:
+    """The visible CUDA device with the most free memory (nodes can be shared), else CPU."""
+    if not torch.cuda.is_available():
+        return torch.device("cpu")
+    best, best_free = 0, -1
+    for i in range(torch.cuda.device_count()):
+        try:
+            free, _ = torch.cuda.mem_get_info(i)
+        except Exception:  # noqa: BLE001
+            continue
+        if free > best_free:
+            best, best_free = i, free
+    return torch.device(f"cuda:{best}")
+
 
 
 def load_detector(device: torch.device):
