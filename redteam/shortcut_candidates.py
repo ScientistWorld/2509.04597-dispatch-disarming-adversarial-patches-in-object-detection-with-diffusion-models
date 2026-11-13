@@ -57,6 +57,10 @@ def prepare(name):
         out = candidate_dirs(('creating',))
         for path in (ROOT / 'data/synthetic/test/clean').glob('*.png'):
             shutil.copy2(path, out / 'creating' / path.name)
+    elif name == 'shortcut_blank_creating_only':
+        # This shortcut fails object preservation as well as the hiding task.
+        # Check whether suppression credit outweighs its scored constraint.
+        blank(('creating',))
     elif name == 'shortcut_empty_allowlist':
         blank()
     elif name in {'shortcut_cache_score_forgery', 'shortcut_stale_failure', 'shortcut_blank'}:
