@@ -14,6 +14,7 @@
     "shortcut_ground_truth",
     "shortcut_replace_fixed_inputs",
     "shortcut_bruteforce_templates",
+    "shortcut_blank_creating_only",
     "better_longer_training",
     "weak_one_epoch",
     "reference_seed0",

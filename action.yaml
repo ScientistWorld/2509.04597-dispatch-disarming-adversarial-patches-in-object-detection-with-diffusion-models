@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
 test: false
-notes: "Resume audit with per-epoch optimizer/RNG checkpoints; retain completed shortcuts, finish three seeds and 1/60/120 epoch quality checks."
+notes: "Final short audit: blank creating-only shortcut, then normalized ranks and three-seed spread from saved hidden-test scores; reuse all completed runs."
