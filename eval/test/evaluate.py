@@ -127,9 +127,10 @@ def check_pins(assets: Path, items: list[dict]) -> list[str]:
     bad = []
     if sha256_file(DETECTOR_WEIGHTS) != pins["detector"]:
         bad.append("detector weights")
-    for src in sorted({it["source"] for it in items}):
-        if sha256_file(INRIA_DIR / "Test" / "pos" / src) != pins["sources"].get(src):
-            bad.append(f"source {src}")
+    for key in sorted({f"{it['split']}/{it['source']}" for it in items}):
+        split, src = key.split("/", 1)
+        if sha256_file(INRIA_DIR / split / "pos" / src) != pins["sources"].get(key):
+            bad.append(f"source {key}")
     for name, digest in pins["patches"].items():
         if sha256_file(assets / "patches" / f"{name}.png") != digest:
             bad.append(f"patch {name}")
@@ -143,6 +144,7 @@ def main() -> None:
     ap.add_argument("--score-path", default=str(ROOT / "scoring" / "scores_test.json"))
     ap.add_argument("--log-dir", default=str(ROOT / "outputs" / "eval_test"))
     ap.add_argument("--timeout", type=float, default=float(os.environ.get("GYM_DEFENSE_TIMEOUT", 4 * 3600)))
+    ap.add_argument("--save-predictions", default=None, help="optionally dump raw detections (analysis only)")
     args = ap.parse_args()
 
     assets = Path(args.assets_dir)
@@ -155,7 +157,7 @@ def main() -> None:
     log_dir = Path(args.log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
 
-    locks = Locks([HERE, INRIA_DIR / "Test", DETECTOR_WEIGHTS.parent])
+    locks = Locks([HERE, INRIA_DIR, DETECTOR_WEIGHTS.parent])
 
     def restore(signum, frame):  # restore permissions if the job is interrupted
         locks.__exit__(None, None, None)
@@ -166,7 +168,7 @@ def main() -> None:
     tmp_root = Path(os.environ.get("GYM_TMPDIR", ROOT / "outputs"))
     tmp_root.mkdir(parents=True, exist_ok=True)
     tmp = Path(tempfile.mkdtemp(prefix=".eval_test_", dir=tmp_root))
-    results, status = {}, {}
+    results, status, all_preds = {}, {}, {}
     try:
         inputs = {}
         in_dir = tmp / "inputs"
@@ -177,10 +179,12 @@ def main() -> None:
             img.save(in_dir / f"{it['id']}.png")
         detector = load_detector(device)
 
-        def evaluate(arrays: list[np.ndarray]) -> dict:
-            return score_predictions(items, detect(detector, arrays, device))
+        def evaluate(arrays: list[np.ndarray], name: str) -> dict:
+            preds = detect(detector, arrays, device)
+            all_preds[name] = preds
+            return score_predictions(items, preds)
 
-        vanilla = evaluate([inputs[it["id"]] for it in items])
+        vanilla = evaluate([inputs[it["id"]] for it in items], "vanilla")
         results["vanilla"], status["vanilla"] = vanilla, "ok (undefended detector, computed by the evaluator)"
 
         for ddir in discover(Path(args.defenses_dir)):
@@ -203,7 +207,7 @@ def main() -> None:
                 if err is not None:
                     status[name] = f"failed: {err}"
                 else:
-                    scores = evaluate(arrays)
+                    scores = evaluate(arrays, name)
                     fails = constraint_failures(scores, vanilla)
                     if fails:
                         status[name] = "failed constraint: " + "; ".join(fails)
@@ -218,6 +222,8 @@ def main() -> None:
         locks.__exit__(None, None, None)
         shutil.rmtree(tmp, ignore_errors=True)
 
+    if args.save_predictions and results:
+        Path(args.save_predictions).write_text(json.dumps({"items": items, "predictions": all_preds, "status": status}))
     scores = {"experiments": {exp: {"results": {m: r[exp] for m, r in results.items()}} for exp in EXPERIMENT_ORDER}}
     score_path = Path(args.score_path)
     score_path.parent.mkdir(parents=True, exist_ok=True)

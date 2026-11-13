@@ -57,6 +57,28 @@ def eot(patch: torch.Tensor, rng: random.Random) -> torch.Tensor:
     return (patch * contrast + brightness + noise).clamp(0.0, 1.0)
 
 
+def gaussian_blur(x: torch.Tensor, sigma: float) -> torch.Tensor:
+    """Differentiable separable Gaussian blur of a [3,H,W] tensor."""
+    if sigma < 0.3:
+        return x
+    k = int(2 * math.ceil(2 * sigma) + 1)
+    coords = torch.arange(k, dtype=x.dtype, device=x.device) - k // 2
+    g = torch.exp(-(coords**2) / (2 * sigma**2))
+    g = g / g.sum()
+    y = F.conv2d(F.pad(x[None], (k // 2, k // 2, 0, 0), mode="replicate"), g.view(1, 1, 1, k).repeat(3, 1, 1, 1), groups=3)
+    y = F.conv2d(F.pad(y, (0, 0, k // 2, k // 2), mode="replicate"), g.view(1, 1, k, 1).repeat(3, 1, 1, 1), groups=3)
+    return y[0]
+
+
+def capture_eot(patch: torch.Tensor, rng: random.Random) -> torch.Tensor:
+    """EOT over print-and-capture conditions for physical creating patches."""
+    p = gaussian_blur(patch, rng.uniform(0.0, 1.6))
+    p = (p - 0.5) * rng.uniform(0.65, 1.05) + 0.5 + rng.uniform(-0.08, 0.10)
+    gain = torch.tensor([rng.uniform(0.88, 1.12) for _ in range(3)], dtype=p.dtype, device=p.device)[:, None, None]
+    p = p * gain + torch.randn_like(p) * 0.025
+    return p.clamp(0.0, 1.0)
+
+
 def class_probs(model, images: list[torch.Tensor], extra: list[torch.Tensor] | None = None):
     """Softmax class probabilities of every second-stage proposal (+ optional extra boxes)."""
     imgs, _ = model.transform(images)
@@ -171,7 +193,7 @@ def optimise_creating_patch(model, data: list[tuple[torch.Tensor, list]], target
             side = rng.uniform(*size_range) * min(w, h)
             place = background_box(boxes, w, h, side, rng) or [0.0, 0.0, side, side]
             cx, cy = 0.5 * (place[0] + place[2]), 0.5 * (place[1] + place[3])
-            x = paste(img.to(device), eot(patch, rng), cx, cy, side, math.radians(rng.uniform(-15, 15)))
+            x = paste(img.to(device), capture_eot(patch, rng), cx, cy, side, math.radians(rng.uniform(-10, 10)))
             imgs.append(x)
             pb = torch.tensor(place, dtype=torch.float32, device=device)
             jit = [pb]

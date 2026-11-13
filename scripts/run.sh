@@ -21,12 +21,12 @@ el() { echo "[elapsed $(( $(date +%s) - T0 ))s] $*"; }
 if [ ! -f data/inria_slice/spec.json ]; then
   el "build visible slice"
   python eval/train/build_slice.py > $R/build_slice.log 2>&1 || python eval/train/build_slice.py --batch 4 >> $R/build_slice.log 2>&1
-  grep -E "device|it=(0|2999|599) |wrote|Error" $R/build_slice.log
+  grep -E "device|optimising|it=(0|2999|599) |wrote|Error" $R/build_slice.log
 fi
 if [ ! -f eval/test/assets/spec.json ]; then
   el "build hidden test assets"
   python eval/test/build_assets.py > outputs/build_assets.log 2>&1 || python eval/test/build_assets.py --batch 4 >> outputs/build_assets.log 2>&1
-  grep -E "device|it=(0|2999|599) |wrote|Error" outputs/build_assets.log
+  grep -E "device|it=(0|2999|599) |wrote|Error" outputs/build_assets.log | sed "s/\[.*\]//"
 fi
 [ -f data/inria_slice/spec.json ] && [ -f eval/test/assets/spec.json ] || { echo "ASSET BUILD FAILED"; exit 1; }
 
@@ -36,7 +36,8 @@ if [ ! -f outputs/.stage_reference.done ]; then
   bash scripts/evaluate_train.sh > outputs/ref_train.log 2>&1 || echo "evaluate_train FAILED"
   cp outputs/eval_train/status.json $R/status_train_reference.json
   el "reference: evaluate_test"
-  bash scripts/evaluate_test.sh > outputs/ref_test.log 2>&1 || echo "evaluate_test FAILED"
+  # Same code path and defaults as scripts/evaluate_test.sh, plus a raw-detection dump for offline analysis.
+  python eval/test/evaluate.py --save-predictions outputs/ref_test_predictions.json > outputs/ref_test.log 2>&1 || echo "evaluate_test FAILED"
   cp outputs/eval_test/status.json $R/status_test_reference.json
   el "reference: evaluate (scores.json)"
   bash scripts/evaluate.sh > outputs/ref_main.log 2>&1 || echo "evaluate FAILED"
@@ -50,7 +51,8 @@ cp data/downloads/torchvision/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth redteam/
 if [ ! -f outputs/.stage_probes_test.done ]; then
   el "probes: hidden test"
   python eval/test/evaluate.py --defenses-dir redteam/hardening/defenses \
-    --score-path $R/scores_test_probes.json --log-dir outputs/hardening_test > outputs/probes_test.log 2>&1 || echo "probe test FAILED"
+    --score-path $R/scores_test_probes.json --log-dir outputs/hardening_test \
+    --save-predictions outputs/probes_test_predictions.json > outputs/probes_test.log 2>&1 || echo "probe test FAILED"
   cp outputs/hardening_test/status.json $R/status_test_probes.json
   for f in outputs/hardening_test/logs/sc_*.log outputs/hardening_test/logs/var_*.log; do echo "== $f"; grep -v "making attention\|Working with z" "$f" | tail -2; done
   touch outputs/.stage_probes_test.done

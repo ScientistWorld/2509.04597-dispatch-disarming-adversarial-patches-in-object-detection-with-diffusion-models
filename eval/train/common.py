@@ -16,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from PIL import Image
+from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[2]
 INRIA_DIR = ROOT / "data" / "downloads" / "INRIAPerson"
@@ -108,6 +108,23 @@ def prepare(split: str, image_name: str, crop: list[float], flip: bool) -> tuple
     return img, persons, ignore
 
 
+def capture(patch: Image.Image, params: dict) -> Image.Image:
+    """Deterministic print-and-capture degradation of a physical creating patch.
+
+    The paper's creating benchmark (APRICOT) photographs printed patches; this
+    applies the corresponding contrast loss, exposure shift, colour cast, optical
+    blur and sensor noise to the digital patch before it is placed in the scene.
+    """
+    arr = np.asarray(patch, dtype=np.float32) / 255.0
+    arr = (arr - 0.5) * params["contrast"] + 0.5 + params["brightness"]
+    arr = arr * np.asarray(params["gain"], dtype=np.float32)[None, None, :]
+    img = Image.fromarray((arr.clip(0, 1) * 255).round().astype(np.uint8))
+    img = img.filter(ImageFilter.GaussianBlur(radius=params["blur"]))
+    arr = np.asarray(img, dtype=np.float32) / 255.0
+    arr = arr + np.random.default_rng(params["noise_seed"]).normal(0.0, params["noise"], arr.shape)
+    return Image.fromarray((arr.clip(0, 1) * 255).round().astype(np.uint8))
+
+
 def compose(item: dict, patch_dir: Path) -> Image.Image:
     """Build the input image of one benchmark item."""
     img, _, _ = prepare(item["split"], item["source"], item["crop"], item["flip"])
@@ -116,7 +133,10 @@ def compose(item: dict, patch_dir: Path) -> Image.Image:
         x0, y0, x1, y1 = [int(v) for v in p["box"]]
         if x1 - x0 < 2 or y1 - y0 < 2:
             continue
-        img.paste(patch.resize((x1 - x0, y1 - y0), Image.BILINEAR), (x0, y0))
+        patch = patch.resize((x1 - x0, y1 - y0), Image.BILINEAR)
+        if "capture" in p:
+            patch = capture(patch, p["capture"])
+        img.paste(patch, (x0, y0))
     return img
 
 
