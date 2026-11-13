@@ -1,0 +1,60 @@
+device cuda:2
+optimising hide_adv_a
+  hiding[adv,11] it=0 det=0.9451 tv=0.6659 t=4s
+  hiding[adv,11] it=250 det=0.6767 tv=0.0977 t=26s
+  hiding[adv,11] it=500 det=0.6943 tv=0.0980 t=48s
+  hiding[adv,11] it=750 det=0.5398 tv=0.0940 t=70s
+  hiding[adv,11] it=1000 det=0.5539 tv=0.0922 t=91s
+  hiding[adv,11] it=1250 det=0.4419 tv=0.1031 t=113s
+  hiding[adv,11] it=1500 det=0.6014 tv=0.1008 t=134s
+  hiding[adv,11] it=1750 det=0.6367 tv=0.0950 t=156s
+  hiding[adv,11] it=2000 det=0.5062 tv=0.1060 t=180s
+  hiding[adv,11] it=2250 det=0.5982 tv=0.0973 t=206s
+  hiding[adv,11] it=2500 det=0.6293 tv=0.0919 t=228s
+  hiding[adv,11] it=2750 det=0.6387 tv=0.0967 t=255s
+  hiding[adv,11] it=2999 det=0.4326 tv=0.0958 t=278s
+optimising hide_adv_b
+  hiding[adv,15] it=0 det=0.9766 tv=0.6648 t=0s
+  hiding[adv,15] it=250 det=0.8298 tv=0.1048 t=22s
+  hiding[adv,15] it=500 det=0.7393 tv=0.1002 t=44s
+  hiding[adv,15] it=750 det=0.6942 tv=0.0961 t=69s
+  hiding[adv,15] it=1000 det=0.7275 tv=0.1092 t=91s
+  hiding[adv,15] it=1250 det=0.6210 tv=0.0975 t=114s
+  hiding[adv,15] it=1500 det=0.3670 tv=0.0918 t=136s
+  hiding[adv,15] it=1750 det=0.6085 tv=0.0957 t=164s
+  hiding[adv,15] it=2000 det=0.6902 tv=0.0969 t=186s
+  hiding[adv,15] it=2250 det=0.5911 tv=0.0932 t=209s
+  hiding[adv,15] it=2500 det=0.5191 tv=0.0908 t=231s
+  hiding[adv,15] it=2750 det=0.5753 tv=0.0903 t=253s
+  hiding[adv,15] it=2999 det=0.5031 tv=0.0949 t=275s
+optimising hide_nat
+  hiding[natural,12] it=0 det=0.9392 tv=0.0620 t=0s
+  hiding[natural,12] it=250 det=0.6330 tv=0.0399 t=23s
+  hiding[natural,12] it=500 det=0.8270 tv=0.0399 t=44s
+  hiding[natural,12] it=750 det=0.7882 tv=0.0399 t=66s
+  hiding[natural,12] it=1000 det=0.7642 tv=0.0400 t=87s
+  hiding[natural,12] it=1250 det=0.7749 tv=0.0401 t=109s
+  hiding[natural,12] it=1500 det=0.7262 tv=0.0400 t=131s
+  hiding[natural,12] it=1750 det=0.8028 tv=0.0398 t=152s
+  hiding[natural,12] it=2000 det=0.6765 tv=0.0397 t=174s
+  hiding[natural,12] it=2250 det=0.8874 tv=0.0398 t=195s
+  hiding[natural,12] it=2500 det=0.7475 tv=0.0399 t=217s
+  hiding[natural,12] it=2750 det=0.7408 tv=0.0400 t=240s
+  hiding[natural,12] it=2999 det=0.6619 tv=0.0398 t=271s
+optimising create_stopsign
+  creating[13,13] it=0 nll=10.6354 t=0s
+  creating[13,13] it=100 nll=0.0092 t=13s
+  creating[13,13] it=200 nll=0.0058 t=24s
+  creating[13,13] it=300 nll=0.0020 t=34s
+  creating[13,13] it=400 nll=0.0016 t=43s
+  creating[13,13] it=500 nll=0.0014 t=52s
+  creating[13,13] it=599 nll=0.0043 t=61s
+optimising create_umbrella
+  creating[28,14] it=0 nll=7.8686 t=0s
+  creating[28,14] it=100 nll=0.0042 t=9s
+  creating[28,14] it=200 nll=0.0055 t=18s
+  creating[28,14] it=300 nll=0.0066 t=27s
+  creating[28,14] it=400 nll=0.0079 t=35s
+  creating[28,14] it=500 nll=0.0032 t=45s
+  creating[28,14] it=599 nll=0.0044 t=54s
+wrote 200 items to /home/user/data/inria_slice ({'clean': 50, 'hide': 50, 'hide_large': 50, 'create': 50})

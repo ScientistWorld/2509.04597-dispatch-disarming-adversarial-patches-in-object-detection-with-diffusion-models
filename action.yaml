@@ -2,4 +2,4 @@ action: submit
 gpus: 1
 test: false
 milestone: secondary_claims
-notes: "Retry full hardening job after OOM on a shared GPU: now selects the free GPU. Builds assets, runs reference + probes through train/test evaluators."
+notes: "Rebuild visible slice (200) and hidden test (480) from pooled INRIA with ignore regions and physical-style creating patches; rerun reference DISPATCH/baselines and all probes (variants, seeds, simple baselines, shortcuts)."
