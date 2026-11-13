@@ -1,4 +1,2 @@
-action: submit
-gpus: 0
-test: false
-notes: "Final short audit: blank creating-only shortcut, then normalized ranks and three-seed spread from saved hidden-test scores; reuse all completed runs."
+action: done
+notes: "Audit committed as 26efa22: 20 cases, nine paying shortcuts, longer-training gain below seed spread; original gym files and artifacts restored."
