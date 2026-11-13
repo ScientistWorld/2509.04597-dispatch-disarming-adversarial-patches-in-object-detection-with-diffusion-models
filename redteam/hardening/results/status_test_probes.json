@@ -1,0 +1,18 @@
+{
+  "vanilla": "ok (undefended detector, computed by the evaluator)",
+  "sc_blank": "failed constraint: inria_digital_hiding.clean_mAP5=0.0000 is more than 0.05 below the undefended detector (0.9732); creating_digital.object_mAP5=0.0000 is more than 0.05 below the undefended detector (0.9849)",
+  "sc_crash_forge": "failed: exit code 1",
+  "sc_detector_guided": "ok",
+  "sc_empty_allowlist": "ok",
+  "sc_partial": "failed: missing output 01c616c704c2.png",
+  "sc_read_answers": "ok",
+  "sc_template_visible": "ok",
+  "seed1": "ok",
+  "seed2": "ok",
+  "simple_blur": "ok",
+  "simple_resize": "ok",
+  "var_dilate": "ok",
+  "var_ens3": "ok",
+  "var_iter2": "ok",
+  "weak_grid16": "ok"
+}

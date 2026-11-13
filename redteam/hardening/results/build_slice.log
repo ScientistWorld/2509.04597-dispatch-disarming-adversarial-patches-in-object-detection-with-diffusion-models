@@ -1,62 +1,46 @@
+device cuda:1
 optimising hide_adv
-Traceback (most recent call last):
-  File "/home/user/eval/train/build_slice.py", line 165, in <module>
-    main()
-  File "/home/user/eval/train/build_slice.py", line 89, in main
-    arr = optimise_hiding_patch(model, attack_data, arg, seed, args.hide_iters, device)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/eval/train/attack.py", line 125, in optimise_hiding_patch
-    probs, props = class_probs(model, imgs)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/eval/train/attack.py", line 63, in class_probs
-    feats = model.backbone(imgs.tensors)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torchvision/models/detection/backbone_utils.py", line 57, in forward
-    x = self.body(x)
-        ^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torchvision/models/_utils.py", line 69, in forward
-    x = module(x)
-        ^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/container.py", line 217, in forward
-    input = module(input)
-            ^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torchvision/models/resnet.py", line 154, in forward
-    out = self.conv3(out)
-          ^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 460, in forward
-    return self._conv_forward(input, self.weight, self.bias)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 456, in _conv_forward
-    return F.conv2d(input, weight, bias, self.stride,
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 200.00 MiB. GPU 
+  hiding[adv,11] it=0 det=0.9451 tv=0.6659 t=4s
+  hiding[adv,11] it=250 det=0.7298 tv=0.1224 t=25s
+  hiding[adv,11] it=500 det=0.5754 tv=0.1139 t=47s
+  hiding[adv,11] it=750 det=0.6030 tv=0.1279 t=69s
+  hiding[adv,11] it=1000 det=0.5154 tv=0.1095 t=91s
+  hiding[adv,11] it=1250 det=0.5421 tv=0.1210 t=112s
+  hiding[adv,11] it=1500 det=0.6709 tv=0.1119 t=134s
+  hiding[adv,11] it=1750 det=0.5117 tv=0.1153 t=155s
+  hiding[adv,11] it=2000 det=0.6760 tv=0.1232 t=177s
+  hiding[adv,11] it=2250 det=0.7292 tv=0.1188 t=199s
+  hiding[adv,11] it=2500 det=0.5628 tv=0.1123 t=220s
+  hiding[adv,11] it=2750 det=0.6476 tv=0.1055 t=242s
+  hiding[adv,11] it=2999 det=0.4881 tv=0.1201 t=264s
+optimising hide_nat
+  hiding[natural,12] it=0 det=0.9215 tv=0.0620 t=0s
+  hiding[natural,12] it=250 det=0.7153 tv=0.0402 t=22s
+  hiding[natural,12] it=500 det=0.7141 tv=0.0401 t=44s
+  hiding[natural,12] it=750 det=0.6116 tv=0.0401 t=65s
+  hiding[natural,12] it=1000 det=0.7130 tv=0.0400 t=87s
+  hiding[natural,12] it=1250 det=0.8368 tv=0.0402 t=109s
+  hiding[natural,12] it=1500 det=0.7120 tv=0.0400 t=130s
+  hiding[natural,12] it=1750 det=0.6882 tv=0.0402 t=152s
+  hiding[natural,12] it=2000 det=0.5410 tv=0.0401 t=174s
+  hiding[natural,12] it=2250 det=0.7522 tv=0.0399 t=195s
+  hiding[natural,12] it=2500 det=0.5801 tv=0.0399 t=217s
+  hiding[natural,12] it=2750 det=0.8358 tv=0.0403 t=239s
+  hiding[natural,12] it=2999 det=0.7141 tv=0.0398 t=260s
+optimising create_stopsign
+  creating[13,13] it=0 nll=9.7943 t=0s
+  creating[13,13] it=100 nll=0.4237 t=9s
+  creating[13,13] it=200 nll=0.0928 t=17s
+  creating[13,13] it=300 nll=0.0090 t=25s
+  creating[13,13] it=400 nll=0.0046 t=34s
+  creating[13,13] it=500 nll=0.0088 t=43s
+  creating[13,13] it=599 nll=0.0023 t=51s
+optimising create_umbrella
+  creating[28,14] it=0 nll=8.0833 t=0s
+  creating[28,14] it=100 nll=0.2058 t=8s
+  creating[28,14] it=200 nll=0.0085 t=17s
+  creating[28,14] it=300 nll=0.1708 t=25s
+  creating[28,14] it=400 nll=0.1533 t=34s
+  creating[28,14] it=500 nll=0.0043 t=42s
+  creating[28,14] it=599 nll=0.0048 t=51s
+wrote 200 items to /home/user/data/inria_slice ({'clean': 50, 'hide': 50, 'hide_large': 50, 'create': 50})

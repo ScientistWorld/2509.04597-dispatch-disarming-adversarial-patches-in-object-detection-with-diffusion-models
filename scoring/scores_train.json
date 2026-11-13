@@ -1,0 +1,84 @@
+{
+  "experiments": {
+    "inria_digital_hiding": {
+      "results": {
+        "vanilla": {
+          "attack_mAP5": 0.11889865453067053,
+          "attack_AR": 0.5309278350515463,
+          "clean_mAP5": 0.8138046007753215,
+          "clean_AR": 0.7371134020618556
+        },
+        "dispatch": {
+          "attack_mAP5": 0.47520541684080747,
+          "attack_AR": 0.6474226804123712,
+          "clean_mAP5": 0.7839590704443371,
+          "clean_AR": 0.7175257731958763
+        },
+        "dispatch_gray": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "regenerated_only": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        }
+      }
+    },
+    "inria_hiding_large_patch": {
+      "results": {
+        "vanilla": {
+          "attack_mAP5": 0.023086911341852548,
+          "attack_AR": 0.22525252525252526
+        },
+        "dispatch": {
+          "attack_mAP5": 0.11845812224625223,
+          "attack_AR": 0.39090909090909093
+        },
+        "dispatch_gray": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "regenerated_only": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        }
+      }
+    },
+    "creating_digital": {
+      "results": {
+        "vanilla": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.8655033461883773
+        },
+        "dispatch": {
+          "targeted_mAP5": 0.44699098222685874,
+          "targeted_ASR": 0.28,
+          "untargeted_mAP5": 0.7249478875973602,
+          "untargeted_ASR": 0.5,
+          "object_mAP5": 0.8696846937761945
+        },
+        "dispatch_gray": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "regenerated_only": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        }
+      }
+    }
+  }
+}
