@@ -1,130 +1,375 @@
 {
   "experiments": {
     "inria_digital_hiding": {
-      "description": "INRIA-Person digital hiding attacks, overall rows from Table 1. Higher mAP.5 and AR indicate better defended person detection; clean-image mAP.5 tracks preservation of benign performance.",
+      "description": "INRIA-Person hiding attack: a white-box AdvPatch-style patch (side 0.2 x person box diagonal) on every annotated person, protected detector Faster R-CNN. Benefit: person mAP.5 / AR on attacked images. Constraint: person mAP.5 / AR on clean images (a defense more than 0.05 clean mAP.5 below the undefended detector is scored as failed).",
+      "weight": 0.4,
+      "primary_metric": "attack_mAP5",
+      "metrics": {
+        "attack_mAP5": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "COCO-style person AP at IoU 0.5 on hiding-attacked images."
+        },
+        "attack_AR": {
+          "higher_is_better": true,
+          "coefficient": 0.5,
+          "description": "COCO AR@100 (IoU 0.50:0.95) for persons on hiding-attacked images."
+        },
+        "clean_mAP5": {
+          "higher_is_better": true,
+          "coefficient": 0.5,
+          "description": "Person AP at IoU 0.5 on clean images; the paper's 'without sacrificing clean performance' constraint (hard gate at -0.05 vs. no defense, plus this scored term)."
+        },
+        "clean_AR": {
+          "higher_is_better": true,
+          "coefficient": 0.15,
+          "description": "Person AR@100 on clean images."
+        }
+      },
+      "results": {
+        "vanilla": {
+          "type": "baseline",
+          "attack_mAP5": 0.51,
+          "attack_AR": 0.546,
+          "clean_mAP5": 0.963,
+          "clean_AR": 0.722
+        },
+        "objectseeker": {
+          "type": "baseline",
+          "attack_mAP5": 0.184,
+          "attack_AR": 0.152,
+          "clean_mAP5": 0.886,
+          "clean_AR": 0.65
+        },
+        "sac": {
+          "type": "baseline",
+          "attack_mAP5": 0.597,
+          "attack_AR": 0.557,
+          "clean_mAP5": 0.942,
+          "clean_AR": 0.702
+        },
+        "jedi": {
+          "type": "baseline",
+          "attack_mAP5": 0.842,
+          "attack_AR": 0.624,
+          "clean_mAP5": 0.953,
+          "clean_AR": 0.692
+        },
+        "nutnet": {
+          "type": "baseline",
+          "attack_mAP5": 0.852,
+          "attack_AR": 0.663,
+          "clean_mAP5": 0.96,
+          "clean_AR": 0.713
+        },
+        "pad": {
+          "type": "baseline",
+          "attack_mAP5": 0.914,
+          "attack_AR": 0.692,
+          "clean_mAP5": 0.964,
+          "clean_AR": 0.722
+        },
+        "dispatch_gray": {
+          "type": "baseline",
+          "attack_mAP5": 0.872,
+          "clean_mAP5": 0.936
+        },
+        "dispatch": {
+          "type": "proposed",
+          "attack_mAP5": 0.932,
+          "attack_AR": 0.682,
+          "clean_mAP5": 0.965,
+          "clean_AR": 0.705
+        }
+      },
+      "notes": "Results are the paper's Faster R-CNN rows: Table 1 (AdvPatch row for attack_*, Clean row for clean_*) and Table 6 (DISPATCH(G)). The gym uses torchvision's COCO Faster R-CNN at 640 px instead of MMDetection, its own white-box patches (two AdvPatch-style, one smooth naturalistic) and pooled INRIA train+test images; reproduced hidden-test values: vanilla 0.489 / dispatch 0.943 attack mAP.5.",
+      "_paper_reported": {
+        "faster_rcnn_natpatch": {
+          "vanilla": [
+            0.713,
+            0.629
+          ],
+          "objectseeker": [
+            0.274,
+            0.212
+          ],
+          "sac": [
+            0.732,
+            0.62
+          ],
+          "jedi": [
+            0.777,
+            0.595
+          ],
+          "nutnet": [
+            0.75,
+            0.627
+          ],
+          "pad": [
+            0.901,
+            0.683
+          ],
+          "dispatch": [
+            0.906,
+            0.654
+          ],
+          "dispatch_gray_mAP5": 0.846,
+          "format": "[mAP.5, AR]"
+        },
+        "overall_table1": {
+          "vanilla": {
+            "type": "baseline",
+            "attack_mAP5": 0.686,
+            "attack_AR": 0.627,
+            "clean_mAP5": 0.939
+          },
+          "sac": {
+            "type": "baseline",
+            "attack_mAP5": 0.701,
+            "attack_AR": 0.61,
+            "clean_mAP5": 0.924
+          },
+          "jedi": {
+            "type": "baseline",
+            "attack_mAP5": 0.834,
+            "attack_AR": 0.637,
+            "clean_mAP5": 0.942
+          },
+          "nutnet": {
+            "type": "baseline",
+            "attack_mAP5": 0.812,
+            "attack_AR": 0.658,
+            "clean_mAP5": 0.943
+          },
+          "pad": {
+            "type": "baseline",
+            "attack_mAP5": 0.872,
+            "attack_AR": 0.681,
+            "clean_mAP5": 0.939
+          },
+          "dispatch": {
+            "type": "proposed",
+            "attack_mAP5": 0.893,
+            "attack_AR": 0.667,
+            "clean_mAP5": 0.951
+          }
+        },
+        "rectification_ablation_table5_yolov3": {
+          "without_rectification": {
+            "clean": 0.928,
+            "advpatch": 0.853,
+            "natpatch": 0.776,
+            "advtexture": 0.807
+          },
+          "with_rectification": {
+            "clean": 0.934,
+            "advpatch": 0.903,
+            "natpatch": 0.84,
+            "advtexture": 0.873
+          }
+        }
+      }
+    },
+    "inria_hiding_large_patch": {
+      "description": "Same hiding attack with larger patches (side 0.3 x person box diagonal), where the paper reports all defenses degrading (Appendix A.5, Figure 10). Person mAP.5 / AR on attacked images.",
       "weight": 0.25,
       "primary_metric": "attack_mAP5",
       "metrics": {
         "attack_mAP5": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Detection quality on attacked hiding images; higher means the defense recovers more true people."
+          "description": "Person AP at IoU 0.5 on images with large hiding patches."
         },
         "attack_AR": {
           "higher_is_better": true,
-          "coefficient": 0.4,
-          "description": "Average recall under hiding attacks; complements mAP.5 with recall-oriented recovery."
-        },
-        "clean_mAP5": {
-          "higher_is_better": true,
-          "coefficient": 0.25,
-          "description": "Clean-image detection quality; guards against defenses that damage benign inputs."
+          "coefficient": 0.5,
+          "description": "Person AR@100 (IoU 0.50:0.95) on images with large hiding patches."
         }
       },
       "results": {
         "vanilla": {
           "type": "baseline",
-          "attack_mAP5": 0.686,
-          "attack_AR": 0.627,
-          "clean_mAP5": 0.939
-        },
-        "sac": {
-          "type": "baseline",
-          "attack_mAP5": 0.701,
-          "attack_AR": 0.61,
-          "clean_mAP5": 0.924
-        },
-        "jedi": {
-          "type": "baseline",
-          "attack_mAP5": 0.834,
-          "attack_AR": 0.637,
-          "clean_mAP5": 0.942
-        },
-        "nutnet": {
-          "type": "baseline",
-          "attack_mAP5": 0.812,
-          "attack_AR": 0.658,
-          "clean_mAP5": 0.943
-        },
-        "pad": {
-          "type": "baseline",
-          "attack_mAP5": 0.872,
-          "attack_AR": 0.681,
-          "clean_mAP5": 0.939
+          "attack_mAP5": 0.0318,
+          "attack_AR": 0.1515
         },
         "dispatch": {
           "type": "proposed",
-          "attack_mAP5": 0.893,
-          "attack_AR": 0.667,
-          "clean_mAP5": 0.951
+          "attack_mAP5": 0.4135,
+          "attack_AR": 0.4801
+        }
+      },
+      "notes": "The paper reports this regime only as a YOLOv3 curve (Figure 10), not on this detector; results here are the reproduced hidden-test values of this gym (scaled substitute), the paper's statements are kept under _paper_reported.",
+      "_paper_reported": {
+        "figure10_yolov3_advpatch_scale_0.3": {
+          "vanilla_mAP5": "< 0.10",
+          "dispatch_mAP5": "> 0.60",
+          "nutnet": "> 0.60, below DISPATCH",
+          "pad": "degrades with patch size"
         }
       }
     },
-    "apricot_creating": {
-      "description": "APRICOT physical creating attacks, overall rows from Table 3. Lower mAP.5 and ASR indicate better suppression of false detections on adversarial patches.",
-      "weight": 0.15,
+    "creating_digital": {
+      "description": "Creating attack: a targeted white-box patch (stop sign or umbrella) in empty background, degraded by a print-and-capture transform (APRICOT-style physical patch). APRICOT protocol: lower attack success rate and lower patch-as-ground-truth mAP.5 are better; person mAP.5 on the same images is the preservation constraint (also gated at -0.05 vs. no defense).",
+      "weight": 0.35,
       "primary_metric": "untargeted_ASR",
       "metrics": {
         "targeted_mAP5": {
           "higher_is_better": false,
           "coefficient": -0.4,
-          "description": "Patch-region detection quality for targeted creating attacks; lower means fewer target-like false detections."
+          "description": "AP at IoU 0.5 of wrong boxes of the target class against the patch box."
         },
         "targeted_ASR": {
           "higher_is_better": false,
-          "coefficient": -0.8,
-          "description": "Targeted creating attack success rate; lower means the patch less often causes the target false detection."
+          "coefficient": -0.6,
+          "description": "Fraction of creating images with a wrong target-class box, confidence > 0.3, IoU >= 0.1 with the patch."
         },
         "untargeted_mAP5": {
           "higher_is_better": false,
           "coefficient": -0.6,
-          "description": "Patch-region detection quality for untargeted creating attacks; lower means fewer false detections of any class."
+          "description": "AP at IoU 0.5 of wrong boxes of any class against the patch box."
         },
         "untargeted_ASR": {
           "higher_is_better": false,
           "coefficient": -1.0,
-          "description": "Untargeted creating attack success rate; the headline metric for suppressing patch-created objects."
+          "description": "Fraction of creating images with a wrong box of any class, confidence > 0.3, IoU >= 0.1 with the patch."
+        },
+        "object_mAP5": {
+          "higher_is_better": true,
+          "coefficient": 0.1,
+          "description": "Person AP at IoU 0.5 on creating-attack images; a guard (hard gate at -0.05 vs. no defense). Honest defenses sit within seed noise of the undefended detector, so its scored coefficient is small."
         }
       },
       "results": {
         "vanilla": {
           "type": "baseline",
-          "targeted_mAP5": 0.059,
-          "targeted_ASR": 0.082,
-          "untargeted_mAP5": 0.207,
-          "untargeted_ASR": 0.424
-        },
-        "sac": {
-          "type": "baseline",
-          "targeted_mAP5": 0.023,
-          "targeted_ASR": 0.03,
-          "untargeted_mAP5": 0.157,
-          "untargeted_ASR": 0.411
-        },
-        "jedi": {
-          "type": "baseline",
-          "targeted_mAP5": 0.025,
-          "targeted_ASR": 0.033,
-          "untargeted_mAP5": 0.144,
-          "untargeted_ASR": 0.337
-        },
-        "nutnet": {
-          "type": "baseline",
-          "targeted_mAP5": 0.025,
-          "targeted_ASR": 0.033,
-          "untargeted_mAP5": 0.05,
-          "untargeted_ASR": 0.25
+          "targeted_mAP5": 0.9901,
+          "targeted_ASR": 0.9917,
+          "untargeted_mAP5": 0.9901,
+          "untargeted_ASR": 0.9917,
+          "object_mAP5": 0.9912
         },
         "dispatch": {
           "type": "proposed",
-          "targeted_mAP5": 0.01,
-          "targeted_ASR": 0.01,
-          "untargeted_mAP5": 0.117,
-          "untargeted_ASR": 0.248
+          "targeted_mAP5": 0.6505,
+          "targeted_ASR": 0.5167,
+          "untargeted_mAP5": 0.808,
+          "untargeted_ASR": 0.6583,
+          "object_mAP5": 0.9916
+        }
+      },
+      "notes": "The paper evaluates photographed physical patches (APRICOT, 873 images); this gym substitutes digitally optimised targeted patches with simulated print-and-capture degradation on INRIA images, so the paper's numbers are not on this scale. Results are the reproduced hidden-test values; the paper's Table 3 rows are kept under _paper_reported.",
+      "_paper_reported": {
+        "format": "[mAP.5, ASR]",
+        "faster_rcnn_targeted": {
+          "vanilla": [
+            0.123,
+            0.171
+          ],
+          "sac": [
+            0.028,
+            0.037
+          ],
+          "jedi": [
+            0.026,
+            0.03
+          ],
+          "nutnet": [
+            0.051,
+            0.067
+          ],
+          "pad": [
+            0.025,
+            0.037
+          ],
+          "dispatch": [
+            0.018,
+            0.017
+          ]
+        },
+        "faster_rcnn_untargeted": {
+          "vanilla": [
+            0.355,
+            0.589
+          ],
+          "sac": [
+            0.164,
+            0.431
+          ],
+          "jedi": [
+            0.197,
+            0.415
+          ],
+          "nutnet": [
+            0.087,
+            0.338
+          ],
+          "pad": [
+            0.158,
+            0.398
+          ],
+          "dispatch": [
+            0.114,
+            0.327
+          ]
+        },
+        "overall_targeted": {
+          "vanilla": [
+            0.059,
+            0.082
+          ],
+          "sac": [
+            0.023,
+            0.03
+          ],
+          "jedi": [
+            0.025,
+            0.033
+          ],
+          "nutnet": [
+            0.025,
+            0.033
+          ],
+          "pad": [
+            0.01,
+            0.017
+          ],
+          "dispatch": [
+            0.01,
+            0.013
+          ]
+        },
+        "overall_untargeted": {
+          "vanilla": [
+            0.207,
+            0.424
+          ],
+          "sac": [
+            0.157,
+            0.411
+          ],
+          "jedi": [
+            0.144,
+            0.337
+          ],
+          "nutnet": [
+            0.05,
+            0.25
+          ],
+          "pad": [
+            0.117,
+            0.338
+          ],
+          "dispatch": [
+            0.07,
+            0.248
+          ]
         }
       }
-    },
-    "physical_hiding": {
+    }
+  },
+  "_paper_unmeasured": {
+    "note": "Paper results this gym does not measure (kept unchanged for reference).",
+    "physical_hiding_table2": {
       "description": "Real-world physical AdvPatch hiding attack ASR from Table 2, averaged across indoor, outdoor lighting, and outdoor shadow conditions for YOLOv3 and Faster R-CNN. Lower ASR is better.",
       "weight": 0.1,
       "primary_metric": "overall_ASR",
@@ -166,144 +411,94 @@
         }
       }
     },
-    "synthetic_hiding_scaled": {
-      "description": "Scaled synthetic hiding benchmark used by this reproduction. Higher recall-at-IoU-0.5 proxy scores indicate better defended detection under hiding patches; clean recall tracks preservation of benign detections.",
-      "weight": 0.25,
-      "primary_metric": "attack_mAP5",
-      "metrics": {
-        "attack_mAP5": {
-          "higher_is_better": true,
-          "coefficient": 1.0,
-          "description": "Person recall at IoU 0.5 on hiding-attack images; the scaled proxy for defended detection quality."
-        },
-        "attack_AR": {
-          "higher_is_better": true,
-          "coefficient": 0.5,
-          "description": "Mean person recall across stricter IoU thresholds on hiding-attack images; catches sloppy boxes tuned only for IoU 0.5."
-        },
-        "attack_precision": {
-          "higher_is_better": true,
-          "coefficient": 0.35,
-          "description": "Person precision on hiding-attack images; penalizes methods that recover recall by hallucinating extra people."
-        },
-        "clean_mAP5": {
-          "higher_is_better": true,
-          "coefficient": 0.25,
-          "description": "Person recall at IoU 0.5 on clean images; preserves the paper's benign-performance constraint."
-        },
-        "clean_precision": {
-          "higher_is_better": true,
-          "coefficient": 0.15,
-          "description": "Person precision on clean images; catches defenses that introduce benign-scene false positives."
-        }
+    "adaptive_attacks_table4_yolov3_mAP5": {
+      "advpatch": {
+        "vanilla": [
+          0.498,
+          0.761,
+          0.802,
+          0.857
+        ],
+        "dispatch": [
+          0.903,
+          0.908,
+          0.908,
+          0.904
+        ]
       },
-      "results": {
-        "vanilla": {
-          "type": "baseline",
-          "attack_mAP5": 0.0,
-          "attack_AR": 0.0,
-          "clean_mAP5": 0.75,
-          "clean_precision": 0.8571428571428571,
-          "attack_precision": 0.0
-        },
-        "dispatch": {
-          "type": "proposed",
-          "attack_mAP5": 0.6517857142857143,
-          "attack_AR": 0.5178571428571429,
-          "clean_mAP5": 0.75,
-          "clean_precision": 0.8571428571428571,
-          "attack_precision": 0.6636363636363637
-        }
+      "natpatch": {
+        "vanilla": [
+          0.707,
+          0.765,
+          0.808,
+          0.826
+        ],
+        "dispatch": [
+          0.84,
+          0.845,
+          0.864,
+          0.868
+        ]
       },
-      "notes": "Scaled synthetic reference values are from the validated reproduction artifacts, not the full paper benchmark."
+      "alpha": [
+        0,
+        0.5,
+        1.0,
+        5.0
+      ]
     },
-    "synthetic_creating_scaled": {
-      "description": "Scaled synthetic creating benchmark used by this reproduction. Lower patch-overlap false-positive rates indicate better suppression of patch-created detections.",
-      "weight": 0.15,
-      "primary_metric": "untargeted_ASR",
-      "metrics": {
-        "targeted_mAP5": {
-          "higher_is_better": false,
-          "coefficient": -0.4,
-          "description": "Strict patch-overlap false-positive rate on creating images; lower means fewer target-like detections centered on the patch."
-        },
-        "targeted_ASR": {
-          "higher_is_better": false,
-          "coefficient": -0.6,
-          "description": "Moderate-overlap false-positive rate on creating images; lower means stronger suppression of patch-created objects."
-        },
-        "untargeted_mAP5": {
-          "higher_is_better": false,
-          "coefficient": -0.7,
-          "description": "Loose patch-overlap false-positive rate on creating images; lower catches broad false detections near the patch."
-        },
-        "untargeted_ASR": {
-          "higher_is_better": false,
-          "coefficient": -1.0,
-          "description": "Any-overlap patch false-positive rate on creating images; the hardest-to-game creating suppression metric."
-        },
-        "object_mAP5": {
-          "higher_is_better": true,
-          "coefficient": 0.25,
-          "description": "Person recall on creating images; prevents methods from suppressing patches by erasing all objects."
-        }
-      },
-      "results": {
-        "vanilla": {
-          "type": "baseline",
-          "targeted_mAP5": 0.45,
-          "targeted_ASR": 0.45,
-          "untargeted_mAP5": 0.45,
-          "untargeted_ASR": 0.45,
-          "object_mAP5": 0.7589285714285714
-        },
-        "dispatch": {
-          "type": "proposed",
-          "targeted_mAP5": 0.0375,
-          "targeted_ASR": 0.0375,
-          "untargeted_mAP5": 0.0375,
-          "untargeted_ASR": 0.0375,
-          "object_mAP5": 0.75
-        }
-      },
-      "notes": "Scaled synthetic reference values are from the validated reproduction artifacts, not the full paper benchmark."
+    "grids_table7_faster_rcnn_mAP5": {
+      "N": [
+        16,
+        32,
+        64
+      ],
+      "clean": [
+        0.95,
+        0.965,
+        0.885
+      ],
+      "advpatch": [
+        0.914,
+        0.932,
+        0.751
+      ],
+      "natpatch": [
+        0.89,
+        0.906,
+        0.702
+      ],
+      "advtexture": [
+        0.767,
+        0.814,
+        0.58
+      ]
     },
-    "rectification_ablation": {
-      "description": "Scaled synthetic rectification ablation corresponding to Appendix A.1: direct regenerated image versus full DISPATCH rectification. Higher attack average recall indicates better recovery under hiding attack.",
-      "weight": 0.1,
-      "primary_metric": "attack_AR",
-      "metrics": {
-        "attack_mAP5": {
-          "higher_is_better": true,
-          "coefficient": 0.8,
-          "description": "Person recall at IoU 0.5 under hiding attack; tests whether rectification improves over direct regeneration."
-        },
-        "attack_AR": {
-          "higher_is_better": true,
-          "coefficient": 1.0,
-          "description": "Mean person recall across stricter IoU thresholds; catches rectification variants with imprecise boxes."
-        },
-        "attack_precision": {
-          "higher_is_better": true,
-          "coefficient": 0.35,
-          "description": "Person precision under hiding attack; penalizes rectification variants that add false people."
-        }
-      },
-      "results": {
-        "regenerated_only": {
-          "type": "proposed",
-          "attack_mAP5": 0.5982142857142857,
-          "attack_AR": 0.44047619047619047,
-          "attack_precision": 0.6442307692307693
-        },
-        "dispatch": {
-          "type": "proposed",
-          "attack_mAP5": 0.6517857142857143,
-          "attack_AR": 0.5178571428571429,
-          "attack_precision": 0.6636363636363637
-        }
-      },
-      "notes": "Scaled synthetic reference values are from the validated reproduction artifacts, not the full paper benchmark."
+    "sampling_steps_table8_yolov3": {
+      "steps": [
+        5,
+        10,
+        30,
+        50
+      ],
+      "seconds_per_img": [
+        0.32,
+        0.67,
+        1.95,
+        3.16
+      ],
+      "clean": [
+        0.934,
+        0.929,
+        0.934,
+        0.934
+      ],
+      "advpatch": [
+        0.903,
+        0.896,
+        0.899,
+        0.901
+      ]
     }
   }
 }

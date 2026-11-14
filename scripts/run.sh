@@ -1,83 +1,75 @@
 #!/bin/bash
-# Full hardening job (1 GPU):
-#   1. build the visible slice (data/inria_slice) and the hidden test assets (eval/test/assets)
-#   2. reference runs: scripts/evaluate_train.sh, evaluate_test.sh, evaluate.sh
-#   3. hardening probes (better/weaker variants, seeds, simple baselines, shortcuts) through
-#      the hidden-test and visible-slice evaluators
-#   4. restore the reference score files (some shortcut probes deliberately overwrite them)
-# Stages are resumable: finished stages leave markers in outputs/.
+# Reference reproduction + final verification job (1 GPU, ~20 min).
+#   1. scripts/evaluate_train.sh, evaluate_test.sh, evaluate.sh with no arguments
+#      -> scoring/scores_train.json, scores_test.json, scores.json (reference defenses only)
+#   2. tampered fixed input demo: one hidden-test source image is altered; the hidden
+#      evaluator must score every defense as failed (then the file is restored)
+#   3. the paper's two ablations scored without the clean gate, from saved detections
+#   4. python validate.py --post-design
+# The full hardening job (asset build + every probe) is redteam/hardening/run_hardening.sh.
 set -uo pipefail
 cd /home/user
-chmod -R u+rwX eval/test data/downloads/INRIAPerson/Test data/downloads/torchvision 2>/dev/null || true
-rm -rf outputs/.eval_t* tmp/smoke
-mkdir -p outputs redteam/hardening/results
+chmod -R u+rwX eval/test data/downloads/INRIAPerson data/downloads/torchvision 2>/dev/null || true
+rm -rf outputs/.eval_t*
+# Restore a fixed input left altered by an interrupted tamper demo.
+if [ -f tmp/tamper_backup.png ] && [ -f tmp/tamper_src ]; then cp tmp/tamper_backup.png "$(cat tmp/tamper_src)"; rm -f tmp/tamper_backup.png tmp/tamper_src; fi
 R=redteam/hardening/results
-nvidia-smi || true
+mkdir -p "$R" tmp
 python -c "import torch; [print('cuda', i, torch.cuda.get_device_name(i), 'free GB %.1f' % (torch.cuda.mem_get_info(i)[0] / 1e9)) for i in range(torch.cuda.device_count())]"
 T0=$(date +%s)
 el() { echo "[elapsed $(( $(date +%s) - T0 ))s] $*"; }
 
-# 1. Assets ---------------------------------------------------------------------------
-if [ ! -f data/inria_slice/spec.json ]; then
-  el "build visible slice"
-  python eval/train/build_slice.py > $R/build_slice.log 2>&1 || python eval/train/build_slice.py --batch 4 >> $R/build_slice.log 2>&1
-  grep -E "device|optimising|it=(0|2999|599) |wrote|Error" $R/build_slice.log
-fi
-if [ ! -f eval/test/assets/spec.json ]; then
-  el "build hidden test assets"
-  python eval/test/build_assets.py > outputs/build_assets.log 2>&1 || python eval/test/build_assets.py --batch 4 >> outputs/build_assets.log 2>&1
-  grep -E "device|it=(0|2999|599) |wrote|Error" outputs/build_assets.log | sed "s/\[.*\]//"
-fi
-[ -f data/inria_slice/spec.json ] && [ -f eval/test/assets/spec.json ] || { echo "ASSET BUILD FAILED"; exit 1; }
+el "evaluate_train"; bash scripts/evaluate_train.sh > outputs/final_train.log 2>&1 || echo "evaluate_train FAILED"
+el "evaluate_test";  bash scripts/evaluate_test.sh  > outputs/final_test.log 2>&1  || echo "evaluate_test FAILED"
+cp outputs/eval_test/status.json $R/status_test_final.json
+el "evaluate";       bash scripts/evaluate.sh       > outputs/final_main.log 2>&1  || echo "evaluate FAILED"
 
-# 2. Reference runs ------------------------------------------------------------------
-if [ ! -f outputs/.stage_reference.done ]; then
-  el "reference: evaluate_train"
-  bash scripts/evaluate_train.sh > outputs/ref_train.log 2>&1 || echo "evaluate_train FAILED"
-  cp outputs/eval_train/status.json $R/status_train_reference.json
-  el "reference: evaluate_test"
-  # Same code path and defaults as scripts/evaluate_test.sh, plus a raw-detection dump for offline analysis.
-  python eval/test/evaluate.py --save-predictions outputs/ref_test_predictions.json > outputs/ref_test.log 2>&1 || echo "evaluate_test FAILED"
-  cp outputs/eval_test/status.json $R/status_test_reference.json
-  el "reference: evaluate (scores.json)"
-  bash scripts/evaluate.sh > outputs/ref_main.log 2>&1 || echo "evaluate FAILED"
-  for f in scores_train scores_test scores; do cp scoring/$f.json $R/reference_$f.json; done
-  touch outputs/.stage_reference.done
-fi
-cat $R/status_test_reference.json
+el "tamper demo"
+SRC=$(python -c "import json; it=json.load(open('eval/test/assets/spec.json'))['items'][0]; print('data/downloads/INRIAPerson/%s/pos/%s' % (it['split'], it['source']))")
+cp "$SRC" tmp/tamper_backup.png; echo "$SRC" > tmp/tamper_src
+rm -rf tmp/tamper_defenses; mkdir -p tmp/tamper_defenses/identity
+printf '#!/bin/bash\nset -e\ncp "$1"/*.png "$2"/\n' > tmp/tamper_defenses/identity/defend.sh
+python - "$SRC" <<'EOF'
+import sys
+from PIL import Image
+p = sys.argv[1]
+im = Image.open(p).convert("RGB")
+im.paste((255, 0, 0), (0, 0, 40, 40))   # visibly altered fixed input
+im.save(p)
+EOF
+python eval/test/evaluate.py --defenses-dir tmp/tamper_defenses --score-path $R/tamper_demo_scores.json \
+  --log-dir outputs/tamper_demo > outputs/tamper_demo.log 2>&1 || echo "tamper demo FAILED"
+cp tmp/tamper_backup.png "$SRC" && rm -f tmp/tamper_backup.png tmp/tamper_src
+cp outputs/tamper_demo/status.json $R/tamper_demo_status.json
+grep "FIXED INPUTS" outputs/tamper_demo.log; cat $R/tamper_demo_status.json
 
-# 3. Probes ------------------------------------------------------------------------------
-cp data/downloads/torchvision/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth redteam/hardening/defenses/sc_detector_guided/weights.pth
-if [ ! -f outputs/.stage_probes_test.done ]; then
-  el "probes: hidden test"
-  python eval/test/evaluate.py --defenses-dir redteam/hardening/defenses \
-    --score-path $R/scores_test_probes.json --log-dir outputs/hardening_test \
-    --save-predictions outputs/probes_test_predictions.json > outputs/probes_test.log 2>&1 || echo "probe test FAILED"
-  cp outputs/hardening_test/status.json $R/status_test_probes.json
-  for f in outputs/hardening_test/logs/sc_*.log outputs/hardening_test/logs/var_*.log; do echo "== $f"; grep -v "making attention\|Working with z" "$f" | tail -2; done
-  touch outputs/.stage_probes_test.done
-fi
-if [ ! -f outputs/.stage_probes_train.done ]; then
-  el "probes: visible slice"
-  python eval/train/evaluate.py --defenses-dir redteam/hardening/defenses \
-    --score-path $R/scores_train_probes.json --save-dir outputs/hardening_train > outputs/probes_train.log 2>&1 || echo "probe train FAILED"
-  cp outputs/hardening_train/status.json $R/status_train_probes.json
-  touch outputs/.stage_probes_train.done
-fi
-rm -f redteam/hardening/defenses/sc_detector_guided/weights.pth
+el "ungated ablations"
+python - <<'EOF'
+import json, sys
+sys.path.insert(0, "eval/test")
+from common import score_predictions  # analysis only: rescoring saved detections without the gate
+out = {}
+for name, path in (("hidden_test", "outputs/ref_test_predictions.json"), ("public_slice", "outputs/ref_train_predictions.json")):
+    try:
+        d = json.load(open(path))
+    except OSError:
+        continue
+    out[name] = {m: score_predictions(d["items"], p) for m, p in d["predictions"].items()
+                 if m in ("vanilla", "dispatch", "dispatch_gray", "regenerated_only")}
+json.dump(out, open("redteam/hardening/results/ungated_ablations.json", "w"), indent=1)
+print(json.dumps(out, indent=1))
+EOF
 
-# 4. Restore reference score files ---------------------------------------------------------
-for f in scores_train scores_test scores; do cp $R/reference_$f.json scoring/$f.json; done
-chmod -R u+rwX eval/test data/downloads/INRIAPerson/Test data/downloads/torchvision 2>/dev/null || true
+el "validate"
+python validate.py --post-design 2>&1 | tail -30
+chmod -R u+rwX eval/test data/downloads/INRIAPerson data/downloads/torchvision 2>/dev/null || true
 el "done"
 python - <<'EOF'
 import json
-for name in ("reference_scores_test", "scores_test_probes", "reference_scores_train", "scores_train_probes"):
-    s = json.load(open(f"redteam/hardening/results/{name}.json"))
-    print("=====", name)
+for f in ("scoring/scores_test.json", "scoring/scores_train.json"):
+    s = json.load(open(f)); print("=====", f)
     for exp, d in s["experiments"].items():
-        print("==", exp)
         for m, r in d["results"].items():
-            print(f"  {m:22s}", " ".join(f"{k}={v:.3f}" for k, v in r.items()))
+            print(f"  {exp[:22]:22s} {m:10s}", " ".join(f"{k}={v:.3f}" for k, v in r.items()))
 EOF
-echo FULL_DONE
+echo FINAL_DONE

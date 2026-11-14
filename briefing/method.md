@@ -29,7 +29,8 @@ the image, so outputs are deterministic.
 
 Paper defaults reproduced: N = 32 grids, s = 5 DDIM steps, 512x512 regeneration,
 no fine-tuning.  The ablations `--mode regen` (no rectification, Appendix A.1)
-and `--mode gray` (DISPATCH(G), Appendix A.2) are registered as baselines.
+and `--mode gray` (DISPATCH(G), Appendix A.2) are available as
+`method/ablations/*.sh` and scored by `scripts/baseline.sh`.
 
 ## Main Claims
 
