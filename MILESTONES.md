@@ -55,3 +55,9 @@
 ### [2026-06-25 08:22] - secondary_claims
 - The validation refresh passed all train/test split checks after changing the rectification ablation primary metric to `attack_AR`, which distinguishes final defended outputs from regenerated-only outputs on train, test, and full scores.
 - Final verification confirms the scaled hiding, creating, and rectification-ablation claims under the corrected generic scoring contract.
+
+### [2026-11-14] - secondary_claims (hardening iteration: gym rebuilt on the paper's setting)
+- Replaced the synthetic toy with INRIA-Person, a COCO-pretrained Faster R-CNN, white-box hiding/creating patches, and the paper's own pretrained LDM `inpainting_big` (DDIM, 512x512, N = 32, s = 5).
+- Core claim (hidden test): person mAP.5 under hiding patches 0.489 -> 0.943 with clean mAP.5 0.976 -> 0.966 (paper, Faster R-CNN AdvPatch: 0.510 -> 0.932, clean 0.963 -> 0.965).
+- Creating claim: untargeted ASR 0.992 -> 0.658, targeted 0.992 -> 0.517 on physical-style creating patches.
+- Secondary: rectification beats the regenerated image (A.1: 0.943 vs 0.869 hiding, 0.966 vs 0.915 clean); large patches degrade the defense (A.5: 0.413 at scale 0.3).  A.2 (regenerated fill beats gray fill) holds only on clean images.

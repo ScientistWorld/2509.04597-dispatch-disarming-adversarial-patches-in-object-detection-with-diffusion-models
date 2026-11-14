@@ -1,43 +1,10 @@
 # Reproduction Checklist
 
-## Briefing
-- [x] `briefing/problem.md` (method-agnostic)
-- [x] `briefing/evaluation.md` (method-agnostic)
-- [x] `briefing/method.md`
-- [x] `briefing/overview.md`
-
-## Scoring
-- [x] `scoring/reference.json` — paper's reported numbers
-- [x] Workspace validated via `python validate.py`
-- [x] `scoring/scores.json` — reproduced numbers
-- [x] `scoring/EXPERIMENTS.md`
-- [x] `scoring/TARGETS.md`
-- [x] `scoring/CONSTRAINTS.md`
-- [x] `scoring/DIRECTION.md`
-
-## Code
-- [x] Evaluation code in `eval/`
-- [x] Method implementation in `method/`
-- [x] Baseline implementation in `baseline/`
-
-## Scripts
-- [x] `scripts/evaluate.sh`
-- [x] `scripts/reproduce.sh`
-- [x] `scripts/download.sh`
-- [x] `scripts/baseline.sh`
-
-## Environment
-- [x] `environment/container.def` + `environment/setup.sh`
-
-## Data
-- [x] Dataset generation code added
-- [x] No external pretrained models required
-
-## Milestones
-- [x] `method_runs`
-- [x] `core_claim`
-- [x] `core_claim_plus`
-- [x] `secondary_claims`
-- [ ] `majority`
-- [ ] `near_complete`
-- [ ] `full`
+- [x] `briefing/problem.md`, `briefing/evaluation.md` (method-agnostic), `briefing/method.md`, `briefing/overview.md`
+- [x] `scoring/reference.json` (paper numbers kept; scaled experiments noted), `TARGETS.md`, `CONSTRAINTS.md`, `DIRECTION.md`, `EXPERIMENTS.md`
+- [x] `scoring/scores.json`, `scores_train.json`, `scores_test.json` from the reference runs
+- [x] `eval/train`, `eval/test` (independent), `defenses/` contract, `method/` (paper's DISPATCH + pretrained LDM)
+- [x] `scripts/download.sh` (INRIA-Person, LDM checkpoint, detector weights), `evaluate*.sh`, `reproduce.sh`, `run.sh`
+- [x] `environment/container.def`, `environment/setup.sh` (CUDA PyTorch)
+- [x] `HARDENING.md`
+- [x] `python validate.py --post-design` passes

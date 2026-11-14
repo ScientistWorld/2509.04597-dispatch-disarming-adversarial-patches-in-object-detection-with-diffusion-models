@@ -233,3 +233,6 @@ core.[0-9]*
 
 # Auto-added by swarm
 data/downloads/
+
+# CUDA runtime cache created by GPU jobs
+.nv/

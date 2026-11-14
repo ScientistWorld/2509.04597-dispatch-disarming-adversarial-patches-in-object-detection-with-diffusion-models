@@ -1,25 +1,39 @@
 # Evaluation Targets
 
-## Primary: synthetic_hiding_scaled
+All three experiments are produced by one run of each defense on a mixed input
+set (see `briefing/evaluation.md`).  A defense that fails, or whose clean or
+object person mAP.5 is more than 0.05 below the undefended detector, gets the
+worst value of every metric below.
 
-Tests whether a defense recovers correct object detections when adversarial patches are placed on synthetic person-like objects.
+## Primary: inria_digital_hiding (weight 0.40)
 
-- **Primary metric:** `attack_mAP5` / scaled recall proxy, higher is better.
-- **Constraint metrics:** `clean_mAP5` should remain high, and `attack_AR` should improve alongside the primary metric.
-- **How to run:** `bash scripts/evaluate.sh` after method or baseline artifacts have been written to `outputs/`.
+Hiding patches of the paper's default size (0.2 x box diagonal) on every person.
 
-## Primary: synthetic_creating_scaled
+- **Primary metric:** `attack_mAP5` (person AP@0.5 on attacked images), higher is better.
+- **Supporting:** `attack_AR` (AR@100, IoU 0.50:0.95).
+- **Constraint metrics:** `clean_mAP5`, `clean_AR` on clean images (gate: `clean_mAP5`
+  at most 0.05 below the undefended detector).
+- Reference (hidden test): undefended 0.489 / DISPATCH 0.943 attack mAP.5; clean 0.976 / 0.966.
 
-Tests whether a defense prevents adversarial patches from causing false object detections on the scaled synthetic benchmark.
+## Primary: creating_digital (weight 0.35)
+
+Targeted, physical-style creating patches in background regions (APRICOT protocol).
 
 - **Primary metric:** `untargeted_ASR`, lower is better.
-- **Constraint metrics:** `targeted_ASR`, `targeted_mAP5`, and `untargeted_mAP5` should also remain low.
-- **How to run:** `bash scripts/evaluate.sh` after method or baseline artifacts have been written to `outputs/`.
+- **Supporting:** `targeted_ASR`, `untargeted_mAP5`, `targeted_mAP5` (lower is better).
+- **Constraint metric:** `object_mAP5` (person AP@0.5 on the same images; gate at -0.05).
+- Reference (hidden test): undefended 0.992 / DISPATCH 0.658 untargeted ASR.
 
-## Secondary: rectification_ablation
+## Secondary (headroom): inria_hiding_large_patch (weight 0.25)
 
-Tests whether the final defended output is better than an ablated intermediate output supplied by the reference reproduction.
+Hiding patches at 0.3 x box diagonal, where the paper reports every defense degrading
+(Appendix A.5).
 
-- **Primary metric:** `attack_AR`, higher is better.
-- **Supporting metrics:** `attack_mAP5` and `attack_precision` should also remain high.
-- **How to run:** `bash scripts/evaluate.sh` after compatible method artifacts have been written to `outputs/`.
+- **Primary metric:** `attack_mAP5`, higher is better.
+- **Supporting:** `attack_AR`.
+- Reference (hidden test): undefended 0.032 / DISPATCH 0.413.
+
+## How to run
+
+`bash scripts/evaluate.sh` scores every `defenses/*/defend.sh` on the public slice
+and writes `scoring/scores.json` (identical metrics to the hidden test).
