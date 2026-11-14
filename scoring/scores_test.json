@@ -13,18 +13,6 @@
           "attack_AR": 0.6755274261603376,
           "clean_mAP5": 0.9662623117802462,
           "clean_AR": 0.697008547008547
-        },
-        "dispatch_gray": {
-          "attack_mAP5": 0.0,
-          "attack_AR": 0.0,
-          "clean_mAP5": 0.0,
-          "clean_AR": 0.0
-        },
-        "regenerated_only": {
-          "attack_mAP5": 0.0,
-          "attack_AR": 0.0,
-          "clean_mAP5": 0.0,
-          "clean_AR": 0.0
         }
       }
     },
@@ -37,14 +25,6 @@
         "dispatch": {
           "attack_mAP5": 0.4134901003927885,
           "attack_AR": 0.4800829875518672
-        },
-        "dispatch_gray": {
-          "attack_mAP5": 0.0,
-          "attack_AR": 0.0
-        },
-        "regenerated_only": {
-          "attack_mAP5": 0.0,
-          "attack_AR": 0.0
         }
       }
     },
@@ -63,20 +43,6 @@
           "untargeted_mAP5": 0.8080370377897963,
           "untargeted_ASR": 0.6583333333333333,
           "object_mAP5": 0.9915923020828037
-        },
-        "dispatch_gray": {
-          "targeted_mAP5": 1.0,
-          "targeted_ASR": 1.0,
-          "untargeted_mAP5": 1.0,
-          "untargeted_ASR": 1.0,
-          "object_mAP5": 0.0
-        },
-        "regenerated_only": {
-          "targeted_mAP5": 1.0,
-          "targeted_ASR": 1.0,
-          "untargeted_mAP5": 1.0,
-          "untargeted_ASR": 1.0,
-          "object_mAP5": 0.0
         }
       }
     }

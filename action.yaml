@@ -2,4 +2,4 @@ action: submit
 gpus: 1
 test: false
 milestone: secondary_claims
-notes: "Resume after preemption: finish hidden test assets (3 of 5 patches left), then reference runs and all probes on visible slice + hidden test."
+notes: "Final verification: official score files via no-argument evaluate scripts (registry = dispatch), tampered-input demo, ungated paper ablations from saved detections, validate --post-design."
