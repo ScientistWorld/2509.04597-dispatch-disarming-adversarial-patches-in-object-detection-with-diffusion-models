@@ -1,5 +1,3 @@
-action: submit
-gpus: 1
-test: false
+action: done
 milestone: secondary_claims
-notes: "Final verification: official score files via no-argument evaluate scripts (registry = dispatch), tampered-input demo, ungated paper ablations from saved detections, validate --post-design."
+notes: "Gym rebuilt on INRIA-Person + Faster R-CNN with the paper's pretrained-LDM DISPATCH; hidden test runs defenses on unreleased inputs with gating/pins; better variants outrank the reference, shortcuts closed (see HARDENING.md)."
