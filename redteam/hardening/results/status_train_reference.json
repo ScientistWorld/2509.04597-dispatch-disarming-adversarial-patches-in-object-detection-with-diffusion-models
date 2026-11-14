@@ -1,0 +1,6 @@
+{
+  "vanilla": "ok (undefended detector, computed by the evaluator)",
+  "dispatch": "ok",
+  "dispatch_gray": "ok",
+  "regenerated_only": "failed constraint: inria_digital_hiding.clean_mAP5=0.9081 is more than 0.05 below the undefended detector (0.9802); creating_digital.object_mAP5=0.9277 is more than 0.05 below the undefended detector (0.9867)"
+}

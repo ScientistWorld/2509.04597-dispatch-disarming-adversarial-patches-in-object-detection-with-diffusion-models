@@ -1,0 +1,288 @@
+{
+  "experiments": {
+    "inria_digital_hiding": {
+      "results": {
+        "vanilla": {
+          "attack_mAP5": 0.37927798769940246,
+          "attack_AR": 0.5485148514851486,
+          "clean_mAP5": 0.9801980198019802,
+          "clean_AR": 0.6909090909090909
+        },
+        "sc_blank": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "sc_crash_forge": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "sc_detector_guided": {
+          "attack_mAP5": 0.8131018391474791,
+          "attack_AR": 0.6504950495049505,
+          "clean_mAP5": 0.9724023569001496,
+          "clean_AR": 0.6757575757575759
+        },
+        "sc_empty_allowlist": {
+          "attack_mAP5": 0.37927798769940246,
+          "attack_AR": 0.5485148514851486,
+          "clean_mAP5": 0.9801980198019802,
+          "clean_AR": 0.6909090909090909
+        },
+        "sc_partial": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "sc_read_answers": {
+          "attack_mAP5": 0.9994203057015525,
+          "attack_AR": 0.7643564356435644,
+          "clean_mAP5": 0.9801980198019802,
+          "clean_AR": 0.6909090909090909
+        },
+        "sc_template_visible": {
+          "attack_mAP5": 0.9794916128028003,
+          "attack_AR": 0.7485148514851485,
+          "clean_mAP5": 0.9801980198019802,
+          "clean_AR": 0.6919191919191919
+        },
+        "seed1": {
+          "attack_mAP5": 0.9188077909095212,
+          "attack_AR": 0.6851485148514851,
+          "clean_mAP5": 0.9607205001019101,
+          "clean_AR": 0.6656565656565656
+        },
+        "seed2": {
+          "attack_mAP5": 0.8860103446480123,
+          "attack_AR": 0.6633663366336633,
+          "clean_mAP5": 0.9579055010426684,
+          "clean_AR": 0.6555555555555557
+        },
+        "simple_blur": {
+          "attack_mAP5": 0.6395252459922106,
+          "attack_AR": 0.6,
+          "clean_mAP5": 0.9717991826005281,
+          "clean_AR": 0.6737373737373737
+        },
+        "simple_resize": {
+          "attack_mAP5": 0.5492414846661438,
+          "attack_AR": 0.5811881188118813,
+          "clean_mAP5": 0.9801980198019802,
+          "clean_AR": 0.6808080808080808
+        },
+        "var_dilate": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "var_ens3": {
+          "attack_mAP5": 0.9314932239428645,
+          "attack_AR": 0.6821782178217822,
+          "clean_mAP5": 0.9638715737908663,
+          "clean_AR": 0.6727272727272727
+        },
+        "var_iter2": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "weak_grid16": {
+          "attack_mAP5": 0.9231582781199007,
+          "attack_AR": 0.6732673267326732,
+          "clean_mAP5": 0.9630253041082498,
+          "clean_AR": 0.6404040404040405
+        }
+      }
+    },
+    "inria_hiding_large_patch": {
+      "results": {
+        "vanilla": {
+          "attack_mAP5": 0.03625302064248545,
+          "attack_AR": 0.27254901960784317
+        },
+        "sc_blank": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "sc_crash_forge": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "sc_detector_guided": {
+          "attack_mAP5": 0.489226436153507,
+          "attack_AR": 0.5470588235294118
+        },
+        "sc_empty_allowlist": {
+          "attack_mAP5": 0.03625302064248545,
+          "attack_AR": 0.27254901960784317
+        },
+        "sc_partial": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "sc_read_answers": {
+          "attack_mAP5": 0.9990387388253392,
+          "attack_AR": 0.7539215686274509
+        },
+        "sc_template_visible": {
+          "attack_mAP5": 0.9562190352251498,
+          "attack_AR": 0.6784313725490196
+        },
+        "seed1": {
+          "attack_mAP5": 0.4917358051905669,
+          "attack_AR": 0.5450980392156862
+        },
+        "seed2": {
+          "attack_mAP5": 0.4479861149320115,
+          "attack_AR": 0.553921568627451
+        },
+        "simple_blur": {
+          "attack_mAP5": 0.08003548527641445,
+          "attack_AR": 0.3323529411764706
+        },
+        "simple_resize": {
+          "attack_mAP5": 0.058928592196614935,
+          "attack_AR": 0.3176470588235294
+        },
+        "var_dilate": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "var_ens3": {
+          "attack_mAP5": 0.533545561745185,
+          "attack_AR": 0.5519607843137255
+        },
+        "var_iter2": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "weak_grid16": {
+          "attack_mAP5": 0.5070277510267652,
+          "attack_AR": 0.546078431372549
+        }
+      }
+    },
+    "creating_digital": {
+      "results": {
+        "vanilla": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.9866959359992844
+        },
+        "sc_blank": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "sc_crash_forge": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "sc_detector_guided": {
+          "targeted_mAP5": 0.7821782178217822,
+          "targeted_ASR": 0.64,
+          "untargeted_mAP5": 0.8926977479634167,
+          "untargeted_ASR": 0.74,
+          "object_mAP5": 0.9739929388927152
+        },
+        "sc_empty_allowlist": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.9866959359992844
+        },
+        "sc_partial": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "sc_read_answers": {
+          "targeted_mAP5": 0.0,
+          "targeted_ASR": 0.0,
+          "untargeted_mAP5": 0.0,
+          "untargeted_ASR": 0.0,
+          "object_mAP5": 0.9866254140338959
+        },
+        "sc_template_visible": {
+          "targeted_mAP5": 0.0,
+          "targeted_ASR": 0.0,
+          "untargeted_mAP5": 0.02145214521452145,
+          "untargeted_ASR": 0.04,
+          "object_mAP5": 0.9866139346250855
+        },
+        "seed1": {
+          "targeted_mAP5": 0.7767405504320323,
+          "targeted_ASR": 0.62,
+          "untargeted_mAP5": 0.8097745378933497,
+          "untargeted_ASR": 0.7,
+          "object_mAP5": 0.962922025955216
+        },
+        "seed2": {
+          "targeted_mAP5": 0.741010943199583,
+          "targeted_ASR": 0.68,
+          "untargeted_mAP5": 0.8625617363575118,
+          "untargeted_ASR": 0.78,
+          "object_mAP5": 0.9758955727775431
+        },
+        "simple_blur": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.9905613570210106
+        },
+        "simple_resize": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.986479806569008
+        },
+        "var_dilate": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "var_ens3": {
+          "targeted_mAP5": 0.7919733304905965,
+          "targeted_ASR": 0.66,
+          "untargeted_mAP5": 0.8475372117817348,
+          "untargeted_ASR": 0.74,
+          "object_mAP5": 0.9808105672403504
+        },
+        "var_iter2": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "weak_grid16": {
+          "targeted_mAP5": 0.8749534093661213,
+          "targeted_ASR": 0.72,
+          "untargeted_mAP5": 0.9382063411777561,
+          "untargeted_ASR": 0.86,
+          "object_mAP5": 0.9663655896494555
+        }
+      }
+    }
+  }
+}

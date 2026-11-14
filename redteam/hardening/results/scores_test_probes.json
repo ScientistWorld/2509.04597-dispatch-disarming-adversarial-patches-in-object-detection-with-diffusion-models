@@ -1,0 +1,288 @@
+{
+  "experiments": {
+    "inria_digital_hiding": {
+      "results": {
+        "vanilla": {
+          "attack_mAP5": 0.4886135375868308,
+          "attack_AR": 0.5358649789029536,
+          "clean_mAP5": 0.9757928230167339,
+          "clean_AR": 0.7200854700854701
+        },
+        "sc_blank": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "sc_crash_forge": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "sc_detector_guided": {
+          "attack_mAP5": 0.92643602397333,
+          "attack_AR": 0.670464135021097,
+          "clean_mAP5": 0.9717782878971207,
+          "clean_AR": 0.7068376068376068
+        },
+        "sc_empty_allowlist": {
+          "attack_mAP5": 0.4886135375868308,
+          "attack_AR": 0.5358649789029536,
+          "clean_mAP5": 0.9757928230167339,
+          "clean_AR": 0.7200854700854701
+        },
+        "sc_partial": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
+        },
+        "sc_read_answers": {
+          "attack_mAP5": 0.4886135375868308,
+          "attack_AR": 0.5358649789029536,
+          "clean_mAP5": 0.9757928230167339,
+          "clean_AR": 0.7200854700854701
+        },
+        "sc_template_visible": {
+          "attack_mAP5": 0.49007864973560067,
+          "attack_AR": 0.540506329113924,
+          "clean_mAP5": 0.9757928230167339,
+          "clean_AR": 0.7205128205128205
+        },
+        "seed1": {
+          "attack_mAP5": 0.9337522011758056,
+          "attack_AR": 0.6755274261603376,
+          "clean_mAP5": 0.9629984814207652,
+          "clean_AR": 0.6995726495726495
+        },
+        "seed2": {
+          "attack_mAP5": 0.9385292480114282,
+          "attack_AR": 0.6805907172995781,
+          "clean_mAP5": 0.9605938770064966,
+          "clean_AR": 0.7004273504273504
+        },
+        "simple_blur": {
+          "attack_mAP5": 0.6855477465373453,
+          "attack_AR": 0.6012658227848101,
+          "clean_mAP5": 0.9664038119022323,
+          "clean_AR": 0.7081196581196582
+        },
+        "simple_resize": {
+          "attack_mAP5": 0.6232932856497798,
+          "attack_AR": 0.6075949367088608,
+          "clean_mAP5": 0.9739903554494184,
+          "clean_AR": 0.7141025641025641
+        },
+        "var_dilate": {
+          "attack_mAP5": 0.8678067534029842,
+          "attack_AR": 0.6548523206751055,
+          "clean_mAP5": 0.9283214566725878,
+          "clean_AR": 0.652991452991453
+        },
+        "var_ens3": {
+          "attack_mAP5": 0.9531113921808139,
+          "attack_AR": 0.6919831223628693,
+          "clean_mAP5": 0.9660035183717702,
+          "clean_AR": 0.7017094017094017
+        },
+        "var_iter2": {
+          "attack_mAP5": 0.9504581272218641,
+          "attack_AR": 0.6784810126582278,
+          "clean_mAP5": 0.9405144692908289,
+          "clean_AR": 0.6764957264957265
+        },
+        "weak_grid16": {
+          "attack_mAP5": 0.9219334170854084,
+          "attack_AR": 0.6738396624472573,
+          "clean_mAP5": 0.9529095918265126,
+          "clean_AR": 0.6863247863247863
+        }
+      }
+    },
+    "inria_hiding_large_patch": {
+      "results": {
+        "vanilla": {
+          "attack_mAP5": 0.03177646035942447,
+          "attack_AR": 0.15145228215767634
+        },
+        "sc_blank": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "sc_crash_forge": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "sc_detector_guided": {
+          "attack_mAP5": 0.4007266975222795,
+          "attack_AR": 0.48755186721991695
+        },
+        "sc_empty_allowlist": {
+          "attack_mAP5": 0.03177646035942447,
+          "attack_AR": 0.15145228215767634
+        },
+        "sc_partial": {
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
+        },
+        "sc_read_answers": {
+          "attack_mAP5": 0.03177646035942447,
+          "attack_AR": 0.15145228215767634
+        },
+        "sc_template_visible": {
+          "attack_mAP5": 0.03184834732460825,
+          "attack_AR": 0.15145228215767634
+        },
+        "seed1": {
+          "attack_mAP5": 0.40162001225253835,
+          "attack_AR": 0.48838174273858925
+        },
+        "seed2": {
+          "attack_mAP5": 0.4325337604701566,
+          "attack_AR": 0.49087136929460584
+        },
+        "simple_blur": {
+          "attack_mAP5": 0.07888965930894971,
+          "attack_AR": 0.22655601659751037
+        },
+        "simple_resize": {
+          "attack_mAP5": 0.061454204991479,
+          "attack_AR": 0.1929460580912863
+        },
+        "var_dilate": {
+          "attack_mAP5": 0.3147209513470751,
+          "attack_AR": 0.3622406639004149
+        },
+        "var_ens3": {
+          "attack_mAP5": 0.46563971903575013,
+          "attack_AR": 0.5074688796680498
+        },
+        "var_iter2": {
+          "attack_mAP5": 0.5667993024588807,
+          "attack_AR": 0.5203319502074688
+        },
+        "weak_grid16": {
+          "attack_mAP5": 0.4382763996751436,
+          "attack_AR": 0.45850622406639
+        }
+      }
+    },
+    "creating_digital": {
+      "results": {
+        "vanilla": {
+          "targeted_mAP5": 0.9900990099009901,
+          "targeted_ASR": 0.9916666666666667,
+          "untargeted_mAP5": 0.9900990099009901,
+          "untargeted_ASR": 0.9916666666666667,
+          "object_mAP5": 0.9911789193723937
+        },
+        "sc_blank": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "sc_crash_forge": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "sc_detector_guided": {
+          "targeted_mAP5": 0.6222172243234381,
+          "targeted_ASR": 0.49166666666666664,
+          "untargeted_mAP5": 0.7741386474769453,
+          "untargeted_ASR": 0.5916666666666667,
+          "object_mAP5": 0.9966438986318692
+        },
+        "sc_empty_allowlist": {
+          "targeted_mAP5": 0.9900990099009901,
+          "targeted_ASR": 0.9916666666666667,
+          "untargeted_mAP5": 0.9900990099009901,
+          "untargeted_ASR": 0.9916666666666667,
+          "object_mAP5": 0.9911789193723937
+        },
+        "sc_partial": {
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
+        },
+        "sc_read_answers": {
+          "targeted_mAP5": 0.9900990099009901,
+          "targeted_ASR": 0.9916666666666667,
+          "untargeted_mAP5": 0.9900990099009901,
+          "untargeted_ASR": 0.9916666666666667,
+          "object_mAP5": 0.9911789193723937
+        },
+        "sc_template_visible": {
+          "targeted_mAP5": 0.9900990099009901,
+          "targeted_ASR": 0.9916666666666667,
+          "untargeted_mAP5": 0.9900990099009901,
+          "untargeted_ASR": 0.9916666666666667,
+          "object_mAP5": 0.9911789193723937
+        },
+        "seed1": {
+          "targeted_mAP5": 0.6921233171229703,
+          "targeted_ASR": 0.55,
+          "untargeted_mAP5": 0.7874440252730759,
+          "untargeted_ASR": 0.6833333333333333,
+          "object_mAP5": 0.9863876413560766
+        },
+        "seed2": {
+          "targeted_mAP5": 0.6786944230964587,
+          "targeted_ASR": 0.5166666666666667,
+          "untargeted_mAP5": 0.7923589009989374,
+          "untargeted_ASR": 0.6083333333333333,
+          "object_mAP5": 0.9973469362193936
+        },
+        "simple_blur": {
+          "targeted_mAP5": 0.9798679867986799,
+          "targeted_ASR": 0.9666666666666667,
+          "untargeted_mAP5": 0.9888949226174315,
+          "untargeted_ASR": 0.9833333333333333,
+          "object_mAP5": 0.9878074426196376
+        },
+        "simple_resize": {
+          "targeted_mAP5": 0.9801980198019802,
+          "targeted_ASR": 0.9833333333333333,
+          "untargeted_mAP5": 0.9899353571720808,
+          "untargeted_ASR": 0.9916666666666667,
+          "object_mAP5": 0.9972795288365369
+        },
+        "var_dilate": {
+          "targeted_mAP5": 0.10662604722010663,
+          "targeted_ASR": 0.058333333333333334,
+          "untargeted_mAP5": 0.2882977080782002,
+          "untargeted_ASR": 0.15833333333333333,
+          "object_mAP5": 0.9693528742787908
+        },
+        "var_ens3": {
+          "targeted_mAP5": 0.6828104497196706,
+          "targeted_ASR": 0.5333333333333333,
+          "untargeted_mAP5": 0.7786925350282534,
+          "untargeted_ASR": 0.65,
+          "object_mAP5": 0.9941015421004824
+        },
+        "var_iter2": {
+          "targeted_mAP5": 0.44042118497564015,
+          "targeted_ASR": 0.31666666666666665,
+          "untargeted_mAP5": 0.5848021416670551,
+          "untargeted_ASR": 0.44166666666666665,
+          "object_mAP5": 0.9830763478852752
+        },
+        "weak_grid16": {
+          "targeted_mAP5": 0.7502873367692766,
+          "targeted_ASR": 0.6333333333333333,
+          "untargeted_mAP5": 0.8681518385319584,
+          "untargeted_ASR": 0.7583333333333333,
+          "object_mAP5": 0.9744046451471713
+        }
+      }
+    }
+  }
+}

@@ -2,4 +2,4 @@ action: submit
 gpus: 1
 test: false
 milestone: secondary_claims
-notes: "Rebuild visible slice (200) and hidden test (480) from pooled INRIA with ignore regions and physical-style creating patches; rerun reference DISPATCH/baselines and all probes (variants, seeds, simple baselines, shortcuts)."
+notes: "Resume after preemption: finish hidden test assets (3 of 5 patches left), then reference runs and all probes on visible slice + hidden test."

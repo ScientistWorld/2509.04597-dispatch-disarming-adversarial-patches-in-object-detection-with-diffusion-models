@@ -3,80 +3,80 @@
     "inria_digital_hiding": {
       "results": {
         "vanilla": {
-          "attack_mAP5": 0.6708873453393496,
-          "attack_AR": 0.6138888888888888,
-          "clean_mAP5": 0.9732379356180436,
-          "clean_AR": 0.7007042253521127
+          "attack_mAP5": 0.4886135375868308,
+          "attack_AR": 0.5358649789029536,
+          "clean_mAP5": 0.9757928230167339,
+          "clean_AR": 0.7200854700854701
         },
         "dispatch": {
-          "attack_mAP5": 0.881358346149357,
-          "attack_AR": 0.6555555555555554,
-          "clean_mAP5": 0.9635935528745917,
-          "clean_AR": 0.680281690140845
+          "attack_mAP5": 0.9431440794315582,
+          "attack_AR": 0.6755274261603376,
+          "clean_mAP5": 0.9662623117802462,
+          "clean_AR": 0.697008547008547
         },
         "dispatch_gray": {
-          "attack_mAP5": 0.9017249446003166,
-          "attack_AR": 0.6694444444444445,
-          "clean_mAP5": 0.9398581313619828,
-          "clean_AR": 0.6711267605633803
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
         },
         "regenerated_only": {
-          "attack_mAP5": 0.7639337325157303,
-          "attack_AR": 0.5652777777777778,
-          "clean_mAP5": 0.9290117976161997,
-          "clean_AR": 0.6654929577464789
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0,
+          "clean_mAP5": 0.0,
+          "clean_AR": 0.0
         }
       }
     },
     "inria_hiding_large_patch": {
       "results": {
         "vanilla": {
-          "attack_mAP5": 0.13420169061196924,
-          "attack_AR": 0.3641891891891892
+          "attack_mAP5": 0.03177646035942447,
+          "attack_AR": 0.15145228215767634
         },
         "dispatch": {
-          "attack_mAP5": 0.34278126927438535,
-          "attack_AR": 0.4864864864864865
+          "attack_mAP5": 0.4134901003927885,
+          "attack_AR": 0.4800829875518672
         },
         "dispatch_gray": {
-          "attack_mAP5": 0.48551346327458694,
-          "attack_AR": 0.5405405405405406
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
         },
         "regenerated_only": {
-          "attack_mAP5": 0.25293902492386766,
-          "attack_AR": 0.37837837837837834
+          "attack_mAP5": 0.0,
+          "attack_AR": 0.0
         }
       }
     },
     "creating_digital": {
       "results": {
         "vanilla": {
+          "targeted_mAP5": 0.9900990099009901,
+          "targeted_ASR": 0.9916666666666667,
+          "untargeted_mAP5": 0.9900990099009901,
+          "untargeted_ASR": 0.9916666666666667,
+          "object_mAP5": 0.9911789193723937
+        },
+        "dispatch": {
+          "targeted_mAP5": 0.6505194089396101,
+          "targeted_ASR": 0.5166666666666667,
+          "untargeted_mAP5": 0.8080370377897963,
+          "untargeted_ASR": 0.6583333333333333,
+          "object_mAP5": 0.9915923020828037
+        },
+        "dispatch_gray": {
           "targeted_mAP5": 1.0,
           "targeted_ASR": 1.0,
           "untargeted_mAP5": 1.0,
           "untargeted_ASR": 1.0,
-          "object_mAP5": 0.9849087087853542
-        },
-        "dispatch": {
-          "targeted_mAP5": 0.41330232161147146,
-          "targeted_ASR": 0.2361111111111111,
-          "untargeted_mAP5": 0.7361375337105134,
-          "untargeted_ASR": 0.5,
-          "object_mAP5": 0.9844121352380508
-        },
-        "dispatch_gray": {
-          "targeted_mAP5": 0.26732673267326734,
-          "targeted_ASR": 0.2361111111111111,
-          "untargeted_mAP5": 0.3839247898653839,
-          "untargeted_ASR": 0.25,
-          "object_mAP5": 0.967909280201183
+          "object_mAP5": 0.0
         },
         "regenerated_only": {
-          "targeted_mAP5": 0.32607260726072607,
-          "targeted_ASR": 0.18055555555555555,
-          "untargeted_mAP5": 0.6326306008422212,
-          "untargeted_ASR": 0.3611111111111111,
-          "object_mAP5": 0.9476879971234528
+          "targeted_mAP5": 1.0,
+          "targeted_ASR": 1.0,
+          "untargeted_mAP5": 1.0,
+          "untargeted_ASR": 1.0,
+          "object_mAP5": 0.0
         }
       }
     }
